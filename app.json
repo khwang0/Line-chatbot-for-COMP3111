@@ -1,5 +1,5 @@
 {
-    "name": "COMP3111 Lab 1 - Faulty Bot",
+    "name": "COMP3111 Lab 1 Faulty Bot",
     "description": "This is a simple but faulty application for the LINE Messaging API",
     "keywords": ["chatbot", "line", "java"],
     "env": {
@@ -11,7 +11,7 @@
             "description": "LINE bot Channel secret from the Channel Console",
             "required":  true
         },
-        "ITSC LOGIN": {
+        "ITSC_LOGIN": {
             "description": "For Grading",
             "required":  true
         }
