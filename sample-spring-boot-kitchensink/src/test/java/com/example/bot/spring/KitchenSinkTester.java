@@ -69,6 +69,7 @@ public class KitchenSinkTester {
 		try {
 			result = this.databaseEngine.search("abc");
 		} catch (Exception e) {
+			//System.out.println("Exception found");
 			thrown = true;
 		}
 		assertThat(!thrown);
