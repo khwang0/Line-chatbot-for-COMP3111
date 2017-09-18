@@ -100,11 +100,4 @@ public class KitchenSinkTester {
 		assertThat(!thrown);
 		assertThat(result.equals("Great!"));
 	}
-	
-	@Test
-	public void testNull() throws Exception {
-		String test1 = "I am fine today";
-		String test2 = "I am fine";
-		assertThat(test1.contains(test2));
-	}
 }
