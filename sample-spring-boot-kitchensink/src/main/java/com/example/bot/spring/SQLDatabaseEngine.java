@@ -16,8 +16,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		PreparedStatement stmt = connection.prepareStatement(
 				"SELECT * FROM keyResponse");
 		//stmt.setString(1, "vin");
+		ResultSet rs = null;
 		try {
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
