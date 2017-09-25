@@ -37,7 +37,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		rs.close();
 		stmt.close();
 		connection.close();
-		return response;
+		if(response != null) {
+			return response;
+		}else {
+			throw new Exception("NOT FOUND");
+		}
 	}
 	
 	
