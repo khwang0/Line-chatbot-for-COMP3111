@@ -16,7 +16,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		PreparedStatement stmt = connection.prepareStatement(
 				"SELECT * FROM keyResponse");
 		//stmt.setString(1, "vin");
-		ResultSet rs = stmt.executeQuery();
+		try {
+			ResultSet rs = stmt.executeQuery();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		String response = null;
 		while (rs.next()) {
 			String key = rs.getString(1);
@@ -29,7 +33,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 						+ "WHERE keyword = ?");
 				nstmt.setInt(1, hits+1);
 				nstmt.setString(2, key);
-				nstmt.execute();
+				try {
+					nstmt.executeUpdate();
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
 				response = res;
 				break;
 			}
