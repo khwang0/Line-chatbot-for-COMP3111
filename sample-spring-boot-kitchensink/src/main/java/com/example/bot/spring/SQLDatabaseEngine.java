@@ -12,7 +12,23 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	@Override
 	String search(String text) throws Exception {
 		//Write your code here
-		return null;
+		Connection connection = getConnection();
+		String result = null;
+		PreparedStatement stmt = connection.prepareStatement(
+			"SELECT response FROM test WHERE keyword like concat('%', ?, '%')"
+		);
+		stmt.setString(1, text);
+		ResultSet rs = stmt.executeQuery();
+		if (rs.next()==true) {
+			result = rs.getString(1);
+		}
+		rs.close();
+		stmt.close();
+		connection.close();
+		
+		if (result != null)
+			return result;
+		throw new Exception("NOT FOUND");
 	}
 	
 	
