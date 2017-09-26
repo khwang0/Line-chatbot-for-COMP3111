@@ -19,7 +19,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		stmt.setString(1,text);
 		ResultSet rs=stmt.executeQuery();
 		while(rs.next()) {
-			result = rs.getString(2);
+			result = rs.getString(1);
 		}
 		rs.close();
 		stmt.close();
