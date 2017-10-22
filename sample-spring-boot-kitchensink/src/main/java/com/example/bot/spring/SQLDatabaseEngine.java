@@ -12,11 +12,30 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	@Override
 	String search(String text) throws Exception {
 		//Write your code here
-		return null;
+		String result=null;
+		try {
+			Connection con = getConnection();
+			PreparedStatement smt = con.prepareStatement("SELECT responses1 FROM responses where keyword like concat('%',?,'%')");
+			smt.setString(1, text);
+			ResultSet rs = smt.executeQuery();
+			while(rs.next())
+			{
+				result = rs.getString("responses1");
+			}
+			rs.close();
+			smt.close();
+			con.close();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+		if(result!=null)
+			return result;
+		throw new Exception("NOT FOUND");
 	}
 	
 	
-	private Connection getConnection() throws URISyntaxException, SQLException {
+	
+private Connection getConnection() throws URISyntaxException, SQLException {
 		Connection connection;
 		URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
@@ -31,5 +50,5 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 		return connection;
 	}
-
 }
+
