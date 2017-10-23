@@ -11,8 +11,33 @@ import java.net.URI;
 public class SQLDatabaseEngine extends DatabaseEngine {
 	@Override
 	String search(String text) throws Exception {
-		//Write your code here
-		return null;
+		String result = "";
+		try {
+			//Write your code here
+			System.out.println("Entered search: " + text);
+			Connection connection = getConnection(); 
+			System.out.println("After getConnection()");
+			PreparedStatement stmt = connection.prepareStatement("select response from chatbot where keyword = '" + text +"'");
+			System.out.println("After prepareStatement()");
+			//stmt.setString(1, text);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			System.out.println("response: " + rs.getString(1) );
+			result = rs.getString(1);
+			
+			rs.close();
+			stmt.close();
+			connection.close();
+			
+		} catch (RuntimeException e) {
+			System.out.print("RuntimeException: ");
+	        System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.print("Exception: ");
+	        System.out.println(e.getMessage());
+		}
+		return result;
 	}
 	
 	
