@@ -35,6 +35,7 @@ import com.linecorp.bot.model.profile.UserProfileResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.bot.spring.database.DBEngine;
 import com.google.common.io.ByteStreams;
 
 import com.linecorp.bot.client.LineMessagingClient;
@@ -316,11 +317,11 @@ public class KitchenSinkController {
 
 
 	public KitchenSinkController() {
-		database = new SQLDatabaseEngine();
+		database = new DBEngine();
 		itscLOGIN = System.getenv("ITSC_LOGIN");
 	}
 
-	private SQLDatabaseEngine database;
+	private DBEngine database;
 	private String itscLOGIN;
 	
 
@@ -332,7 +333,6 @@ public class KitchenSinkController {
 		Path path;
 		String uri;
 	}
-
 
 	//an inner class that gets the user profile and status message
 	class ProfileGetter implements BiConsumer<UserProfileResponse, Throwable> {

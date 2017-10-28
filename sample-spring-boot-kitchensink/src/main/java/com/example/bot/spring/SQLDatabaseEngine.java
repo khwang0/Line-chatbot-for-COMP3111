@@ -8,9 +8,8 @@ import java.net.URISyntaxException;
 import java.net.URI;
 
 @Slf4j
-public class SQLDatabaseEngine extends DatabaseEngine {
-	@Override
-	String search(String text) throws Exception {
+public class SQLDatabaseEngine{
+	public String search(String text) throws Exception {
 		//Write your code here
 		Connection connection = getConnection();
 		PreparedStatement stmt = connection.prepareStatement(
