@@ -35,6 +35,7 @@ import com.linecorp.bot.model.profile.UserProfileResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.bot.spring.database.DBEngine;
 import com.google.common.io.ByteStreams;
 
 import com.linecorp.bot.client.LineMessagingClient;
@@ -242,14 +243,14 @@ public class KitchenSinkController {
                                         new URIAction("Go to line.me",
                                                       "https://line.me"),
                                         new PostbackAction("Say hello1",
-                                                           "hello ã�“ã‚“ã�«ã�¡ã�¯")
+                                                           "hello 茫锟解�溍ｂ�氣�溍ｏ拷芦茫锟铰∶ｏ拷炉")
                                 )),
                                 new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-                                        new PostbackAction("è¨€ hello2",
-                                                           "hello ã�“ã‚“ã�«ã�¡ã�¯",
-                                                           "hello ã�“ã‚“ã�«ã�¡ã�¯"),
+                                        new PostbackAction("猫篓鈧� hello2",
+                                                           "hello 茫锟解�溍ｂ�氣�溍ｏ拷芦茫锟铰∶ｏ拷炉",
+                                                           "hello 茫锟解�溍ｂ�氣�溍ｏ拷芦茫锟铰∶ｏ拷炉"),
                                         new MessageAction("Say message",
-                                                          "Rice=ç±³")
+                                                          "Rice=莽卤鲁")
                                 ))
                         ));
                 TemplateMessage templateMessage = new TemplateMessage("Carousel alt text", carouselTemplate);
@@ -316,11 +317,11 @@ public class KitchenSinkController {
 
 
 	public KitchenSinkController() {
-		database = new DatabaseEngine();
+		database = new DBEngine();
 		itscLOGIN = System.getenv("ITSC_LOGIN");
 	}
 
-	private DatabaseEngine database;
+	private DBEngine database;
 	private String itscLOGIN;
 	
 
@@ -332,7 +333,6 @@ public class KitchenSinkController {
 		Path path;
 		String uri;
 	}
-
 
 	//an inner class that gets the user profile and status message
 	class ProfileGetter implements BiConsumer<UserProfileResponse, Throwable> {
