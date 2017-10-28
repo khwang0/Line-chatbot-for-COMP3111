@@ -12,6 +12,6 @@ public class UQAutomateSender implements TextSender {
 	public String process(String userId, String msg) {
 		// TODO Auto-generated method stub
 		UQDBEngine searchEngine = new UQDBEngine();
-		return searchEngine.uqQuery(userID, msg);
+		return searchEngine.uqQuery(userId, msg);
 	}
 }
