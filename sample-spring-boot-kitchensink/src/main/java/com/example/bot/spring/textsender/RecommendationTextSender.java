@@ -1,15 +1,15 @@
 package com.example.bot.spring.textsender;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
-
-public class RecommendationTextSender extends TextSender {
+public class RecommendationTextSender implements TextSender {
 
 	public RecommendationTextSender() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public int replyRecommendation(TextMessageContent text) {
-		return 0;
+
+	@Override
+	public String process(String userId, String msg) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

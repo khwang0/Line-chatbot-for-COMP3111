@@ -208,71 +208,6 @@ public class KitchenSinkController {
 		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
 
-	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
-            throws Exception {
-        String text = content.getText();
-
-        log.info("Got text message from {}: {}", replyToken, text);
-        switch (text) {
-            case "profile": {
-                String userId = event.getSource().getUserId();
-                if (userId != null) {
-                    lineMessagingClient
-                            .getProfile(userId)
-                            .whenComplete(new ProfileGetter (this, replyToken));
-                } else {
-                    this.replyText(replyToken, "Bot can't use profile API without user ID");
-                }
-                break;
-            }
-            case "confirm": {
-                ConfirmTemplate confirmTemplate = new ConfirmTemplate(
-                        "Do it?",
-                        new MessageAction("Yes", "Yes!"),
-                        new MessageAction("No", "No!")
-                );
-                TemplateMessage templateMessage = new TemplateMessage("Confirm alt text", confirmTemplate);
-                this.reply(replyToken, templateMessage);
-                break;
-            }
-            case "carousel": {
-                String imageUrl = createUri("/static/buttons/1040.jpg");
-                CarouselTemplate carouselTemplate = new CarouselTemplate(
-                        Arrays.asList(
-                                new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-                                        new URIAction("Go to line.me",
-                                                      "https://line.me"),
-                                        new PostbackAction("Say hello1",
-                                                           "hello 茫锟解�溍ｂ�氣�溍ｏ拷芦茫锟铰∶ｏ拷炉")
-                                )),
-                                new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-                                        new PostbackAction("猫篓鈧� hello2",
-                                                           "hello 茫锟解�溍ｂ�氣�溍ｏ拷芦茫锟铰∶ｏ拷炉",
-                                                           "hello 茫锟解�溍ｂ�氣�溍ｏ拷芦茫锟铰∶ｏ拷炉"),
-                                        new MessageAction("Say message",
-                                                          "Rice=莽卤鲁")
-                                ))
-                        ));
-                TemplateMessage templateMessage = new TemplateMessage("Carousel alt text", carouselTemplate);
-                this.reply(replyToken, templateMessage);
-                break;
-            }
-
-            default:
-            	String reply = null;
-            	try {
-            		reply = database.search(text);
-            	} catch (Exception e) {
-            		reply = text;
-            	}
-                log.info("Returns echo message {}: {}", replyToken, reply);
-                this.replyText(
-                        replyToken,
-                        itscLOGIN + " says " + reply
-                );
-                break;
-        }
-    }
 
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
@@ -317,14 +252,13 @@ public class KitchenSinkController {
 
 
 	public KitchenSinkController() {
-		database = new DBEngine();
-		itscLOGIN = System.getenv("ITSC_LOGIN");
+		processor = new TextProcessor();
 	}
 
-	private DBEngine database;
-	private String itscLOGIN;
+	private TextProcessor processor;
 	
-
+	
+	
 	//The annontation @Value is from the package lombok.Value
 	//Basically what it does is to generate constructor and getter for the class below
 	//See https://projectlombok.org/features/Value

@@ -8,7 +8,7 @@ public class TextProcessor {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int processText(TextMessageContent text) {
-		return 0;
+	public String processText(String userId, TextMessageContent text) {
+		return null;
 	}
 }

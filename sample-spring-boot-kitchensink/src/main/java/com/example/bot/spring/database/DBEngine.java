@@ -18,7 +18,7 @@ public class DBEngine {
 		
 	}
 	
-	String query(String text) throws Exception {
+	public String query(String text) throws Exception {
 		//Write your code here
 		Connection connection = getConnection();
 		PreparedStatement stmt = connection.prepareStatement(
