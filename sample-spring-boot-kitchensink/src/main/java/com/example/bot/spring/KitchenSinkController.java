@@ -119,7 +119,7 @@ public class KitchenSinkController {
 			System.err.println(e.getMessage());
 		}
 
-        this.replyText(replyToken + " says ",  reply);
+        this.replyText(replyToken,  reply);
     }
         
         
