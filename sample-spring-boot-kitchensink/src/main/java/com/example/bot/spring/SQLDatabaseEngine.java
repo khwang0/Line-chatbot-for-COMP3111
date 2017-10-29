@@ -8,11 +8,48 @@ import java.net.URISyntaxException;
 import java.net.URI;
 
 @Slf4j
-public class SQLDatabaseEngine extends DatabaseEngine {
-	@Override
-	String search(String text) throws Exception {
+public class SQLDatabaseEngine{
+	public String search(String text) throws Exception {
 		//Write your code here
-		return null;
+		Connection connection = getConnection();
+		PreparedStatement stmt = connection.prepareStatement(
+				"SELECT * FROM keyResponse");
+		//stmt.setString(1, "vin");
+		ResultSet rs = null;
+		try {
+			rs = stmt.executeQuery();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		String response = null;
+		while (rs.next()) {
+			String key = rs.getString(1);
+			String res = rs.getString(2);
+			int hits = rs.getInt(3);
+			if((text.toLowerCase()).contains(key.toLowerCase())) {
+				PreparedStatement nstmt = connection.prepareStatement(
+						"UPDATE keyResponse "
+						+ "SET hits = ? "
+						+ "WHERE keyword = ?");
+				nstmt.setInt(1, hits+1);
+				nstmt.setString(2, key);
+				try {
+					nstmt.executeUpdate();
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+				response = res;
+				break;
+			}
+		}
+		rs.close();
+		stmt.close();
+		connection.close();
+		if(response != null) {
+			return response;
+		}else {
+			throw new Exception("NOT FOUND");
+		}
 	}
 	
 	
