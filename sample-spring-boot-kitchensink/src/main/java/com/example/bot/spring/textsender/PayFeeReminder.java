@@ -1,6 +1,6 @@
 package com.example.bot.spring.textsender;
 
-public class PayFeeReminder extends TextSender {
+public class PayFeeReminder {
 
 	public PayFeeReminder() {
 		// TODO Auto-generated constructor stub

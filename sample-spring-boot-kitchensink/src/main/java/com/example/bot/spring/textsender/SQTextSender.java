@@ -1,14 +1,14 @@
 package com.example.bot.spring.textsender;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
-
-public class SQTextSender extends TextSender {
+public class SQTextSender implements TextSender {
 
 	public SQTextSender() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int replySQ(TextMessageContent text) {
-		return 0;
+	@Override
+	public String process(String userId, String msg) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
