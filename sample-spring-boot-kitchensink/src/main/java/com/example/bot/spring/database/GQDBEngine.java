@@ -53,7 +53,6 @@ public class GQDBEngine extends DBEngine {
 		return TourID;
 	}
 
-	@Override
 	public String query(String userID,String Text,String TourID) throw Exception{
 		Connection connection = getConnection();
 		PreparedStatement stmt;
@@ -94,7 +93,11 @@ public class GQDBEngine extends DBEngine {
 		ResultSet rs;
 		stmt = connection.prepareStatement(
 				"UPDATE line_user_info SET tourids = ? WHERE userid = ?");
-		stmt.setString(1, TourID, UserID);
+		stmt.setString(1, TourID);
+		stmt.setString(2, UserID);
+		stmt.executeUpdate();
+		stmt.close();
+		connection.close();
 	}
 	
 }
