@@ -63,9 +63,8 @@ public class BookingTextSender implements TextSender {
 				boolean valid = bookingDB.checkValidDate(dd,mm,userId);
 				if(valid) {
 					bookingDB.recordDate(userId,dd,mm);
-					String nextQ = bookingDB.findNextEmptyInfo(userId);
-					reply = getInfoQuestion(nextQ);
-					bookingDB.setStatus(nextQ, userId);
+					reply = getInfoQuestion("adult");
+					bookingDB.setStatus("adult", userId);
 				}else {
 					reply = "Invalid date. Please enter a valid date.";
 				}
@@ -86,12 +85,8 @@ public class BookingTextSender implements TextSender {
 					break;
 				}
 				String nextQ = bookingDB.findNextEmptyInfo(userId);
-				if(nextQ == null) {
-					reply = getTotalPrice(userId);
-				}else {
-					reply = getInfoQuestion(nextQ);
-					bookingDB.setStatus(nextQ,userId);
-				}
+				reply = getInfoQuestion("children");
+				bookingDB.setStatus("children",userId);
 				break;
 			}
 			
@@ -108,13 +103,8 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid number of children (Age 4 to 11). Please enter again.";
 					break;
 				}
-				String nextQ = bookingDB.findNextEmptyInfo(userId);
-				if(nextQ == null) {
-					reply = getConfirmation(userId);
-				}else {
-					reply = getInfoQuestion(nextQ);
-					bookingDB.setStatus(nextQ,userId);
-				}
+				reply = getInfoQuestion("toddler");
+				bookingDB.setStatus("toddler",userId);
 				break;
 			}
 			
@@ -131,13 +121,8 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid number of children (Age 0 to 3). Please enter again.";
 					break;
 				}
-				String nextQ = bookingDB.findNextEmptyInfo(userId);
-				if(nextQ == null) {
-					reply = getTotalPrice(userId);
-				}else {
-					reply = getInfoQuestion(nextQ);
-					bookingDB.setStatus(nextQ,userId);
-				}
+				reply = getInfoQuestion("phone");
+				bookingDB.setStatus("phone",userId);
 				break;
 			}
 			
@@ -154,13 +139,7 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid phone number. Please enter again.";
 					break;
 				}
-				String nextQ = bookingDB.findNextEmptyInfo(userId);
-				if(nextQ == null) {
-					reply = getTotalPrice(userId);
-				}else {
-					reply = getInfoQuestion(nextQ);
-					bookingDB.setStatus(nextQ,userId);
-				}
+				reply = getTotalPrice(userId);
 				break;
 			}
 			

@@ -42,6 +42,14 @@ public class BookingDBEngine extends DBEngine {
 		rs.close();
 		return status;
 	}
+	
+	/* Get possible tour ids for one user
+	 * 
+	 */
+	public String[] getTourIds(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/* Record the name of user
 	 * 
@@ -118,7 +126,7 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public void recordAdults(String userId, int i) {
 		// TODO Auto-generated method stub
-		PreparedStatement nstmt;
+		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
@@ -143,7 +151,7 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public void recordChildren(String userId, int i){
 		// TODO Auto-generated method stub
-		PreparedStatement nstmt;
+		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
@@ -168,7 +176,7 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public void recordToddler(String userId, int i) {
 		// TODO Auto-generated method stub
-		PreparedStatement nstmt;
+		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
@@ -193,7 +201,7 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public void recordPhone(String userId, int i) {
 		// TODO Auto-generated method stub
-		PreparedStatement nstmt;
+		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
@@ -215,18 +223,20 @@ public class BookingDBEngine extends DBEngine {
 
 	/* Find next unrecorded information field. If all information
 	 * are recorded, return null
-	 */
+	 *
 	public String findNextEmptyInfo(String userId) {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
+	*/
 
 	/* Set the status in the flow of booking for a given user id
 	 * 
 	 */
 	public void setStatus(String status, String userId){
 		// TODO Auto-generated method stub
-		PreparedStatement nstmt;
+		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE ?"
@@ -265,7 +275,28 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public int getAdult(String userId) {
 		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement nstmt = null;
+		int adult = -1;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT adult "
+					+ "FROM ? c, ? l"
+					+ "WHERE c.name = l.name"
+					+ "AND l.userID = ?");
+			nstmt.setString(1, CUSTOMER);
+			nstmt.setString(2, LINEUSER);
+			nstmt.setString(3, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				adult = rs.getInt(1);
+			}
+			rs.close();
+			nstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return adult;
 	}
 
 	/* Get the number of toddlers
@@ -273,7 +304,28 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public int getToddler(String userId) {
 		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement nstmt = null;
+		int toddler = -1;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT toddler "
+					+ "FROM ? c, ? l"
+					+ "WHERE c.name = l.name"
+					+ "AND l.userID = ?");
+			nstmt.setString(1, CUSTOMER);
+			nstmt.setString(2, LINEUSER);
+			nstmt.setString(3, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				toddler = rs.getInt(1);
+			}
+			rs.close();
+			nstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return toddler;
 	}
 
 	/* Get the number of children
@@ -281,7 +333,28 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public int getChildren(String userId) {
 		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement nstmt = null;
+		int children = -1;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT children "
+					+ "FROM ? c, ? l"
+					+ "WHERE c.name = l.name"
+					+ "AND l.userID = ?");
+			nstmt.setString(1, CUSTOMER);
+			nstmt.setString(2, LINEUSER);
+			nstmt.setString(3, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				children = rs.getInt(1);
+			}
+			rs.close();
+			nstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return children;
 	}
 
 	/* Get the id of the tour for one user
@@ -316,13 +389,6 @@ public class BookingDBEngine extends DBEngine {
 		return null;
 	}
 
-	/* Get possible tour ids for one user
-	 * 
-	 */
-	public String[] getTourIds(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/* Get all possible tour names
 	 * 
