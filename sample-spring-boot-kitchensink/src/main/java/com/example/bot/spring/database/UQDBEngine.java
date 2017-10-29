@@ -12,11 +12,16 @@ public class UQDBEngine extends DBEngine {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public string uqQuery(String userId, TextMessageContent text) {
+	public String uqQuery(String userId, TextMessageContent text) {
 		Connection connection = getConnection();
 		//insert into the unanswered question table to store the question
 		PreparedStatement stmt = connection.prepareStatement(
-				"insert into table ###### values ######");
+				"insert into table unanswered_question values ("+userId+", '"+text+"', false);");
+		try {
+			stmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 
 		stmt.close();
 		connection.close();
