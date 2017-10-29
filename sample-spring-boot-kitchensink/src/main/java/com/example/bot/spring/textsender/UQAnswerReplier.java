@@ -9,6 +9,6 @@ public class UQAnswerReplier{
 	}
 
 	public String replyUnansweredQuestion(Message msg, String id) {
-		return 0;
+		return null;
 	}
 }
