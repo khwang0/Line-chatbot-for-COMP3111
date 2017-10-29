@@ -13,13 +13,6 @@ public class UQDBEngine extends DBEngine {
 	}
 	
 	public String uqQuery(String userId, String text) {
-		//Connection connection = getConnection();
-		//insert into the unanswered question table to store the question
-		//PreparedStatement stmt = connection.prepareStatement(
-				//"insert into table ###### values ######");
-
-		//stmt.close();
-		//connection.close();
 		
 		return "Sorry, I can't answer your question. My colleague will follow up with you.";
 	}
