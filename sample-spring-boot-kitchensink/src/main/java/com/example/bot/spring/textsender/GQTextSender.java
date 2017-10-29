@@ -1,14 +1,18 @@
 package com.example.bot.spring.textsender;
 
-public class GQTextSender implements TextSender {
+import com.example.bot.spring.database.GQDBEngine;
 
+public class GQTextSender implements TextSender {
+	
+	private GQDBEngine DBE;
 	public GQTextSender() {
-		// TODO Auto-generated constructor stub
+		DBE= new GQDBEngine();
 	}
 
 	@Override
-	public String process(String userId, String msg) {
-		// TODO Auto-generated method stub
-		return null;
+	public String process(String userID, String msg) {
+		String TourID=DBE.getTourID(userID,msg);
+		DBE.update(userID,TourID);
+		return DBE.query(userID,msg,TourID); 
 	}
 }

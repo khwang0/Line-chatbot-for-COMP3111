@@ -1,6 +1,6 @@
 package com.example.bot.spring.textsender;
 
-import com.example.bot.spring.database.*;
+import com.example.bot.spring.database.UQDBEngine;
 
 public class UQAutomateSender implements TextSender {
 
