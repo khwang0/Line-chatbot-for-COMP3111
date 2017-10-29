@@ -8,7 +8,7 @@ public class GQTextSender implements TextSender {
 
 	@Override
 	public String process(String userId, String msg) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }
