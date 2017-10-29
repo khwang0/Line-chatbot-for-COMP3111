@@ -50,8 +50,7 @@ public class SQLDatabaseEngine{
 		}else {
 			throw new Exception("NOT FOUND");
 		}
-	}
-	
+	}	
 	
 	private Connection getConnection() throws URISyntaxException, SQLException {
 		Connection connection;
@@ -68,5 +67,4 @@ public class SQLDatabaseEngine{
 
 		return connection;
 	}
-
 }
