@@ -17,14 +17,14 @@ public class RecommendationDBEngine extends DBEngine {
 		//insert into the unanswered question table to store the question
 		String response="";
 		String idList="";
-		for(int i=0; i<text.length; i++) {
+		for(int i=0; i<text.size(); i++) {
 			try {
 				ResultSet rs = null;
 				PreparedStatement stmt = connection.prepareStatement(
-					"select * from tour_features where "+text.get(i))+"=1";
-				String temp="Tours with good "+text.get(i)+" are:"
+					"select * from tour_features where "+text.get(i)+"=1");
+				String temp="Tours with good "+text.get(i)+" are:";
 			
-				rs=stmt.executeQuery()
+				rs=stmt.executeQuery();
 				if (rs==null) {
 					response="No tours with good "+text.get(i)+"\n";
 				}
@@ -32,18 +32,19 @@ public class RecommendationDBEngine extends DBEngine {
 					while (rs.next()) {	
 						String tourid = rs.getString(1);
 						temp+=tourid+", ";
-						idList+=tourid+", "
+						idList+=tourid+", ";
 					}
 					temp=temp.replaceAll(", $", "");
 					response+=temp+"\n";
 				}
-				tourid=tourid.replaceAll(", $", "");
+				idList=idList.replaceAll(", $", "");
+				stmt.close();
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
-		stmt=connection.prepareStatement(
+		PreparedStatement stmt=connection.prepareStatement(
 				"update line_user_info set TourIDs ='"+idList+"'where UserID="+userID+";");
 		stmt.executeUpdate();
 

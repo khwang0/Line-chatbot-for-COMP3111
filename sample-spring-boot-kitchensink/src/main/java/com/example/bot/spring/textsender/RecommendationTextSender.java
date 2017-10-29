@@ -21,7 +21,7 @@ public class RecommendationTextSender implements TextSender {
 			featureList.add("spring");
 		}
 		if (msg.contains("view")||msg.contains("sight")){
-			feature.add("view");
+			featureList.add("view");
 		}
 		return searchEngine(userId, featureList);
 	}
