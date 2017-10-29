@@ -42,37 +42,30 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
+import com.example.bot.spring.textsender.*;
 
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
-@SpringBootTest(classes = { KitchenSinkTester.class, SQLDatabaseEngine.class })
+@SpringBootTest(classes = { KitchenSinkTester.class, SQTextSender.class })
 public class KitchenSinkTester {
 	@Autowired
-	private SQLDatabaseEngine databaseEngine;
+	private SQTextSender sqsender;
 	
 	@Test
-	public void testNotFound() throws Exception {
+	public void simpleReply() throws Exception {
 		boolean thrown = false;
+		String expectedReply = "Hi! How can I help you?";
+		String userid = "12345";
+		String reply = null;
+		
 		try {
-			this.databaseEngine.search("no");
+			reply = this.sqsender.process(userid, "Hi");
+			
 		} catch (Exception e) {
+			System.out.println("---------- inside KitchenSinkTester ---------- ");
+			System.err.println(e.getMessage());
 			thrown = true;
 		}
-		assertThat(thrown).isEqualTo(true);
-	}
-	
-	@Test
-	public void testFound() throws Exception {
-		boolean thrown = false;
-		String result = null;
-		try {
-			result = this.databaseEngine.search("abc");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("def");
+		assertThat(reply).isEqualTo(expectedReply);
 	}
 }

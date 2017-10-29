@@ -13,7 +13,7 @@ public class SQDBEngine extends DBEngine {
 	
 	public SQDBEngine() {
 		this.tname1 = "sq_table"; // name of table in charge; 
-		this.column1_1 = "keyword";
+		this.column1_1 = "keywords";
 		this.column1_2 = "label";
 	}
 	
@@ -28,29 +28,34 @@ public class SQDBEngine extends DBEngine {
 		text = text.toLowerCase();
 		
 		Connection connection = super.getConnection();
-		String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE " + text + " LIKE '%" + column1_1 + "%' ";		
+//		String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
+		String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
+		System.out.print(statement);
+		
 		PreparedStatement stmt = connection.prepareStatement(statement);
 		
 		ResultSet rs = null;
 		try {
 			rs = stmt.executeQuery();			
-			if (rs.next()) {
+			if (rs.next()) {				
 				reply = rs.getString(1);
 			}
+			System.out.print(reply);
 		}catch(Exception e) {
+			System.out.println("---------- inside search ---------- ");
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}finally {	
 			rs.close();
 			stmt.close();
-			connection.close();
-			//return -1; // Exception in executing query; 
+			connection.close(); 
 		}
-		
+		System.out.print(reply);
 		if(reply != null) {
+			System.out.print(reply);
 			return reply;
 		}else {
 			throw new Exception("NOT FOUND");	
-			//return -2; // Exception "Not found"; 
 		}
 		
 	}

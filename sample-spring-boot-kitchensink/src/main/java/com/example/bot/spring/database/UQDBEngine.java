@@ -12,14 +12,14 @@ public class UQDBEngine extends DBEngine {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public string uqQuery(String userId, TextMessageContent text) {
-		Connection connection = getConnection();
+	public String uqQuery(String userId, String text) {
+		//Connection connection = getConnection();
 		//insert into the unanswered question table to store the question
-		PreparedStatement stmt = connection.prepareStatement(
-				"insert into table ###### values ######");
+		//PreparedStatement stmt = connection.prepareStatement(
+				//"insert into table ###### values ######");
 
-		stmt.close();
-		connection.close();
+		//stmt.close();
+		//connection.close();
 		
 		return "Sorry, I can't answer your question. My colleague will follow up with you.";
 	}

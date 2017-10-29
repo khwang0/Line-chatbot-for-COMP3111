@@ -114,7 +114,7 @@ public class KitchenSinkController {
         
         // call text processor; 
 
-        this.replyText(replyToken, itscLOGIN + " says " + reply);
+        this.replyText(replyToken + " says ",  reply);
     }
         
         
