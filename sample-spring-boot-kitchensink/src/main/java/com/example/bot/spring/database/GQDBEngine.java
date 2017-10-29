@@ -11,7 +11,7 @@ public class GQDBEngine extends DBEngine {
 		
 	}
 	
-	private String getTourID(String userID,String Text) {
+	public String getTourID(String userID,String Text) {
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -52,12 +52,12 @@ public class GQDBEngine extends DBEngine {
 		connection.close();
 		return TourID;
 	}
-	
-	public String gqQuery(String userID,String Text) {
+
+	@Override
+	public String query(String userID,String Text,String TourID) {
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
-		String TourID=getTourID();
 		String answer="";
 		if(Text.toLowerCase().contains("how long") || 
 		   Text.toLowerCase().contains("how much time") ||
@@ -88,6 +88,13 @@ public class GQDBEngine extends DBEngine {
 		}
 		return answer;
 	}
-
+	public String update(String UserID,String TourID) {
+		Connection connection = getConnection();
+		PreparedStatement stmt;
+		ResultSet rs;
+		stmt = connection.prepareStatement(
+				"UPDATE line_user_info SET tourids = ? WHERE userid = ?");
+		stmt.setString(1, TourID, UserID);
+	}
 	
 }
