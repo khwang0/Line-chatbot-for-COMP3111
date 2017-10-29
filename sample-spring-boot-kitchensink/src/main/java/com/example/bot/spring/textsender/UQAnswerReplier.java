@@ -8,7 +8,7 @@ public class UQAnswerReplier{
 		// TODO Auto-generated constructor stub
 	}
 
-	public int replyUnansweredQuestion(Message msg, String id) {
+	public String replyUnansweredQuestion(Message msg, String id) {
 		return 0;
 	}
 }

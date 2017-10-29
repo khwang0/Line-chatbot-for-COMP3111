@@ -1,5 +1,7 @@
 package com.example.bot.spring.textsender;
 
+import com.example.bot.spring.database;
+
 public class UQAutomateSender implements TextSender {
 
 	public UQAutomateSender() {
@@ -9,6 +11,7 @@ public class UQAutomateSender implements TextSender {
 	@Override
 	public String process(String userId, String msg) {
 		// TODO Auto-generated method stub
-		return null;
+		UQDBEngine searchEngine = new UQDBEngine();
+		return searchEngine.uqQuery(userId, msg);
 	}
 }
