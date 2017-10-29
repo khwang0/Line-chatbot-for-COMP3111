@@ -106,13 +106,18 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
-    	String reply = null;
-
+    	String reply = null;        
+        String userId = event.getSource().getUserId();          
         log.info("Got text message from {}: {}", replyToken, text);
         
-        String userId = event.getSource().getUserId();          
-        
-        // call text processor; 
+        // TEST: text processor;       
+       try {
+			reply = this.processor.processText(userId, text);
+			
+		} catch (Exception e) {
+			System.out.println("---------- inside handleTextContent ---------- ");
+			System.err.println(e.getMessage());
+		}
 
         this.replyText(replyToken + " says ",  reply);
     }
