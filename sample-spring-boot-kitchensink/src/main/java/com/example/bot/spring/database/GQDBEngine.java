@@ -23,7 +23,7 @@ public class GQDBEngine extends DBEngine {
 		String TourID = rs.getString(1);
 		rs.close();
 		stmt.close();
-		stmt = connnection.prepareStatement(
+		stmt = connection.prepareStatement(
 			"SELECT tour_name,tourid FROM tour_info");
 		rs=stmt.executeQuery();
 		String tourname;
@@ -84,7 +84,7 @@ public class GQDBEngine extends DBEngine {
 			while(rs.next()) {
 				answer+="\n   "+rs.getString(1);
 			}
-			answer+=".\n"
+			answer+=".\n";
 		}
 		return answer;
 	}
