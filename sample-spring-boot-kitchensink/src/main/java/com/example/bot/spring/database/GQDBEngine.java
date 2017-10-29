@@ -11,7 +11,7 @@ public class GQDBEngine extends DBEngine {
 		
 	}
 	
-	public String getTourID(String userID,String Text) {
+	public String getTourID(String userID,String Text)throw Exception {
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -53,8 +53,7 @@ public class GQDBEngine extends DBEngine {
 		return TourID;
 	}
 
-	@Override
-	public String query(String userID,String Text,String TourID) {
+	public String query(String userID,String Text,String TourID) throw Exception{
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -88,13 +87,17 @@ public class GQDBEngine extends DBEngine {
 		}
 		return answer;
 	}
-	public String update(String UserID,String TourID) {
+	public String update(String UserID,String TourID) throw Exception{
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
 		stmt = connection.prepareStatement(
 				"UPDATE line_user_info SET tourids = ? WHERE userid = ?");
-		stmt.setString(1, TourID, UserID);
+		stmt.setString(1, TourID);
+		stmt.setString(2, UserID);
+		stmt.executeUpdate();
+		stmt.close();
+		connection.close();
 	}
 	
 }
