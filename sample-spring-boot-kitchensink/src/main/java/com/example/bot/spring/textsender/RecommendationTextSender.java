@@ -10,7 +10,7 @@ public class RecommendationTextSender implements TextSender {
 	}
 
 	@Override
-	public String process(String userId, String msg) {
+	public String process(String userId, String msg) throws Exception {
 		// TODO Auto-generated method stub
 		RecommendationDBEngine searchEngine = new RecommendationDBEngine();
 		//assume the features are 1.hotel, 2.spring, 3.view
@@ -27,7 +27,10 @@ public class RecommendationTextSender implements TextSender {
 		if (msg.contains("food")){
 			featureList.add("food");
 		}
-		return searchEngine.recommendationQuery(userId, featureList);
+		String reply = searchEngine.recommendationQuery(userId, featureList);
+		if(reply == null)
+			throw new Exception("No matching");
+		return reply;
 	}
 	
 }
