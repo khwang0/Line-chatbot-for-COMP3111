@@ -23,6 +23,9 @@ public class RecommendationTextSender implements TextSender {
 		if (msg.contains("view")||msg.contains("sight")){
 			featureList.add("view");
 		}
+		if (msg.contains("food")){
+			featureList.add("food");
+		}
 		return searchEngine.recommendationQuery(userId, featureList);
 	}
 	
