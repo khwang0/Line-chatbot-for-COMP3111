@@ -10,14 +10,13 @@ public class GQTextSender implements TextSender {
 	}
 
 	@Override
-	public String process(String userID, String msg) {
-		try{
-			String TourID= DBE.getTourID(userID,msg);
+	public String process(String userID, String msg) throws Exception{
+			String TourID=DBE.getTourID(userID,msg);
 			DBE.update(userID,TourID);
-			
-			return DBE.query(userID,msg,TourID);
-		}catch(Exception e) {
-			return null;
-		}
+			String reply =DBE.query(userID,msg,TourID);
+			if(reply.equals(null)||reply.equals(""))
+				throw new Exception("No matching");
+			else
+				return reply;
 	}
 }

@@ -47,7 +47,7 @@ public class RecommendationDBEngine extends DBEngine {
 			}
 			
 			stmt=connection.prepareStatement(
-					"update line_user_info set TourIDs ='"+idList+"'where UserID="+userId+";"
+					"update line_user_info set TourIDs ='"+idList+"'where UserID='"+userId+"';"
 			);
 			stmt.executeUpdate();
 			
