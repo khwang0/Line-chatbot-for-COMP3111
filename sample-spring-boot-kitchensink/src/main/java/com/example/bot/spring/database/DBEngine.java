@@ -50,8 +50,7 @@ public class DBEngine {
 		try{
 			stmt = connection.prepareStatement(
 					"SELECT "+entryName+" FROM line_user_info WHERE userid = ?");
-			stmt.setString(1, entryName);
-			stmt.setString(2, userID);
+			stmt.setString(1, userID);
 			rs=stmt.executeQuery();
 		}catch(Exception e){
 			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
