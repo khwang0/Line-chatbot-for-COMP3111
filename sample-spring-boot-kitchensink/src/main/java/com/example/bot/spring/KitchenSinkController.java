@@ -1,318 +1,351 @@
-/*
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
+package com.example.bot.spring.textsender;
 
-package com.example.bot.spring;
+import java.util.LinkedList;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
-import com.linecorp.bot.model.profile.UserProfileResponse;
+import com.example.bot.spring.database.BookingDBEngine;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.example.bot.spring.database.DBEngine;
-import com.google.common.io.ByteStreams;
-
-import com.linecorp.bot.client.LineMessagingClient;
-import com.linecorp.bot.client.MessageContentResponse;
-import com.linecorp.bot.model.ReplyMessage;
-import com.linecorp.bot.model.action.MessageAction;
-import com.linecorp.bot.model.action.PostbackAction;
-import com.linecorp.bot.model.action.URIAction;
-import com.linecorp.bot.model.event.BeaconEvent;
-import com.linecorp.bot.model.event.Event;
-import com.linecorp.bot.model.event.FollowEvent;
-import com.linecorp.bot.model.event.JoinEvent;
-import com.linecorp.bot.model.event.MessageEvent;
-import com.linecorp.bot.model.event.PostbackEvent;
-import com.linecorp.bot.model.event.UnfollowEvent;
-import com.linecorp.bot.model.event.message.AudioMessageContent;
-import com.linecorp.bot.model.event.message.ImageMessageContent;
-import com.linecorp.bot.model.event.message.LocationMessageContent;
-import com.linecorp.bot.model.event.message.StickerMessageContent;
-import com.linecorp.bot.model.event.message.TextMessageContent;
-import com.linecorp.bot.model.event.source.GroupSource;
-import com.linecorp.bot.model.event.source.RoomSource;
-import com.linecorp.bot.model.event.source.Source;
-import com.linecorp.bot.model.message.AudioMessage;
-import com.linecorp.bot.model.message.ImageMessage;
-import com.linecorp.bot.model.message.ImagemapMessage;
-import com.linecorp.bot.model.message.LocationMessage;
-import com.linecorp.bot.model.message.Message;
-import com.linecorp.bot.model.message.StickerMessage;
-import com.linecorp.bot.model.message.TemplateMessage;
-import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.message.imagemap.ImagemapArea;
-import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
-import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
-import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
-import com.linecorp.bot.model.message.template.ButtonsTemplate;
-import com.linecorp.bot.model.message.template.CarouselColumn;
-import com.linecorp.bot.model.message.template.CarouselTemplate;
-import com.linecorp.bot.model.message.template.ConfirmTemplate;
-import com.linecorp.bot.model.response.BotApiResponse;
-import com.linecorp.bot.spring.boot.annotation.EventMapping;
-import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
-
-import lombok.NonNull;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URI;
-
 @Slf4j
-@LineMessageHandler
-public class KitchenSinkController {
+public class BookingTextSender implements TextSender {
 	
+	private BookingDBEngine bookingDB;
 
-
-	@Autowired
-	private LineMessagingClient lineMessagingClient;
-
-	@EventMapping
-	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
-		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		log.info("This is your entry point:");
-		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		TextMessageContent message = event.getMessage();
-		
+	public BookingTextSender() {
+		// TODO Auto-generated constructor stub
+		bookingDB = new BookingDBEngine();
 	}
 	
-	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
-            throws Exception {
-        String text = content.getText();
-    	String reply = null;        
-        String userId = event.getSource().getUserId();          
-        log.info("Got text message from {}: {}", replyToken, text);
-        
-        // TEST: text processor;       
-       try {
-			reply = this.processor.processText(userId, text);
+
+	@Override
+	/** The major processing function
+	 * @param userId
+	 * @param msg
+	 * @return
+	 */
+	public String process(String userId, String msg) throws Exception {
+		bookingDB.openConnection();
+		String status = null;
+		try {
+			status = bookingDB.getStatus(userId);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String reply = null;
+		switch(status) {
+			case "new":{
+				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")||
+						msg.toLowerCase().contains("good")) {
+					bookingDB.setStatus("date",userId);
+					reply = getInfoQuestion("date");
+				}else {
+					bookingDB.setStatus("default",userId);
+					reply = defaultCaseHandler(userId,msg);
+				}
+				break;
+			}
 			
-		} catch (Exception e) {
-			System.out.println("---------- inside handleTextContent ---------- ");
-			System.err.println(e.getMessage());
+			// Status name: asking for user's actual name
+			case "name":{
+				bookingDB.createNewBooking(userId, msg);
+				break;
+			}
+			
+			// Status date: asking for the desired departing date
+			case "date":{
+				String[] s = msg.split("/");
+				if(s.length != 2) {
+					reply = "Invalid date format. Please enter in (DD/MM) format.";
+					break;
+				}
+				int dd,mm;
+				try {
+					dd = Integer.parseInt(s[0]);
+					mm = Integer.parseInt(s[1]);
+				}catch(NumberFormatException e){
+					reply = "Invalid date format. Please enter in (DD/MM) format.";
+					break;
+				}
+				String tourId = bookingDB.getTourIds(userId)[0];
+				String dates = bookingDB.getAllDates(tourId);
+				String date = Integer.toString(mm)+Integer.toString(dd);
+				if(dates.contains(date)) {
+					bookingDB.recordDate(userId,dd,mm);
+					reply = getInfoQuestion("adult");
+					bookingDB.setStatus("adult", userId);
+				}else {
+					reply = "Invalid date. Please enter a valid date.";
+				}
+				break;
+			}
+			
+			// Status adult; asking for number of adults
+			case "adult":{
+				if(detectCancel(msg)) {
+					this.stopCurrentBooking(userId);
+					break;
+				}
+				try {
+					int i = Integer.parseInt(msg);
+					bookingDB.recordAdults(userId,i);
+				}catch(NumberFormatException e) {
+					reply = "Invalid number of adults. Please enter again.";
+					break;
+				}
+				reply = getInfoQuestion("children");
+				bookingDB.setStatus("children",userId);
+				break;
+			}
+			
+			// Status children: asking for number of children (Age 4 to 11)
+			case "children":{
+				if(detectCancel(msg)) {
+					this.stopCurrentBooking(userId);
+					break;
+				}
+				try {
+					int i = Integer.parseInt(msg);
+					bookingDB.recordChildren(userId,i);
+				}catch(Exception e) {
+					reply = "Invalid number of children (Age 4 to 11). Please enter again.";
+					break;
+				}
+				reply = getInfoQuestion("toddler");
+				bookingDB.setStatus("toddler",userId);
+				break;
+			}
+			
+			//Status toddler: asking for number of children (Age 0 to 3)
+			case "toddler":{
+				if(detectCancel(msg)) {
+					this.stopCurrentBooking(userId);
+					break;
+				}
+				try {
+					int i = Integer.parseInt(msg);
+					bookingDB.recordToddler(userId,i);
+				}catch(Exception e) {
+					reply = "Invalid number of children (Age 0 to 3). Please enter again.";
+					break;
+				}
+				reply = getInfoQuestion("phone");
+				bookingDB.setStatus("phone",userId);
+				break;
+			}
+			
+			//Status phone: asking for phone number
+			case "phone" :{
+				if(detectCancel(msg)) {
+					this.stopCurrentBooking(userId);
+					break;
+				}
+				try {
+					int i = Integer.parseInt(msg);
+					bookingDB.recordPhone(userId,i);
+				}catch(Exception e) {
+					reply = "Invalid phone number. Please enter again.";
+					break;
+				}
+				reply = getTotalPrice(userId);
+				break;
+			}
+			
+			// Status confirm: last step before everything finished
+			case "confirm" :{
+				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")
+						||msg.toLowerCase().contains("good")) {
+					bookingDB.setStatus("default",userId);
+					reply = "Thank you. Please pay the tour fee by ATM to "
+							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
+							+ "When you complete the ATM payment, please send the bank "
+							+ "in slip to us. Our staff will validate it.";
+				}else {
+					reply = stopCurrentBooking(userId);
+				}
+				break;
+			}
+			case "default":{
+				reply = defaultCaseHandler(userId,msg);
+				break;
+			}
+			default:{
+				//log.info("Illegal status for user id: {}. ", userId);
+				reply = defaultCaseHandler(userId,msg);
+			}
 		}
-
-        this.replyText(replyToken,  reply);
-    }
-        
-        
-	@EventMapping
-	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
-		handleSticker(event.getReplyToken(), event.getMessage());
-	}
-
-	@EventMapping
-	public void handleLocationMessageEvent(MessageEvent<LocationMessageContent> event) {
-		LocationMessageContent locationMessage = event.getMessage();
-		reply(event.getReplyToken(), new LocationMessage(locationMessage.getTitle(), locationMessage.getAddress(),
-				locationMessage.getLatitude(), locationMessage.getLongitude()));
-	}
-
-	@EventMapping
-	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
-		final MessageContentResponse response;
-		String replyToken = event.getReplyToken();
-		String messageId = event.getMessage().getId();
-		try {
-			response = lineMessagingClient.getMessageContent(messageId).get();
-		} catch (InterruptedException | ExecutionException e) {
-			reply(replyToken, new TextMessage("Cannot get image: " + e.getMessage()));
-			throw new RuntimeException(e);
+		bookingDB.close();
+		if(reply.equals(null)) {
+			throw new Exception("CANNOT ANSWER");
 		}
-		DownloadedContent jpg = saveContent("jpg", response);
-		reply(((MessageEvent) event).getReplyToken(), new ImageMessage(jpg.getUri(), jpg.getUri()));
-
+		return reply;
 	}
-
-	@EventMapping
-	public void handleAudioMessageEvent(MessageEvent<AudioMessageContent> event) throws IOException {
-		final MessageContentResponse response;
-		String replyToken = event.getReplyToken();
-		String messageId = event.getMessage().getId();
-		try {
-			response = lineMessagingClient.getMessageContent(messageId).get();
-		} catch (InterruptedException | ExecutionException e) {
-			reply(replyToken, new TextMessage("Cannot get image: " + e.getMessage()));
-			throw new RuntimeException(e);
-		}
-		DownloadedContent mp4 = saveContent("mp4", response);
-		reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));
-	}
-
-	@EventMapping
-	public void handleUnfollowEvent(UnfollowEvent event) {
-		log.info("unfollowed this bot: {}", event);
-	}
-
-	@EventMapping
-	public void handleFollowEvent(FollowEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got followed event");
-	}
-
-	@EventMapping
-	public void handleJoinEvent(JoinEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Joined " + event.getSource());
-	}
-
-	@EventMapping
-	public void handlePostbackEvent(PostbackEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got postback " + event.getPostbackContent().getData());
-	}
-
-	@EventMapping
-	public void handleBeaconEvent(BeaconEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got beacon message " + event.getBeacon().getHwid());
-	}
-
-	@EventMapping
-	public void handleOtherEvent(Event event) {
-		log.info("Received message(Ignored): {}", event);
-	}
-
-	private void reply(@NonNull String replyToken, @NonNull Message message) {
-		reply(replyToken, Collections.singletonList(message));
-	}
-
-	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
-		try {
-			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
-			log.info("Sent messages: {}", apiResponse);
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private void replyText(@NonNull String replyToken, @NonNull String message) {
-		if (replyToken.isEmpty()) {
-			throw new IllegalArgumentException("replyToken must not be empty");
-		}
-		if (message.length() > 1000) {
-			message = message.substring(0, 1000 - 2) + "..";
-		}
-		this.reply(replyToken, new TextMessage(message));
-	}
-
-
-	private void handleSticker(String replyToken, StickerMessageContent content) {
-		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
-	}
-
-
-	static String createUri(String path) {
-		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
-	}
-
-	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
-	}
-
-	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
-		log.info("Got content-type: {}", responseBody);
-
-		DownloadedContent tempFile = createTempFile(ext);
-		try (OutputStream outputStream = Files.newOutputStream(tempFile.path)) {
-			ByteStreams.copy(responseBody.getStream(), outputStream);
-			log.info("Saved {}: {}", ext, tempFile);
-			return tempFile;
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
-
-	private static DownloadedContent createTempFile(String ext) {
-		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
-		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
-		tempFile.toFile().deleteOnExit();
-		return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
-	}
-
-
 	
 
-
-	public KitchenSinkController() {
-		processor = new TextProcessor();
+	/** determine if a message has the potential to cancel
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	private boolean detectCancel(String msg) {
+		String[] negativeFlags = {"don't", "cancel", "stop", "remove", "quit", "sorry"};
+		for(int i = 1; i < negativeFlags.length; i++) {
+			if(msg.toLowerCase().contains(negativeFlags[i])) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	private TextProcessor processor;
-	
-	
-	
-	//The annontation @Value is from the package lombok.Value
-	//Basically what it does is to generate constructor and getter for the class below
-	//See https://projectlombok.org/features/Value
-	@Value
-	public static class DownloadedContent {
-		Path path;
-		String uri;
+	/** stop the current booking request of one user
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private String stopCurrentBooking(String userId) {
+		bookingDB.setStatus("default",userId);
+		bookingDB.removeBooking(userId);
+		return "You just stopped your booking request. Please start a new booking request if you want.";
 	}
 
-	//an inner class that gets the user profile and status message
-	class ProfileGetter implements BiConsumer<UserProfileResponse, Throwable> {
-		private KitchenSinkController ksc;
-		private String replyToken;
+	/** handle a question if the user is not in the booking flow
+	 * 
+	 * @param userId
+	 * @param msg
+	 * @return
+	 */
+	private String defaultCaseHandler(String userId, String msg) {
+		// If he specifies the tour ID
+		LinkedList<String> tourIds = bookingDB.getAllTourIds();
+		String reply = null;
+		for(int i = 0; i < tourIds.size(); i++) {
+			if(msg.contains(tourIds.get(i))) {
+				reply = this.getConfirmation(tourIds.get(i));
+				return reply;
+			}
+		}
+		// If he specifies the number of the tour
+		String[] candiTours = bookingDB.getTourIds(userId);
+		String[] orders = {"first", "second", "third", "fourth", "fifth", "seventh", "eighth", "ninth", "tenth", "eleventh"};
+		String[] numbers = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
+		String[] engNumbers = {"one", "two", "three", "four", "five", "six", "seven" ,"eight", "nine", "ten", "eleven"};
+		String[] s = msg.split("\\s");
+		for(int i = 0; i < s.length; i++) {
+			for(int j = 0; j < candiTours.length; j++) {
+				if(s[i].toLowerCase().equals(orders[j])) {
+					reply = this.getConfirmation(tourIds.get(j));
+					return reply;
+				}else if(s[i].toLowerCase().equals(numbers[j])) {
+					reply = this.getConfirmation(tourIds.get(j));
+					return reply;
+				}else if(s[i].toLowerCase().equals(engNumbers[j])) {
+					reply = this.getConfirmation(tourIds.get(j));
+					return reply;
+				}
+			}
+		}
 		
-		public ProfileGetter(KitchenSinkController ksc, String replyToken) {
-			this.ksc = ksc;
-			this.replyToken = replyToken;
+		// If he specifies the name of the tour
+		LinkedList<String> tourNames = bookingDB.getAllTourNames();
+		for(int i = 0; i < tourNames.size(); i++) {
+			String[] t = tourNames.get(i).split("\\s|-");
+			for(int j = 0; j < t.length; j++) {
+				if(!msg.contains(t[j])) {
+					break;
+				}else if(j == t.length-1) {
+					String tourId = bookingDB.findTourId(tourNames.get(i));
+					reply = this.getConfirmation(tourId);
+				}
+			}
 		}
-		@Override
-    	public void accept(UserProfileResponse profile, Throwable throwable) {
-    		if (throwable != null) {
-            	ksc.replyText(replyToken, throwable.getMessage());
-            	return;
-        	}
-        	ksc.reply(
-                	replyToken,
-                	Arrays.asList(new TextMessage(
-                		"Display name: " + profile.getDisplayName()),
-                              	new TextMessage("Status message: "
-                            		  + profile.getStatusMessage()))
-        	);
-    	}
-    }
+		return reply;
+	}
+
+	/** calculate the total price of the current booking request for one user
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	private String getTotalPrice(String userId) {
+		int adult = bookingDB.getAdult(userId);
+		int toodler = bookingDB.getToddler(userId);
+		int children = bookingDB.getChildren(userId);
+		String tourId = bookingDB.getTourJoined(userId);
+		int quota = bookingDB.getQuota(tourId);
+		if(quota < (adult+toodler+children)) {
+			String reply = String.format("We only have a quota of %d left for tour %s. "
+					+ "Please change to another tour. Sorry", quota, tourId);
+			bookingDB.setStatus("default",userId);
+			bookingDB.removeBooking(userId);
+			return reply;
+		}else {
+			double price = bookingDB.getPrice(tourId);
+			double totalPrice = price*adult+price*0.8*children;
+			String reply = String.format("Total price is %f, confirm? "
+					+ "Please notice that there will be no refund for "
+					+ "cancellation due to personal reasons.", totalPrice);
+			bookingDB.setStatus("confirm",userId);
+			return reply;
+		}
+	}
 	
-	
+	/** Get the confirmation message of one tour before start a booking request
+	 * 
+	 * @param tourId
+	 * @return
+	 */
+	private String getConfirmation(String tourId) {
+		LinkedList<String> tourInfo = bookingDB.getTourInfos(tourId);
+		String dates = bookingDB.getAllDates(tourId);
+		StringBuilder sb = new StringBuilder();
+		sb.append(tourId+" "+tourInfo.get(0));
+		sb.append(":"+tourInfo.get(1)+".\n");
+		sb.append("We have tours on ");
+		String[] allDates = dates.split(",");
+		for(int i = 0; i < allDates.length; i++) {
+			if(i == allDates.length-1 && i != 0)
+				sb.append(" and ");
+			else if(i != 0)
+				sb.append(", ");
+			sb.append(allDates[i].substring(2)+"//"+allDates[i].substring(0,2));
+		}
+		sb.append(" still available for booking.\n");
+		sb.append("The fee for this tour is: Weekday: ");
+		sb.append(tourInfo.get(2));
+		sb.append(" / Weekend: ");
+		sb.append(tourInfo.get(3)).append("\n");
+		sb.append("Do you want to book this one?");
+		return sb.toString();
+	}
+
+
+	/** Return next question according to the current status
+	 * 
+	 * @param nextQ
+	 * @return
+	 */
+	private String getInfoQuestion(String nextQ) {
+		switch(nextQ) {
+			case "name": {
+				return "Your name please (Firstname LASTNAME)";
+			}
+			case "date": {
+				return "On which date you are going? (in DD/MM format)";
+			}
+			case "adult":{
+				return "How many adults?";
+			}
+			case "children":{
+				return "How many children (Age 4 to 11)?";
+			}
+			case "toddler":{
+				return "How many children (Age 0 to 3)?";
+			}
+			case "phone":{
+				return "Your phone number please.";
+			}
+		}
+		return null;
+	}
 
 }

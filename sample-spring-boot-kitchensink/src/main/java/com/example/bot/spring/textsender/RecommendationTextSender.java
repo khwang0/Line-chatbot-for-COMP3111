@@ -1,6 +1,7 @@
 package com.example.bot.spring.textsender;
 
 import java.util.ArrayList;
+import com.example.bot.spring.database.*;
 
 public class RecommendationTextSender implements TextSender {
 
@@ -13,7 +14,7 @@ public class RecommendationTextSender implements TextSender {
 		// TODO Auto-generated method stub
 		RecommendationDBEngine searchEngine = new RecommendationDBEngine();
 		//assume the features are 1.hotel, 2.spring, 3.view
-		ArrayList<String> featureList = new ArrayList();
+		ArrayList<String> featureList = new ArrayList<String>();
 		if (msg.contains("hotel")){
 			featureList.add("hotel");
 		}

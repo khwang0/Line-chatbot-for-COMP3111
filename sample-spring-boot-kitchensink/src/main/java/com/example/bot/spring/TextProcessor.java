@@ -23,25 +23,25 @@ public class TextProcessor {
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
 				reply += rsender.process(userId, text);
-				DBE.update(userId,"categorization","reco");
+				DBE.updateLineUserInfo(userId,"categorization","reco");
 				return reply;
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
 				GQTextSender gqsender = new GQTextSender;
 				reply += gqsender.process(userId, text);
-				DBE.update(userId,"categorization", "gq");
+				DBE.updateLineUserInfo(userId,"categorization", "gq");
 				return reply;
 			}
 
 			if(text.toLowerCase().contains("book")) {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);
-				DBE.update(userId,"categorization","book");
+				DBE.updateLineUserInfo(userId,"categorization","book");
 				return reply;
 			}
 			
-			tag=DBE.get(userId,"categorization");
+			tag=DBE.getLineUserInfo(userId,"categorization");
 			switch(tag) {
 			case "reco":
 				RecommendationTextSender rsender = new RecommendationTextSender();
@@ -69,11 +69,11 @@ public class TextProcessor {
 	}
 
 	public String processText(String userId, String text) throws Exception{
+		DBE.updateLineUserInfo(userId,"lastq",text);
 		if (text=null) {
 			throw Exception("no input");
 		}
-		DBE.update(userId,"lastq",text);
 		String reply=classifyText(userID,text);
-		DBE.update(userId,"lasta",reply);
+		DBE.updateLineUserInfo(userId,"lasta",reply);
 	}
 }
