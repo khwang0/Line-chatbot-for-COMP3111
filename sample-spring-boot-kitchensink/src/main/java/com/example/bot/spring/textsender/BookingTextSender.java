@@ -1,5 +1,7 @@
 package com.example.bot.spring.textsender;
 
+import java.util.LinkedList;
+
 import com.example.bot.spring.database.BookingDBEngine;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +16,27 @@ public class BookingTextSender implements TextSender {
 		bookingDB = new BookingDBEngine();
 	}
 	
+
 	@Override
-	public String process(String userId, String msg) {
+	/** The major processing function
+	 * @param userId
+	 * @param msg
+	 * @return
+	 */
+	public String process(String userId, String msg) throws Exception {
 		bookingDB.openConnection();
-		String status = bookingDB.getStatus(userId);
+		String status = null;
+		try {
+			status = bookingDB.getStatus(userId);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		String reply = null;
 		switch(status) {
 			case "new":{
-				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yea")) {
+				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")||
+						msg.toLowerCase().contains("good")) {
 					bookingDB.setStatus("date",userId);
 					reply = getInfoQuestion("date");
 				}else {
@@ -33,20 +48,12 @@ public class BookingTextSender implements TextSender {
 			
 			// Status name: asking for user's actual name
 			case "name":{
-				if(detectCancel(msg)) {
-					this.stopCurrentBooking(userId);
-					break;
-				}
 				bookingDB.createNewBooking(userId, msg);
 				break;
 			}
 			
 			// Status date: asking for the desired departing date
 			case "date":{
-				if(detectCancel(msg)) {
-					this.stopCurrentBooking(userId);
-					break;
-				}
 				String[] s = msg.split("/");
 				if(s.length != 2) {
 					reply = "Invalid date format. Please enter in (DD/MM) format.";
@@ -60,8 +67,10 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid date format. Please enter in (DD/MM) format.";
 					break;
 				}
-				boolean valid = bookingDB.checkValidDate(dd,mm,userId);
-				if(valid) {
+				String tourId = bookingDB.getTourIds(userId)[0];
+				String dates = bookingDB.getAllDates(tourId);
+				String date = Integer.toString(mm)+Integer.toString(dd);
+				if(dates.contains(date)) {
 					bookingDB.recordDate(userId,dd,mm);
 					reply = getInfoQuestion("adult");
 					bookingDB.setStatus("adult", userId);
@@ -84,7 +93,6 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid number of adults. Please enter again.";
 					break;
 				}
-				String nextQ = bookingDB.findNextEmptyInfo(userId);
 				reply = getInfoQuestion("children");
 				bookingDB.setStatus("children",userId);
 				break;
@@ -145,7 +153,8 @@ public class BookingTextSender implements TextSender {
 			
 			// Status confirm: last step before everything finished
 			case "confirm" :{
-				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yea")) {
+				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")
+						||msg.toLowerCase().contains("good")) {
 					bookingDB.setStatus("default",userId);
 					reply = "Thank you. Please pay the tour fee by ATM to "
 							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
@@ -161,17 +170,24 @@ public class BookingTextSender implements TextSender {
 				break;
 			}
 			default:{
-				log.info("Illegal status for user id: {}. ", userId);
+				//log.info("Illegal status for user id: {}. ", userId);
 				reply = defaultCaseHandler(userId,msg);
 			}
 		}
 		bookingDB.close();
+		if(reply.equals(null)) {
+			throw new Exception("CANNOT ANSWER");
+		}
 		return reply;
 	}
 	
 
+	/** determine if a message has the potential to cancel
+	 * 
+	 * @param msg
+	 * @return
+	 */
 	private boolean detectCancel(String msg) {
-		// TODO Auto-generated method stub
 		String[] negativeFlags = {"don't", "cancel", "stop", "remove", "quit", "sorry"};
 		for(int i = 1; i < negativeFlags.length; i++) {
 			if(msg.toLowerCase().contains(negativeFlags[i])) {
@@ -181,21 +197,30 @@ public class BookingTextSender implements TextSender {
 		return false;
 	}
 
+	/** stop the current booking request of one user
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	private String stopCurrentBooking(String userId) {
-		// TODO Auto-generated method stub
 		bookingDB.setStatus("default",userId);
 		bookingDB.removeBooking(userId);
 		return "You just stopped your booking request. Please start a new booking request if you want.";
 	}
 
+	/** handle a question if the user is not in the booking flow
+	 * 
+	 * @param userId
+	 * @param msg
+	 * @return
+	 */
 	private String defaultCaseHandler(String userId, String msg) {
-		// TODO Auto-generated method stub
 		// If he specifies the tour ID
-		String[] tourIds = bookingDB.getAllTourIds();
+		LinkedList<String> tourIds = bookingDB.getAllTourIds();
 		String reply = null;
-		for(int i = 0; i < tourIds.length; i++) {
-			if(msg.contains(tourIds[i])) {
-				reply = this.getConfirmation(tourIds[i]);
+		for(int i = 0; i < tourIds.size(); i++) {
+			if(msg.contains(tourIds.get(i))) {
+				reply = this.getConfirmation(tourIds.get(i));
 				return reply;
 			}
 		}
@@ -208,27 +233,27 @@ public class BookingTextSender implements TextSender {
 		for(int i = 0; i < s.length; i++) {
 			for(int j = 0; j < candiTours.length; j++) {
 				if(s[i].toLowerCase().equals(orders[j])) {
-					reply = this.getConfirmation(tourIds[j]);
+					reply = this.getConfirmation(tourIds.get(j));
 					return reply;
 				}else if(s[i].toLowerCase().equals(numbers[j])) {
-					reply = this.getConfirmation(tourIds[j]);
+					reply = this.getConfirmation(tourIds.get(j));
 					return reply;
 				}else if(s[i].toLowerCase().equals(engNumbers[j])) {
-					reply = this.getConfirmation(tourIds[j]);
+					reply = this.getConfirmation(tourIds.get(j));
 					return reply;
 				}
 			}
 		}
 		
 		// If he specifies the name of the tour
-		String[] tourNames = bookingDB.getAllTourNames();
-		for(int i = 0; i < tourNames.length; i++) {
-			String[] t = tourNames[i].split("\\s|-");
+		LinkedList<String> tourNames = bookingDB.getAllTourNames();
+		for(int i = 0; i < tourNames.size(); i++) {
+			String[] t = tourNames.get(i).split("\\s|-");
 			for(int j = 0; j < t.length; j++) {
 				if(!msg.contains(t[j])) {
 					break;
 				}else if(j == t.length-1) {
-					String tourId = bookingDB.findTourId(tourNames[i]);
+					String tourId = bookingDB.findTourId(tourNames.get(i));
 					reply = this.getConfirmation(tourId);
 				}
 			}
@@ -236,8 +261,12 @@ public class BookingTextSender implements TextSender {
 		return reply;
 	}
 
+	/** calculate the total price of the current booking request for one user
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	private String getTotalPrice(String userId) {
-		// TODO Auto-generated method stub
 		int adult = bookingDB.getAdult(userId);
 		int toodler = bookingDB.getToddler(userId);
 		int children = bookingDB.getChildren(userId);
@@ -260,17 +289,45 @@ public class BookingTextSender implements TextSender {
 		}
 	}
 	
+	/** Get the confirmation message of one tour before start a booking request
+	 * 
+	 * @param tourId
+	 * @return
+	 */
 	private String getConfirmation(String tourId) {
-		// TODO Auto-generated method stub
-		return null;
+		LinkedList<String> tourInfo = bookingDB.getTourInfos(tourId);
+		String dates = bookingDB.getAllDates(tourId);
+		StringBuilder sb = new StringBuilder();
+		sb.append(tourId+" "+tourInfo.get(0));
+		sb.append(":"+tourInfo.get(1)+".\n");
+		sb.append("We have tours on ");
+		String[] allDates = dates.split(",");
+		for(int i = 0; i < allDates.length; i++) {
+			if(i == allDates.length-1 && i != 0)
+				sb.append(" and ");
+			else if(i != 0)
+				sb.append(", ");
+			sb.append(allDates[i].substring(2)+"//"+allDates[i].substring(0,2));
+		}
+		sb.append(" still available for booking.\n");
+		sb.append("The fee for this tour is: Weekday: ");
+		sb.append(tourInfo.get(2));
+		sb.append(" / Weekend: ");
+		sb.append(tourInfo.get(3)).append("\n");
+		sb.append("Do you want to book this one?");
+		return sb.toString();
 	}
 
 
+	/** Return next question according to the current status
+	 * 
+	 * @param nextQ
+	 * @return
+	 */
 	private String getInfoQuestion(String nextQ) {
-		// TODO Auto-generated method stub
 		switch(nextQ) {
 			case "name": {
-				return "Your name please (Fistname LASTNAME)";
+				return "Your name please (Firstname LASTNAME)";
 			}
 			case "date": {
 				return "On which date you are going? (in DD/MM format)";
