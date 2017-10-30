@@ -22,7 +22,7 @@ public class RecommendationDBEngine extends DBEngine {
 				ResultSet rs = null;
 				PreparedStatement stmt = connection.prepareStatement(
 					"select * from tour_features where "+text.get(i)+"=1");
-				String temp="Tours with good "+text.get(i)+" are:";
+				String temp="Tours with good "+text.get(i)+" : ";
 			
 				rs=stmt.executeQuery();
 				if (rs==null) {
@@ -45,7 +45,9 @@ public class RecommendationDBEngine extends DBEngine {
 		}
 		
 		PreparedStatement stmt=connection.prepareStatement(
-				"update line_user_info set TourIDs ='"+idList+"'where UserID="+userID+";");
+				"update line_user_info set TourIDs ='"+idList+"'where UserID="+userId+";"
+		);
+		
 		stmt.executeUpdate();
 
 		stmt.close();
