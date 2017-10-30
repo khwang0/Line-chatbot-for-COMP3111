@@ -13,7 +13,7 @@ public class SQTextSender implements TextSender {
 	@Override
 	public String process(String userId, String msg) throws Exception{
 		if(msg == null) {
-			throw Exception("unvalid input for SQTextSender.");
+			throw new Exception("unvalid input for SQTextSender.");
 		}
 		// TODO Auto-generated method stub
 		/* Label: greeting/ thanks/ goodbye */
@@ -51,7 +51,7 @@ public class SQTextSender implements TextSender {
 				return "have a nice day!";
 			}
 			default:{
-				throw Exception("Not a simple question");
+				throw new Exception("Not a simple question");
 			}
 		}			
 	}

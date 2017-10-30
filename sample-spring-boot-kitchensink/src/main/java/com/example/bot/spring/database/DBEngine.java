@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,7 +28,7 @@ public class DBEngine {
 				stmt.executeUpdate();
 				stmt.close();
 			}
-			else throw Exception("Wrong Command");
+			else throw new Exception("Wrong Command");
 		}
 		try {
 			stmt = connection.prepareStatement(
@@ -39,13 +37,13 @@ public class DBEngine {
 			stmt.setString(2, userID);
 			stmt.executeUpdate();
 		}catch(Exception e) {
-			throw Exception("Wrong Command");
+			throw new Exception("Wrong Command");
 		}
 		stmt.close();
 		connection.close();
 	}
 	
-	public String getLineUserInfo(String userID,String entryName) throw Exception{
+	public String getLineUserInfo(String userID,String entryName) throws Exception{
 		Connection connection= getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -55,10 +53,10 @@ public class DBEngine {
 			stmt.setString(1, entryName);
 			stmt.setString(2, userID);
 			rs=stmt.executeQuery();
-		}catch(Exception){
-			throw Exception("Wrong Command");
+		}catch(Exception e){
+			throw new Exception("Wrong Command");
 		}
-		if(!rs.next()) throw Exception("No such entry");
+		if(!rs.next()) throw new Exception("No such entry");
 		String tmp=rs.getString(1);
 		rs.close();
 		stmt.close();

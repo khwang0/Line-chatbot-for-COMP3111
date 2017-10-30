@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
-
 public class SQDBEngine extends DBEngine {
 	private String tname1; // name of table in charge; 
 	private String column1_1;

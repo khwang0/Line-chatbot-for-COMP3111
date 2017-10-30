@@ -220,7 +220,7 @@ public class BookingTextSender implements TextSender {
 		String reply = null;
 		for(int i = 0; i < tourIds.size(); i++) {
 			if(msg.contains(tourIds.get(i))) {
-				reply = this.getConfirmation(tourIds.get(i));
+				reply = this.getConfirmation(userId, tourIds.get(i));
 				return reply;
 			}
 		}
@@ -233,13 +233,13 @@ public class BookingTextSender implements TextSender {
 		for(int i = 0; i < s.length; i++) {
 			for(int j = 0; j < candiTours.length; j++) {
 				if(s[i].toLowerCase().equals(orders[j])) {
-					reply = this.getConfirmation(tourIds.get(j));
+					reply = this.getConfirmation(userId, tourIds.get(j));
 					return reply;
 				}else if(s[i].toLowerCase().equals(numbers[j])) {
-					reply = this.getConfirmation(tourIds.get(j));
+					reply = this.getConfirmation(userId, tourIds.get(j));
 					return reply;
 				}else if(s[i].toLowerCase().equals(engNumbers[j])) {
-					reply = this.getConfirmation(tourIds.get(j));
+					reply = this.getConfirmation(userId, tourIds.get(j));
 					return reply;
 				}
 			}
@@ -254,7 +254,7 @@ public class BookingTextSender implements TextSender {
 					break;
 				}else if(j == t.length-1) {
 					String tourId = bookingDB.findTourId(tourNames.get(i));
-					reply = this.getConfirmation(tourId);
+					reply = this.getConfirmation(userId, tourId);
 				}
 			}
 		}
@@ -294,7 +294,7 @@ public class BookingTextSender implements TextSender {
 	 * @param tourId
 	 * @return
 	 */
-	private String getConfirmation(String tourId) {
+	private String getConfirmation(String userId, String tourId) {
 		LinkedList<String> tourInfo = bookingDB.getTourInfos(tourId);
 		String dates = bookingDB.getAllDates(tourId);
 		StringBuilder sb = new StringBuilder();
@@ -315,6 +315,7 @@ public class BookingTextSender implements TextSender {
 		sb.append(" / Weekend: ");
 		sb.append(tourInfo.get(3)).append("\n");
 		sb.append("Do you want to book this one?");
+		bookingDB.setTourid(userId, tourId);
 		return sb.toString();
 	}
 

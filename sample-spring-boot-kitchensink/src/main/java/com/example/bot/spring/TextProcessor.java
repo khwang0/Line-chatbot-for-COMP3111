@@ -1,6 +1,6 @@
 package com.example.bot.spring;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.example.bot.spring.database.DBEngine;
 import com.example.bot.spring.textsender.*;
 
 public class TextProcessor {
@@ -28,7 +28,7 @@ public class TextProcessor {
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
-				GQTextSender gqsender = new GQTextSender;
+				GQTextSender gqsender = new GQTextSender();
 				reply += gqsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization", "gq");
 				return reply;
@@ -52,7 +52,7 @@ public class TextProcessor {
 				reply += bsender.process(userId, text);
 				break;
 			case "gq":
-				GQTextSender gqsender = new GQTextSender;
+				GQTextSender gqsender = new GQTextSender();
 				reply += gqsender.process(userId, text);
 				break;
 			default:
@@ -61,19 +61,20 @@ public class TextProcessor {
 			return reply;
 			
 		} catch (Exception e) {
-			// TODO: call unanswered question
+			UQAutomateSender uqSender = new UQAutomateSender();
+			reply = uqSender.process(userId, text);
+			return reply;
 		}
-		throw Exception("Still not return");
-		return null;
 
 	}
 
 	public String processText(String userId, String text) throws Exception{
 		DBE.updateLineUserInfo(userId,"lastq",text);
-		if (text=null) {
-			throw Exception("no input");
+		if (text==null) {
+			throw new Exception("no input");
 		}
-		String reply=classifyText(userID,text);
+		String reply=classifyText(userId,text);
 		DBE.updateLineUserInfo(userId,"lasta",reply);
+		return reply;
 	}
 }
