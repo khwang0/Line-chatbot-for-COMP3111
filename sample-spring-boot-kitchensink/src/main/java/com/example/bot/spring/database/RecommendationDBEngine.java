@@ -50,6 +50,7 @@ public class RecommendationDBEngine extends DBEngine {
 					"update line_user_info set TourIDs ='"+idList+"'where UserID="+userId+";"
 			);
 			stmt.executeUpdate();
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {

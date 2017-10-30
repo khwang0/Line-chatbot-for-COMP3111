@@ -7,8 +7,14 @@ import java.sql.ResultSet;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 
 public class GQDBEngine extends DBEngine {
+	private String tname1; // name of table in charge; 
+	private String column1_1;
+	private String column1_2;
+	
 	public GQDBEngine() {
-		
+		this.tname1 = "gq_table"; // name of table in charge; 
+		this.column1_1 = "pattern";
+		this.column1_2 = "answer";
 	}
 	
 	public String getTourID (String userID, String Text) throws Exception {
@@ -56,37 +62,73 @@ public class GQDBEngine extends DBEngine {
 		return TourID;
 	}
 
-	public String query(String userID,String Text,String TourID) throws Exception{
-		Connection connection = getConnection();
-		PreparedStatement stmt;
-		ResultSet rs;
-		String answer="";
-		if(Text.toLowerCase().contains("how long") || 
-		   Text.toLowerCase().contains("how much time") ||
-		   Text.toLowerCase().contains("duration") ) 
-		{
-			stmt = connection.prepareStatement(
-				"SELECT tour_name,duration FROM tour_info WHERE tourid = ?");
-			stmt.setString(1, TourID);
-			rs=stmt.executeQuery();
-			rs.next();
-			answer+= rs.getString(1) + " takes " + rs.getString(2) + " days.\n";
-			rs.close();
-			stmt.close();
-		}
-		if(Text.toLowerCase().contains("feature") ||
-		   Text.toLowerCase().contains("descri") ||
-		   Text.toLowerCase().contains("introdu"))
-		{
-			stmt = connection.prepareStatement(
-					"SELECT tour_short_description from tour_description WHERE tourid=?");
-			stmt.setString(1, TourID);
-			answer+= "These are what you can expect there:";
-			rs=stmt.executeQuery();
-			while(rs.next()) {
-				answer+="\n   "+rs.getString(1);
+	public String query(String userID,String Text,String TourID) throws Exception{		
+		/*TODO
+		 * 	check whether we need to add "\n" at the end of every line
+		 * */
+			Connection connection = getConnection();
+			PreparedStatement stmt = null;
+			String statement = null;
+			ResultSet rs = null;
+			String answer="";
+			
+		try {
+			// dynamic question
+			if(Text.toLowerCase().contains("how long") || 
+			   Text.toLowerCase().contains("how much time") ||
+			   Text.toLowerCase().contains("duration") ) 
+			{
+				stmt = connection.prepareStatement(
+					"SELECT tour_name,duration FROM tour_info WHERE tourid = ?");				
+				stmt.setString(1, TourID);
+				rs=stmt.executeQuery();
+								
+				if(rs.next()) {
+					answer+= rs.getString(1) + " takes " + rs.getString(2) + " days.\n";
+				}
 			}
-			answer+=".\n";
+			
+			else if(Text.toLowerCase().contains("feature") ||
+			   Text.toLowerCase().contains("descri") ||
+			   Text.toLowerCase().contains("introdu"))
+			{
+				stmt = connection.prepareStatement(
+						"SELECT tour_short_description from tour_description WHERE tourid=?");
+				stmt.setString(1, TourID);				
+				rs=stmt.executeQuery();
+				
+				if(rs.next()) {
+					answer+= "These are what you can expect there:";
+					answer+="\n   "+rs.getString(1);
+					answer+=".\n";
+				}
+				
+			}
+			
+			else {
+				// static answer question
+				statement = "SELECT " + column1_2 + " FROM " + tname1 + " WHERE \'" Text + "\' SIMILAR TO " + column1_1;
+				//System.out.print(statement);
+				stmt = connection.prepareStatement(statement);
+				rs=stmt.executeQuery();
+				
+				if(rs.next()) {
+					answer+="\n   "+rs.getString(1);
+					answer+=".\n"; 
+				}
+			}
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}finally {
+			//rs.close();
+			//stmt.close();
+			try {
+				if (rs.next()) rs.close();
+				if (stmt != null) stmt.close();
+				if (connection != null) connection.close();
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
 		}
 		return answer;
 	}
