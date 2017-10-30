@@ -22,7 +22,7 @@ public class DBEngine {
 		Connection connection= getConnection();
 		PreparedStatement stmt;
 		try {
-			get()
+			getLineUserInfo(userID,entryName);
 		}catch(Exception e) {
 			if(e.getMessage().equals("No such entry")) {
 				stmt=connection.prepareStatement("INSERT INTO line_user_info VALUES ( ? ,'','','','','','')");
