@@ -18,49 +18,54 @@ public class DBEngine {
 		
 	}
 	
-	public String query(String text) throws Exception {
-		//Write your code here
-		Connection connection = getConnection();
-		PreparedStatement stmt = connection.prepareStatement(
-				"SELECT * FROM keyResponse");
-		//stmt.setString(1, "vin");
-		ResultSet rs = null;
+	public void update(String userID,String entryName,String value) throws Exception{
+		Connection connection= getConnection();
+		PreparedStatement stmt;
 		try {
-			rs = stmt.executeQuery();
+			get()
 		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		String response = null;
-		while (rs.next()) {
-			String key = rs.getString(1);
-			String res = rs.getString(2);
-			int hits = rs.getInt(3);
-			if((text.toLowerCase()).contains(key.toLowerCase())) {
-				PreparedStatement nstmt = connection.prepareStatement(
-						"UPDATE keyResponse "
-						+ "SET hits = ? "
-						+ "WHERE keyword = ?");
-				nstmt.setInt(1, hits+1);
-				nstmt.setString(2, key);
-				try {
-					nstmt.executeUpdate();
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-				response = res;
-				break;
+			if(e.getMessage().equals("No such entry")) {
+				stmt=connection.prepareStatement("INSERT INTO line_user_info VALUES ( ? ,'','','','','','')");
+				stmt.setString(1,userID);
+				stmt.executeUpdate();
+				stmt.close();
 			}
+			else throw Exception("Wrong Command");
 		}
+		try {
+			stmt = connection.prepareStatement(
+					"UPDATE line_user_info SET ? = ? WHERE userid = ?");
+			stmt.setString(1, entryName);
+			stmt.setString(2, value);
+			stmt.setString(3, userID);
+			stmt.executeUpdate();
+		}catch(Exception e) {
+			throw Exception("Wrong Command");
+		}
+		stmt.close();
+		connection.close();
+	}
+	
+	public String get(String userID,String entryName) throw Exception{
+		Connection connection= getConnection();
+		PreparedStatement stmt;
+		ResultSet rs;
+		try{
+			stmt = connection.prepareStatement(
+					"SELECT ? FROM line_user_info WHERE userid = ?");
+			stmt.setString(1, entryName);
+			stmt.setString(2, userID);
+			rs=stmt.executeQuery();
+		}catch(Exception){
+			throw Exception("Wrong Command");
+		}
+		if(!rs.next()) throw Exception("No such entry");
+		String tmp=rs.getString(1);
 		rs.close();
 		stmt.close();
 		connection.close();
-		if(response != null) {
-			return response;
-		}else {
-			throw new Exception("NOT FOUND");
-		}
+		return tmp;
 	}
-	
 	
 	protected Connection getConnection() throws URISyntaxException, SQLException {
 		Connection connection;

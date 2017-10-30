@@ -69,10 +69,10 @@ public class TextProcessor {
 	}
 
 	public String processText(String userId, String text) throws Exception{
+		DBE.update(userId,"lastq",text);
 		if (text=null) {
 			throw Exception("no input");
 		}
-		DBE.update(userId,"lastq",text);
 		String reply=classifyText(userID,text);
 		DBE.update(userId,"lasta",reply);
 	}
