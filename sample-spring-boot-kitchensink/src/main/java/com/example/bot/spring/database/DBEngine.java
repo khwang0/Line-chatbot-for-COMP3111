@@ -46,7 +46,7 @@ public class DBEngine {
 		connection.close();
 	}
 	
-	public String get(String userID,String entryName) throw Exception{
+	public String getLineUserInfo(String userID,String entryName) throw Exception{
 		Connection connection= getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
