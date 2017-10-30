@@ -14,8 +14,9 @@ public class GQTextSender implements TextSender {
 			String TourID=DBE.getTourID(userID,msg);
 			DBE.update(userID,TourID);
 			String reply =DBE.query(userID,msg,TourID);
-			if(reply == null)
+			if(reply.equals(null))
 				throw new Exception("No matching");
-			return reply;
+			else
+				return reply;
 	}
 }
