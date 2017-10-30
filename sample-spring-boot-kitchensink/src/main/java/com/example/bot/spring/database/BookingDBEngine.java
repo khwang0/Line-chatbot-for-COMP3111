@@ -195,10 +195,34 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+LINEUSER
-					+ " SET state = ?, categoriztion = ?"
+					+ " SET status = ?, categoriztion = ?"
 					+ " WHERE userID = ?");
 		
 			nstmt.setString(1, status);
+			nstmt.setString(2, cat);
+			nstmt.setString(3, userId);
+			this.update(nstmt);
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/** Set the field tourids
+	 * 
+	 * @param tourId
+	 */
+	public void setTourid(String userId, String tourId) {
+		// TODO Auto-generated method stub
+		PreparedStatement nstmt = null;
+		String cat = null;
+		try {
+			nstmt = connection.prepareStatement(
+					"UPDATE "+LINEUSER
+					+ " SET status = ?, categoriztion = ?"
+					+ " WHERE userID = ?");
+		
+			nstmt.setString(1, tourId);
 			nstmt.setString(2, cat);
 			nstmt.setString(3, userId);
 			this.update(nstmt);
@@ -302,7 +326,7 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT state "
+					"SELECT status "
 					+ "FROM "+ LINEUSER
 					+ "WHERE userID = ?");
 			nstmt.setString(1, userId);
@@ -329,7 +353,7 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT state "
+					"SELECT tourids "
 					+ " FROM " + LINEUSER
 					+ " WHERE userID = ?");
 			nstmt.setString(1, userId);
@@ -718,6 +742,5 @@ public class BookingDBEngine extends DBEngine {
 			e.printStackTrace();
 		}
 	}
-
 
 }
