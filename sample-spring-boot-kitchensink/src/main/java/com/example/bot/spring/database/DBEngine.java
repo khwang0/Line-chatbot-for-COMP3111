@@ -54,7 +54,10 @@ public class DBEngine {
 			stmt.setString(2, userID);
 			rs=stmt.executeQuery();
 		}catch(Exception e){
-			throw new Exception("Wrong Command3");
+			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			System.out.println("with userid "+userID);
+			e.printStackTrace();
+			throw new Exception("Wrong Command1");
 		}
 		if(!rs.next()) { 
 			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
