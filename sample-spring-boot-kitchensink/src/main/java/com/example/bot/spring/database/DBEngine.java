@@ -54,9 +54,16 @@ public class DBEngine {
 			stmt.setString(2, userID);
 			rs=stmt.executeQuery();
 		}catch(Exception e){
-			throw new Exception("Wrong Command3");
+			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			System.out.println("with userid "+userID);
+			e.printStackTrace();
+			throw new Exception("Wrong Command1");
 		}
-		if(!rs.next()) throw new Exception("No such entry");
+		if(!rs.next()) { 
+			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			System.out.println("No such entry!!!!!");
+			throw new Exception("No such entry");
+		}
 		String tmp=rs.getString(1);
 		rs.close();
 		stmt.close();

@@ -215,6 +215,8 @@ public class KitchenSinkController {
         try {
         	reply = processor.processText(userId, text);
         }catch(Exception e) {
+        	System.err.println("XXXXXXXXXXXXXXXXXXXXXXXX");
+        	System.err.println(e.getMessage());
         	reply = "I'm stupid";
         }
         log.info("Returns echo message {}: {}", replyToken, reply);
