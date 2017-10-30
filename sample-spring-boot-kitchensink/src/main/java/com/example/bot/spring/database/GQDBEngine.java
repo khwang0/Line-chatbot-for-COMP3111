@@ -11,16 +11,18 @@ public class GQDBEngine extends DBEngine {
 		
 	}
 	
-	public String getTourID(String userID,String Text)throw Exception {
+	public String getTourID (String userID, String Text) throws Exception {
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
+		
 		stmt = connection.prepareStatement(
 			"SELECT TourIDs FROM line_user_info WHERE userid = ?");
 		stmt.setString(1, userID);
 		rs = stmt.executeQuery();
 		rs.next();
 		String TourID = rs.getString(1);
+		
 		rs.close();
 		stmt.close();
 		stmt = connection.prepareStatement(
@@ -31,7 +33,8 @@ public class GQDBEngine extends DBEngine {
 			boolean found=true;
 			tourname=rs.getString(1);
 			for(String info:tourname.split("\\s|-")) {
-				if(Text.toLowerCase().contains(info.toLowerCase()))continue;
+				if(Text.toLowerCase().contains(info.toLowerCase()))
+					continue;
 				switch(info.toLowerCase()) {
 				case "tour":
 				case "trip":
@@ -53,7 +56,7 @@ public class GQDBEngine extends DBEngine {
 		return TourID;
 	}
 
-	public String query(String userID,String Text,String TourID) throw Exception{
+	public String query(String userID,String Text,String TourID) throws Exception{
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -87,7 +90,7 @@ public class GQDBEngine extends DBEngine {
 		}
 		return answer;
 	}
-	public String update(String UserID,String TourID) throw Exception{
+	public void update(String UserID,String TourID) throws Exception{
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;

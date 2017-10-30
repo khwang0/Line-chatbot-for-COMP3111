@@ -1,6 +1,7 @@
 package com.example.bot.spring.textsender;
 
 import java.util.ArrayList;
+import com.example.bot.spring.database.*;
 
 public class RecommendationTextSender implements TextSender {
 
@@ -11,9 +12,9 @@ public class RecommendationTextSender implements TextSender {
 	@Override
 	public String process(String userId, String msg) {
 		// TODO Auto-generated method stub
-		RecommandationDBEngine searchEngine = new RecommandationDBEngine();
+		RecommendationDBEngine searchEngine = new RecommendationDBEngine();
 		//assume the features are 1.hotel, 2.spring, 3.view
-		ArrayList<String> featureList = new ArrayList();
+		ArrayList<String> featureList = new ArrayList<String>();
 		if (msg.contains("hotel")){
 			featureList.add("hotel");
 		}
@@ -23,7 +24,10 @@ public class RecommendationTextSender implements TextSender {
 		if (msg.contains("view")||msg.contains("sight")){
 			featureList.add("view");
 		}
-		return searchEngine(userId, featureList);
+		if (msg.contains("food")){
+			featureList.add("food");
+		}
+		return searchEngine.recommendationQuery(userId, featureList);
 	}
 	
 }
