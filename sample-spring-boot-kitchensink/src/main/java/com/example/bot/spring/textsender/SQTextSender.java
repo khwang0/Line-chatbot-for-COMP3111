@@ -18,8 +18,6 @@ public class SQTextSender implements TextSender {
 		// TODO Auto-generated method stub
 		/* Label: greeting/ thanks/ goodbye */
 		String label = null; 
-		
-		try {
 		// if msg contains certain keywords, label it
 			
 			label = sqdbengine.search(msg);
@@ -33,11 +31,7 @@ public class SQTextSender implements TextSender {
 				label = "greeting";
 			}
 			*/
-		}catch (Exception e){
-			System.out.println("---------- inside SQTextSender ---------- ");
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
+
 		
 		switch (label) {
 			case "greeting":{
@@ -53,6 +47,6 @@ public class SQTextSender implements TextSender {
 			default:{
 				throw new Exception("Not a simple question");
 			}
-		}			
+		}
 	}
 }
