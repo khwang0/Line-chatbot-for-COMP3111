@@ -27,15 +27,19 @@ public class SQDBEngine extends DBEngine {
 		String reply = null;
 		text = text.toLowerCase();
 		
-		Connection connection = super.getConnection();
-//		String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
-		String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
-		System.out.print(statement);
-		
-		PreparedStatement stmt = connection.prepareStatement(statement);
-		
+		Connection connection = null;
+		String statement = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		
 		try {
+			connection = super.getConnection();
+			//String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
+			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
+			//System.out.print(statement);
+			
+			stmt = connection.prepareStatement(statement);
+			
 			rs = stmt.executeQuery();			
 			if (rs.next()) {				
 				reply = rs.getString(1);
@@ -46,9 +50,16 @@ public class SQDBEngine extends DBEngine {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}finally {	
-			rs.close();
-			stmt.close();
-			connection.close(); 
+			//rs.close();
+			//stmt.close();
+			//connection.close(); 
+			try {
+				if (rs.next()) rs.close();
+				if (stmt != null) stmt.close();
+				if (connection != null) connection.close();
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
 		}
 		System.out.print(reply);
 		if(reply != null) {
