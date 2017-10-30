@@ -34,10 +34,9 @@ public class DBEngine {
 		}
 		try {
 			stmt = connection.prepareStatement(
-					"UPDATE line_user_info SET ? = ? WHERE userid = ?");
-			stmt.setString(1, entryName);
-			stmt.setString(2, value);
-			stmt.setString(3, userID);
+					"UPDATE line_user_info SET "+entryName+" = ? WHERE userid = ?");
+			stmt.setString(1, value);
+			stmt.setString(2, userID);
 			stmt.executeUpdate();
 		}catch(Exception e) {
 			throw Exception("Wrong Command");
@@ -52,7 +51,7 @@ public class DBEngine {
 		ResultSet rs;
 		try{
 			stmt = connection.prepareStatement(
-					"SELECT ? FROM line_user_info WHERE userid = ?");
+					"SELECT "+entryName+" FROM line_user_info WHERE userid = ?");
 			stmt.setString(1, entryName);
 			stmt.setString(2, userID);
 			rs=stmt.executeQuery();
