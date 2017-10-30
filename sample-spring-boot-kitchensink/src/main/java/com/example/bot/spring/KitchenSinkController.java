@@ -113,6 +113,8 @@ public class KitchenSinkController {
         // TEST: text processor;       
        try {
 			reply = this.processor.processText(userId, text);
+			System.out.println("---------- inside handleTextContent ---------- ");
+			System.out.println(reply);
 			
 		} catch (Exception e) {
 			System.out.println("---------- inside handleTextContent ---------- ");
