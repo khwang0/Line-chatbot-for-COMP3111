@@ -5,8 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import com.linecorp.bot.model.event.message.TextMessageContent;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 public class BookingDBEngine extends DBEngine {
 	
@@ -15,69 +16,32 @@ public class BookingDBEngine extends DBEngine {
 	private static final String LINEUSER = "line_user_info";
 	private static final String PRICE = "tour_price";
 	private static final String DESCRIPTION = "tour_description";
+	private static final String TOURINFO = "tour_info";
+	private static final String BOOKTABLE = "booking_table";
 	
 	private Connection connection = null;
 
 	public BookingDBEngine() {
-		// TODO Auto-generated constructor stub
 	}
 	
-	/* Set the status of booking flow for a given userid
+	/** Record the specified date for the tour
 	 * 
-	 */
-	public String getStatus(String userId) throws Exception {
-		// TODO Auto-generated method stub
-		String status = null;
-		PreparedStatement nstmt = connection.prepareStatement(
-				"SELECT state "
-				+ "FROM ?"
-				+ "WHERE userID = ?");
-		nstmt.setString(1, LINEUSER);
-		nstmt.setString(2, userId);
-		ResultSet rs = this.query(nstmt);
-		while(rs.next()) {
-			status = rs.getString(1);
-		}
-		nstmt.close();
-		rs.close();
-		return status;
-	}
-	
-	/* Get possible tour ids for one user
-	 * 
-	 */
-	public String[] getTourIds(String userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* Record the name of user
-	 * 
-	 *
-	public void recordName(String userId, String t) {
-		// TODO Auto-generated method stub
-		
-	}
-	*/
-
-	/* Record the specified date for the tour
-	 * 
+	 * @param userId
+	 * @param dd
+	 * @param mm
 	 */
 	public void recordDate(String userId, int dd, int mm) {
-		// TODO Auto-generated method stub
 		String tourId = null;
 		PreparedStatement nstmt = null;
 		ResultSet rs = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT tourIDs "
-					+ "FROM ?"
+					+ "FROM "+LINEUSER
 					+ "WHERE userID = ?");
-			nstmt.setString(1, LINEUSER);
-			nstmt.setString(2, userId);
+			nstmt.setString(1, userId);
 			rs = this.query(nstmt);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
@@ -85,30 +49,34 @@ public class BookingDBEngine extends DBEngine {
 				tourId = rs.getString(1);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(tourId == null) {
 			try {
 				throw new Exception("Unknown error");
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else {
-			tourId = tourId+"2017"+mm+dd;
+			if(mm<10 && dd>=10) {
+				tourId = tourId+"20170"+mm+dd;
+			}else if(mm<10 && dd<10) {
+				tourId = tourId+"20170"+mm+"0"+dd;
+			}else if(mm>=10 && dd<10) {
+				tourId = tourId+"2017"+mm+"0"+dd;
+			}else {
+				tourId = tourId+"2017"+mm+dd;
+			}
 			nstmt = null;
 			try {
 				nstmt = connection.prepareStatement(
-						"UPDATE ? "
-						+ "SET tourIDs = ?"
-						+ "WHERE userID = ?");
-			nstmt.setString(1,LINEUSER);
-			nstmt.setString(2, tourId);
-			nstmt.setString(3, userId);
+						"UPDATE "+LINEUSER
+						+ " SET tourIDs = ?"
+						+ " WHERE userID = ?");
+			nstmt.setString(1, tourId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -116,176 +84,285 @@ public class BookingDBEngine extends DBEngine {
 			rs.close();
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	/* Record the number of adults in the tour
+	/** Record the number of adults in the tour
 	 * 
+	 * @param userId
+	 * @param i
 	 */
 	public void recordAdults(String userId, int i) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
-					+ "SET c.adultnum = ?"
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
-					+ "AND l.userID = ?");
+					+ "SET c.adultnum = ? "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
+					+ "WHERE c.name = l.name "
+					+ "AND l.userID = ? ");
 			nstmt.setInt(1, i);
-			nstmt.setString(2, CUSTOMER);
-			nstmt.setString(3, LINEUSER);
-			nstmt.setString(4, userId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	/* Record the number of children in the tour
+	/** Record the number of children in the tour
 	 * 
+	 * @param userId
+	 * @param i
 	 */
 	public void recordChildren(String userId, int i){
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
-					+ "SET c.childnum = ?"
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
-					+ "AND l.userID = ?");
+					+ "SET c.childnum = ? "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
+					+ "WHERE c.name = l.name "
+					+ "AND l.userID = ? ");
 			nstmt.setInt(1, i);
-			nstmt.setString(2, CUSTOMER);
-			nstmt.setString(3, LINEUSER);
-			nstmt.setString(4, userId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	/* Record the number of toddlers in the tour
+	/** Record the number of toddlers in the tour
 	 * 
+	 * @param userId
+	 * @param i
 	 */
 	public void recordToddler(String userId, int i) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
-					+ "SET c.toodlernum = ?"
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
-					+ "AND l.userID = ?");
+					+ "SET c.toodlernum = ? "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
+					+ "WHERE c.name = l.name "
+					+ "AND l.userID = ? ");
 			nstmt.setInt(1, i);
-			nstmt.setString(2, CUSTOMER);
-			nstmt.setString(3, LINEUSER);
-			nstmt.setString(4, userId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	/* Record the phone number of user accordingly
+	/** Record the phone number of user accordingly
 	 * 
+	 * @param userId
+	 * @param i
 	 */
 	public void recordPhone(String userId, int i) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE c "
-					+ "SET c.phonenumber = ?"
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
+					+ "SET c.phonenumber = ? "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
+					+ "WHERE c.name = l.name "
 					+ "AND l.userID = ?");
 			nstmt.setInt(1, i);
-			nstmt.setString(2, CUSTOMER);
-			nstmt.setString(3, LINEUSER);
-			nstmt.setString(4, userId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	/* Find next unrecorded information field. If all information
-	 * are recorded, return null
-	 *
-	public String findNextEmptyInfo(String userId) {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
-	*/
-
-	/* Set the status in the flow of booking for a given user id
+	/** Set the status in the flow of booking for a given user id
 	 * 
+	 * @param status
+	 * @param userId
 	 */
 	public void setStatus(String status, String userId){
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
+		String cat = null;
+		if(status == "default")
+			cat = "default";
+		else
+			cat = "booking";
 		try {
 			nstmt = connection.prepareStatement(
-					"UPDATE ?"
-					+ "SET state = ?"
-					+ "WHERE userID = ?");
+					"UPDATE "+LINEUSER
+					+ " SET state = ?, categoriztion = ?"
+					+ " WHERE userID = ?");
 		
-		nstmt.setString(1, LINEUSER);
-		nstmt.setString(2, status);
-		nstmt.setString(3, userId);
-		this.update(nstmt);
-		nstmt.close();
+			nstmt.setString(1, status);
+			nstmt.setString(2, cat);
+			nstmt.setString(3, userId);
+			this.update(nstmt);
+			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	/* Check if the date is a valid one for a given tour
+	/** Check if the date is a valid one for a given tour
 	 * 
+	 * @param dd
+	 * @param mm
+	 * @param userId
+	 * @return
 	 */
-	public boolean checkValidDate(int dd, int mm, String userId) {
-		// TODO Auto-generated method stub
-		return false;
+	public int checkValidDate(int dd, int mm, String userId) {
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT o.bootableid, b.tourcapcity-b.registerednum "
+					+ " FROM "+OFFERTABLE+" o, "+LINEUSER+" l, "+BOOKTABLE+" b"
+					+ " WHERE o.tourid = l.tourids"
+					+ " AND o.bootableid = b.bootableid"
+					+ " AND l.userID = ?");
+			nstmt.setString(1, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				String offerId = rs.getString(1);
+				int quota = rs.getInt(2);
+				if(offerId!=null&&offerId!="") {
+					String date = offerId.substring(9);
+					int d = Integer.parseInt(date.substring(0,2));
+					int m = Integer.parseInt(date.substring(2));
+					if(d==dd && m==mm && quota > 0) {
+						nstmt.close();
+						rs.close();
+						return quota;
+					}
+				}
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
-	/* Start a new booking request from user
+	/** Start a new booking request from user
 	 * 
+	 * @param userId
+	 * @param name
+	 * @return
 	 */
 	public String createNewBooking(String userId, String name) {
-		// TODO Auto-generated method stub
+		PreparedStatement nstmt;
+		String tourId = this.getTourIds(userId)[0];
+		try {
+			nstmt = connection.prepareStatement(
+					"INSERT INTO "+LINEUSER+" (customername, bootableid) "
+					+ "VALUES (?,?) ");
+			nstmt.setString(1, name);
+			nstmt.setString(2, tourId);
+			this.execute(nstmt);
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
-
-	/* Get the number of adults
+	
+	public String getName(String userId) {
+		String name = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT name "
+					+ "FROM "+ LINEUSER
+					+ "WHERE userID = ?");
+			nstmt.setString(1, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				name = rs.getString(1);
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
+	
+	/** Set the status of booking flow for a given userid
 	 * 
+	 * @param userId
+	 * @return
+	 */
+	public String getStatus(String userId){
+		String status = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT state "
+					+ "FROM "+ LINEUSER
+					+ "WHERE userID = ?");
+			nstmt.setString(1, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				status = rs.getString(1);
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
+	/** Get possible tour ids for one user
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public String[] getTourIds(String userId) {
+		String ids = null;
+		String[] allId = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT state "
+					+ " FROM " + LINEUSER
+					+ " WHERE userID = ?");
+			nstmt.setString(1, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				ids = rs.getString(1);
+			}
+			if(ids != null) {
+				allId = ids.split(",");
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return allId;
+	}
+
+	/** Get the number of adults
+	 * 
+	 * @param userId
+	 * @return
 	 */
 	public int getAdult(String userId) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		int adult = -1;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT adult "
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
-					+ "AND l.userID = ?");
-			nstmt.setString(1, CUSTOMER);
-			nstmt.setString(2, LINEUSER);
-			nstmt.setString(3, userId);
+					"SELECT c.adult "
+					+ " FROM "+CUSTOMER+ "c, "+LINEUSER+" l"
+					+ " WHERE c.name = l.name"
+					+ " AND l.userID = ?");
+			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
 				adult = rs.getInt(1);
@@ -293,28 +370,26 @@ public class BookingDBEngine extends DBEngine {
 			rs.close();
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return adult;
 	}
 
-	/* Get the number of toddlers
+	/** Get the number of toddlers
 	 * 
+	 * @param userId
+	 * @return
 	 */
 	public int getToddler(String userId) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		int toddler = -1;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT toddler "
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
-					+ "AND l.userID = ?");
-			nstmt.setString(1, CUSTOMER);
-			nstmt.setString(2, LINEUSER);
-			nstmt.setString(3, userId);
+					"SELECT c.toddler "
+					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
+					+ " WHERE c.name = l.name"
+					+ " AND l.userID = ?");
+			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
 				toddler = rs.getInt(1);
@@ -322,28 +397,26 @@ public class BookingDBEngine extends DBEngine {
 			rs.close();
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return toddler;
 	}
 
-	/* Get the number of children
+	/** Get the number of children
 	 * 
+	 * @param userId
+	 * @return
 	 */
 	public int getChildren(String userId) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		int children = -1;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT children "
-					+ "FROM ? c, ? l"
-					+ "WHERE c.name = l.name"
-					+ "AND l.userID = ?");
-			nstmt.setString(1, CUSTOMER);
-			nstmt.setString(2, LINEUSER);
-			nstmt.setString(3, userId);
+					"SELECT c.children "
+					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
+					+ " WHERE c.name = l.name"
+					+ " AND l.userID = ?");
+			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
 				children = rs.getInt(1);
@@ -351,86 +424,271 @@ public class BookingDBEngine extends DBEngine {
 			rs.close();
 			nstmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return children;
 	}
 
-	/* Get the id of the tour for one user
+	/** Get the id of the tour for one user
 	 * 
+	 * @param userId
+	 * @return
 	 */
 	public String getTourJoined(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement nstmt = null;
+		String tourId = null;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT c.bootableid "
+					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
+					+ " WHERE c.name = l.name"
+					+ " AND l.userID = ?");
+			nstmt.setString(1, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				tourId = rs.getString(1);
+			}
+			rs.close();
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tourId;
 	}
 
-	/* Get the quota remaining for one tour
+	/** Get the quota remaining for one tour
 	 * 
+	 * @param tourId
+	 * @return
 	 */
 	public int getQuota(String tourId) {
-		// TODO Auto-generated method stub
-		return 0;
+		int quota = -1;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT tourcapcity - registerednum "
+					+ " FROM "+BOOKTABLE
+					+ " WHERE bootableid = ?");
+			nstmt.setString(1, tourId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				quota = rs.getInt(1);
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return quota;
 	}
 
-	/* Get the one-day price for a tour
+	/** Get the one-day price for a tour
 	 * 
+	 * @param tourId
+	 * @return
 	 */
 	public double getPrice(String tourId) {
-		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement nstmt = null;
+		double price = 0;
+		try {
+			String field = null;
+			String ts = tourId.substring(5);
+			String id = tourId.substring(0, 5);
+		    int year = Integer.parseInt(ts.substring(0, 4));
+		    int month = Integer.parseInt(ts.substring(4, 6));
+		    int day = Integer.parseInt(ts.substring(6, 8));
+		    Calendar cal = new GregorianCalendar(year, month - 1, day);
+		    int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		    if(Calendar.SUNDAY == dayOfWeek || Calendar.SATURDAY == dayOfWeek) {
+		    	field = "weekend_price";
+		    }else {
+		    	field = "weekday_price";
+		    }
+			nstmt = connection.prepareStatement(
+					"SELECT ? "
+					+ " FROM "+PRICE
+					+ " WHERE tourid = ?");
+			nstmt.setString(1, field);
+			nstmt.setString(2, id);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				price = rs.getInt(1)*1.0;
+			}
+			rs.close();
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return price;
 	}
 	
-	/* Get all possible tour IDs
+	/** Get all possible tour IDs
 	 * 
+	 * @return
 	 */
-	public String[] getAllTourIds() {
-		// TODO Auto-generated method stub
-		return null;
+	public LinkedList<String> getAllTourIds() {
+		LinkedList<String> tourIds = new LinkedList<String>();
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT DISTINCT tourid"
+					+ " FROM "+TOURINFO);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 tourIds.add(rs.getString(1));
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tourIds;
 	}
 
 
-	/* Get all possible tour names
+	/** Get all possible tour names
 	 * 
+	 * @return
 	 */
-	public String[] getAllTourNames() {
-		// TODO Auto-generated method stub
-		return null;
+	public LinkedList<String> getAllTourNames() {
+		LinkedList<String> tourNames = new LinkedList<String>();
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT DISTINCT tour_name"
+					+ " FROM "+TOURINFO);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 tourNames.add(rs.getString(1));
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tourNames;
 	}
 	
-	/* Find the tour ID use tour name
+	/** Get all tour information and store them in a linked list
+	 *  In the order of name >> description >>  weekday fee >> weekend fee
+	 * @param tourId
+	 * @return
+	 */
+	public LinkedList<String> getTourInfos(String tourId) {
+		LinkedList<String> allInfos = new LinkedList<String>();
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT i.name,d.description,p.weekday_price,p.weekend_price"
+					+ " FROM "+TOURINFO+" i, "+PRICE+" p, "+DESCRIPTION+" d"
+					+ " WHERE i.tourid = ?"
+					+ " AND i.tourid = d.tourid"
+					+ " AND p.tourid = i.tourid");
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 allInfos.add(rs.getString(1));
+				 allInfos.add(rs.getString(2));
+				 allInfos.add(Integer.toString(rs.getInt(3)));
+				 allInfos.add(Integer.toString(rs.getInt(4)));
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return allInfos;
+	}
+	
+
+	/** Get all possible departure dates of one tour
 	 * 
+	 * @param tourId
+	 * @return
+	 */
+	public String getAllDates(String tourId) {
+		PreparedStatement nstmt;
+		String allDates = "";
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT o.bootableid "
+					+ " FROM "+OFFERTABLE+" o, "+BOOKTABLE+" b"
+					+ " WHERE o.bootableid = b.bootableid"
+					+ " AND o.tourid = ?"
+					+ " AND o.registerednum < o.tourcapcity");
+			nstmt.setString(1, tourId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				String offerId = rs.getString(1);
+				String date = offerId.substring(9);
+				if(!allDates.equals(""))
+					allDates = allDates + "," + date;
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return allDates;
+	}
+	
+	/** Find the tour ID use tour name
+	 * 
+	 * @param tourName
+	 * @return
 	 */
 	public String findTourId(String tourName) {
-		// TODO Auto-generated method stub
-		return null;
+		String tourId = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT DISTINCT tourid"
+					+ " FROM "+TOURINFO
+					+ " WHERE tour_name = ?");
+			nstmt.setString(2, tourName);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 tourId = rs.getString(1);
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tourId;
 	}
 
-	/* Remove a booking record from table
+	/** Remove a booking record of one user from table
 	 * 
+	 * @param userId
 	 */
 	public void removeBooking(String userId) {
-		// TODO Auto-generated method stub
-		
+		PreparedStatement nstmt;
+		String name = this.getName(userId);
+		try {
+			nstmt = connection.prepareStatement(
+					"DELETE FROM "+CUSTOMER
+					+ " WHERE name = ?");
+			nstmt.setString(1, name);
+			this.execute(nstmt);
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void openConnection() {
-		// TODO Auto-generated method stub
 		try {
 			connection = this.getConnection();
 		} catch (URISyntaxException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
 		try {
 			connection.close();
 			connection = null;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -440,7 +698,6 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			rs = nstmt.executeQuery();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rs;
@@ -450,7 +707,14 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void execute(PreparedStatement nstmt) {
+		try {
+			nstmt.execute();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
