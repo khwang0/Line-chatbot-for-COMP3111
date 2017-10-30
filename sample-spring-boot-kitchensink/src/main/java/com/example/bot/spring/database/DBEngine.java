@@ -18,7 +18,7 @@ public class DBEngine {
 		
 	}
 	
-	public void update(String userID,String entryName,String value) throws Exception{
+	public void updateLineUserInfo(String userID,String entryName,String value) throws Exception{
 		Connection connection= getConnection();
 		PreparedStatement stmt;
 		try {
