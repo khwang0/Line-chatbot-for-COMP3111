@@ -11,7 +11,7 @@ public class TextProcessor {
 		DBE=new DBEngine();
 	}
 	
-	private String classifyText(String userId, String text)throws Exception {
+	private String classifyText(String userId, String text){
 		String reply="";
 		String tag;
 		try {
