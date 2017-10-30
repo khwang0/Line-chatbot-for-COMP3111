@@ -23,25 +23,25 @@ public class TextProcessor {
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
 				reply += rsender.process(userId, text);
-				DBE.update(userId,"categoriztion","reco");
+				DBE.update(userId,"categorization","reco");
 				return reply;
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
 				GQTextSender gqsender = new GQTextSender;
 				reply += gqsender.process(userId, text);
-				DBE.update(userId,"categoriztion", "gq");
+				DBE.update(userId,"categorization", "gq");
 				return reply;
 			}
 
 			if(text.toLowerCase().contains("book")) {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);
-				DBE.update(userId,"categoriztion","book");
+				DBE.update(userId,"categorization","book");
 				return reply;
 			}
 			
-			tag=DBE.get(userId,"categoriztion");
+			tag=DBE.get(userId,"categorization");
 			switch(tag) {
 			case "reco":
 				RecommendationTextSender rsender = new RecommendationTextSender();
