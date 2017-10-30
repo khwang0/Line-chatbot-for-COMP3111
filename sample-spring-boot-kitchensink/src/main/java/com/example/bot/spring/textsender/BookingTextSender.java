@@ -1,5 +1,7 @@
 package com.example.bot.spring.textsender;
 
+import java.util.LinkedList;
+
 import com.example.bot.spring.database.BookingDBEngine;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,13 @@ public class BookingTextSender implements TextSender {
 	@Override
 	public String process(String userId, String msg) {
 		bookingDB.openConnection();
-		String status = bookingDB.getStatus(userId);
+		String status = null;
+		try {
+			status = bookingDB.getStatus(userId);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		String reply = null;
 		switch(status) {
 			case "new":{
@@ -60,8 +68,8 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid date format. Please enter in (DD/MM) format.";
 					break;
 				}
-				boolean valid = bookingDB.checkValidDate(dd,mm,userId);
-				if(valid) {
+				int quota = bookingDB.checkValidDate(dd,mm,userId);
+				if(quota > 0) {
 					bookingDB.recordDate(userId,dd,mm);
 					reply = getInfoQuestion("adult");
 					bookingDB.setStatus("adult", userId);
@@ -84,7 +92,6 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid number of adults. Please enter again.";
 					break;
 				}
-				String nextQ = bookingDB.findNextEmptyInfo(userId);
 				reply = getInfoQuestion("children");
 				bookingDB.setStatus("children",userId);
 				break;
@@ -161,7 +168,7 @@ public class BookingTextSender implements TextSender {
 				break;
 			}
 			default:{
-				log.info("Illegal status for user id: {}. ", userId);
+				//log.info("Illegal status for user id: {}. ", userId);
 				reply = defaultCaseHandler(userId,msg);
 			}
 		}
@@ -191,11 +198,11 @@ public class BookingTextSender implements TextSender {
 	private String defaultCaseHandler(String userId, String msg) {
 		// TODO Auto-generated method stub
 		// If he specifies the tour ID
-		String[] tourIds = bookingDB.getAllTourIds();
+		LinkedList<String> tourIds = bookingDB.getAllTourIds();
 		String reply = null;
-		for(int i = 0; i < tourIds.length; i++) {
-			if(msg.contains(tourIds[i])) {
-				reply = this.getConfirmation(tourIds[i]);
+		for(int i = 0; i < tourIds.size(); i++) {
+			if(msg.contains(tourIds.get(i))) {
+				reply = this.getConfirmation(tourIds.get(i));
 				return reply;
 			}
 		}
@@ -208,27 +215,27 @@ public class BookingTextSender implements TextSender {
 		for(int i = 0; i < s.length; i++) {
 			for(int j = 0; j < candiTours.length; j++) {
 				if(s[i].toLowerCase().equals(orders[j])) {
-					reply = this.getConfirmation(tourIds[j]);
+					reply = this.getConfirmation(tourIds.get(j));
 					return reply;
 				}else if(s[i].toLowerCase().equals(numbers[j])) {
-					reply = this.getConfirmation(tourIds[j]);
+					reply = this.getConfirmation(tourIds.get(j));
 					return reply;
 				}else if(s[i].toLowerCase().equals(engNumbers[j])) {
-					reply = this.getConfirmation(tourIds[j]);
+					reply = this.getConfirmation(tourIds.get(j));
 					return reply;
 				}
 			}
 		}
 		
 		// If he specifies the name of the tour
-		String[] tourNames = bookingDB.getAllTourNames();
-		for(int i = 0; i < tourNames.length; i++) {
-			String[] t = tourNames[i].split("\\s|-");
+		LinkedList<String> tourNames = bookingDB.getAllTourNames();
+		for(int i = 0; i < tourNames.size(); i++) {
+			String[] t = tourNames.get(i).split("\\s|-");
 			for(int j = 0; j < t.length; j++) {
 				if(!msg.contains(t[j])) {
 					break;
 				}else if(j == t.length-1) {
-					String tourId = bookingDB.findTourId(tourNames[i]);
+					String tourId = bookingDB.findTourId(tourNames.get(i));
 					reply = this.getConfirmation(tourId);
 				}
 			}
