@@ -13,10 +13,6 @@ public class UQDBEngine extends DBEngine {
 	}
 	
 	public String uqQuery(String userId, String text) {
-<<<<<<< HEAD
-		
-=======
-
 		Connection connection;
 		try {
 			connection = getConnection();
@@ -32,7 +28,7 @@ public class UQDBEngine extends DBEngine {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
->>>>>>> 8902cbefd57eabccd677ed0d2f6b9174a03577c2
+
 		return "Sorry, I can't answer your question. My colleague will follow up with you.";
 	}
 }
