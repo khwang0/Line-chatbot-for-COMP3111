@@ -23,7 +23,7 @@ public class BookingTextSender implements TextSender {
 	 * @param msg
 	 * @return
 	 */
-	public String process(String userId, String msg) {
+	public String process(String userId, String msg) throws Exception {
 		bookingDB.openConnection();
 		String status = null;
 		try {
@@ -175,6 +175,9 @@ public class BookingTextSender implements TextSender {
 			}
 		}
 		bookingDB.close();
+		if(reply.equals(null)) {
+			throw new Exception("CANNOT ANSWER");
+		}
 		return reply;
 	}
 	
