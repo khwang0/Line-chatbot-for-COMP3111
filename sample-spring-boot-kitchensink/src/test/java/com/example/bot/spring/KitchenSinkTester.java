@@ -42,6 +42,7 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+
 import com.example.bot.spring.textsender.*;
 
 
@@ -53,19 +54,5 @@ public class KitchenSinkTester {
 	
 	@Test
 	public void simpleReply() throws Exception {
-		boolean thrown = false;
-		String expectedReply = "Hi! How can I help you?";
-		String userid = "12345";
-		String reply = null;
-		
-		try {
-			reply = this.sqsender.process(userid, "Hi");
-			
-		} catch (Exception e) {
-			System.out.println("---------- inside KitchenSinkTester ---------- ");
-			System.err.println(e.getMessage());
-			thrown = true;
-		}
-		assertThat(reply).isEqualTo(expectedReply);
 	}
 }

@@ -14,10 +14,11 @@ public class UQDBEngine extends DBEngine {
 	
 	public String uqQuery(String userId, String text) {
 		Connection connection = null;
+		PreparedStatement stmt = null;
 		try {
 			connection = getConnection();
 			//insert into the unanswered question table to store the question
-			PreparedStatement stmt = connection.prepareStatement(
+			stmt = connection.prepareStatement(
 					"insert into unanswered_question values( \'"+userId+"\', \'"+text+"\', false)"
 			);
 			stmt.executeUpdate();
@@ -32,7 +33,6 @@ public class UQDBEngine extends DBEngine {
 			//stmt.close();
 			//connection.close();
 			try {
-				if (rs.next()) rs.close();
 				if (stmt != null) stmt.close();
 				if (connection != null) connection.close();
 			} catch (Exception e2) {

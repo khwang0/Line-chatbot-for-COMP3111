@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
-
 public class GQDBEngine extends DBEngine {
 	private String tname1; // name of table in charge; 
 	private String column1_1;
@@ -107,7 +105,7 @@ public class GQDBEngine extends DBEngine {
 			
 			else {
 				// static answer question
-				statement = "SELECT " + column1_2 + " FROM " + tname1 + " WHERE \'" Text + "\' SIMILAR TO " + column1_1;
+				statement = "SELECT " + column1_2 + " FROM " + tname1 + " WHERE \'" + Text + "\' SIMILAR TO " + column1_1;
 				//System.out.print(statement);
 				stmt = connection.prepareStatement(statement);
 				rs=stmt.executeQuery();
@@ -135,7 +133,6 @@ public class GQDBEngine extends DBEngine {
 	public void update(String UserID,String TourID) throws Exception{
 		Connection connection = getConnection();
 		PreparedStatement stmt;
-		ResultSet rs;
 		stmt = connection.prepareStatement(
 				"UPDATE line_user_info SET tourids = ? WHERE userid = ?");
 		stmt.setString(1, TourID);

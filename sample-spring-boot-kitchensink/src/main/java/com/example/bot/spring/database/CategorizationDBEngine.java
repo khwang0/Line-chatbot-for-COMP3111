@@ -1,13 +1,11 @@
 package com.example.bot.spring.database;
 
-import com.linecorp.bot.model.event.message.TextMessageContent;
-
 public class CategorizationDBEngine extends DBEngine {
 	public CategorizationDBEngine() {
 		
 	}
 	
-	public int categoryQuery(TextMessageContent text) {
+	public int categoryQuery(String text) {
 		return 0;
 		
 	}
