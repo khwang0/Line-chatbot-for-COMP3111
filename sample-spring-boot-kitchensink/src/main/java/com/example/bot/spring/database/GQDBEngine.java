@@ -61,16 +61,14 @@ public class GQDBEngine extends DBEngine {
 	}
 
 	public String query(String userID,String Text,String TourID) throws Exception{		
-		/*TODO
-		 * 	check whether we need to add "\n" at the end of every line
-		 * */
-			Connection connection = getConnection();
+			Connection connection = null;
 			PreparedStatement stmt = null;
 			String statement = null;
 			ResultSet rs = null;
 			String answer="";
 			
 		try {
+			connection = getConnection();
 			// dynamic question
 			if(Text.toLowerCase().contains("how long") || 
 			   Text.toLowerCase().contains("how much time") ||

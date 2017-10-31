@@ -35,10 +35,13 @@ public class BookingTextSender implements TextSender {
 		String reply = null;
 		switch(status) {
 			case "new":{
+
 				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")||
 						msg.toLowerCase().contains("good")) {
 					bookingDB.setStatus("date",userId);
 					reply = getInfoQuestion("date");
+					// >>>>>>>>>>>>> should it be getInfoQuestion("name");?
+					// bookingDB.setStatus("name",userId);
 				}else {
 					bookingDB.setStatus("default",userId);
 					reply = defaultCaseHandler(userId,msg);
@@ -51,6 +54,8 @@ public class BookingTextSender implements TextSender {
 				reply = getInfoQuestion("adult");
 				bookingDB.setStatus("adult", userId);
 				bookingDB.createNewBooking(userId, msg);
+				// >>>>>>>>>>>>> reply = getInfoQuestion("date");?
+				// >>>>>>>>>>>>> bookingDB.setStatus("date",userId);
 				break;
 			}
 			
@@ -69,7 +74,7 @@ public class BookingTextSender implements TextSender {
 					reply = "Invalid date format. Please enter in (DD/MM) format.";
 					break;
 				}
-				String tourId = bookingDB.getTourIds(userId)[0];
+				String tourId = bookingDB.getTourIds(userId)[0]; // >>>>>>>>>>>>>> not necessarily the first one; 
 				String dates = bookingDB.getAllDates(tourId);
 				String date = Integer.toString(mm)+Integer.toString(dd);
 				if(dates.contains(date)) {
