@@ -37,8 +37,8 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT tourIDs "
-					+ "FROM "+LINEUSER
-					+ "WHERE userID = ?");
+					+ " FROM "+LINEUSER
+					+ " WHERE userID = ?");
 			nstmt.setString(1, userId);
 			rs = this.query(nstmt);
 		} catch (SQLException e) {
@@ -97,10 +97,10 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
-					"UPDATE c "
-					+ "SET c.adultnum = ? "
+					"UPDATE "+CUSTOMER
+					+ " SET adultnum = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.name = l.name "
+					+ "WHERE c.customername = l.name "
 					+ "AND l.userID = ? ");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
@@ -120,10 +120,10 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
-					"UPDATE c "
-					+ "SET c.childnum = ? "
+					"UPDATE "+CUSTOMER
+					+ " SET childnum = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.name = l.name "
+					+ "WHERE c.customername = l.name "
 					+ "AND l.userID = ? ");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
@@ -143,10 +143,10 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
-					"UPDATE c "
-					+ "SET c.toodlernum = ? "
+					"UPDATE "+CUSTOMER
+					+ " SET toodlernum = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.name = l.name "
+					+ "WHERE c.customername = l.name "
 					+ "AND l.userID = ? ");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
@@ -166,12 +166,35 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
-					"UPDATE c "
-					+ "SET c.phonenumber = ? "
+					"UPDATE "+CUSTOMER
+					+ " SET phonenumber = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.name = l.name "
-					+ "AND l.userID = ?");
-			nstmt.setInt(1, i);
+					+ "WHERE c.customername = l.name "
+					+ "AND l.userID = ? ");
+			nstmt.setString(1, Integer.toString(i));
+			nstmt.setString(2, userId);
+			this.update(nstmt);
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/** Set the tour fee for a customer
+	 * 
+	 * @param totalPrice
+	 * @param userId
+	 */
+	public void recordTotalPrice(double totalPrice, String userId) {
+		PreparedStatement nstmt = null;
+		try {
+			nstmt = connection.prepareStatement(
+					"UPDATE "+CUSTOMER
+					+ " SET tourfee = ? "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
+					+ "WHERE c.customername = l.name "
+					+ "AND l.userID = ? ");
+			nstmt.setDouble(1, totalPrice);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
@@ -195,7 +218,7 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+LINEUSER
-					+ " SET status = ?, categoriztion = ?"
+					+ " SET status = ?, categorization = ?"
 					+ " WHERE userID = ?");
 		
 			nstmt.setString(1, status);
@@ -208,23 +231,38 @@ public class BookingDBEngine extends DBEngine {
 		}
 	}
 	
+	
+	private void setName(String userId, String name) {
+		PreparedStatement nstmt = null;
+		try {
+			nstmt = connection.prepareStatement(
+					"UPDATE "+LINEUSER
+					+ " SET name = ?"
+					+ " WHERE userID = ?");
+		
+			nstmt.setString(1, name);
+			nstmt.setString(2, userId);
+			this.update(nstmt);
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/** Set the field tourids
 	 * 
 	 * @param tourId
 	 */
 	public void setTourid(String userId, String tourId) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
-		String cat = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+LINEUSER
-					+ " SET status = ?, categoriztion = ?"
+					+ " SET tourIds = ?"
 					+ " WHERE userID = ?");
 		
 			nstmt.setString(1, tourId);
-			nstmt.setString(2, cat);
-			nstmt.setString(3, userId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
@@ -283,18 +321,19 @@ public class BookingDBEngine extends DBEngine {
 		String tourId = this.getTourIds(userId)[0];
 		try {
 			nstmt = connection.prepareStatement(
-					"INSERT INTO "+LINEUSER+" (customername, bootableid) "
-					+ "VALUES (?,?) ");
+					"INSERT INTO "+CUSTOMER
+					+ " VALUES (0,?,'',0,?,0,0,0,0,0,'') ");
 			nstmt.setString(1, name);
 			nstmt.setString(2, tourId);
 			this.execute(nstmt);
+			this.setName(userId, name);
 			nstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public String getName(String userId) {
 		String name = null;
 		PreparedStatement nstmt;
@@ -327,8 +366,8 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT status "
-					+ "FROM "+ LINEUSER
-					+ "WHERE userID = ?");
+					+ " FROM "+ LINEUSER
+					+ " WHERE userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -382,9 +421,9 @@ public class BookingDBEngine extends DBEngine {
 		int adult = -1;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT c.adult "
-					+ " FROM "+CUSTOMER+ "c, "+LINEUSER+" l"
-					+ " WHERE c.name = l.name"
+					"SELECT c.adultnum "
+					+ " FROM "+CUSTOMER+ " c, "+LINEUSER+" l"
+					+ " WHERE c.customername = l.name"
 					+ " AND l.userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
@@ -409,9 +448,9 @@ public class BookingDBEngine extends DBEngine {
 		int toddler = -1;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT c.toddler "
+					"SELECT c.toodlernum "
 					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
-					+ " WHERE c.name = l.name"
+					+ " WHERE c.customername = l.name"
 					+ " AND l.userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
@@ -436,9 +475,9 @@ public class BookingDBEngine extends DBEngine {
 		int children = -1;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT c.children "
+					"SELECT c.childnum "
 					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
-					+ " WHERE c.name = l.name"
+					+ " WHERE c.customername = l.name"
 					+ " AND l.userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
@@ -465,7 +504,7 @@ public class BookingDBEngine extends DBEngine {
 			nstmt = connection.prepareStatement(
 					"SELECT c.bootableid "
 					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
-					+ " WHERE c.name = l.name"
+					+ " WHERE c.customername = l.name"
 					+ " AND l.userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
@@ -529,14 +568,13 @@ public class BookingDBEngine extends DBEngine {
 		    	field = "weekday_price";
 		    }
 			nstmt = connection.prepareStatement(
-					"SELECT ? "
+					"SELECT "+field
 					+ " FROM "+PRICE
 					+ " WHERE tourid = ?");
-			nstmt.setString(1, field);
-			nstmt.setString(2, id);
+			nstmt.setString(1, id);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
-				price = rs.getInt(1)*1.0;
+				price = rs.getInt(1);
 			}
 			rs.close();
 			nstmt.close();
@@ -603,11 +641,12 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
-					"SELECT i.name,d.description,p.weekday_price,p.weekend_price"
+					"SELECT i.tour_name,d.description,p.weekday_price,p.weekend_price"
 					+ " FROM "+TOURINFO+" i, "+PRICE+" p, "+DESCRIPTION+" d"
 					+ " WHERE i.tourid = ?"
 					+ " AND i.tourid = d.tourid"
 					+ " AND p.tourid = i.tourid");
+			nstmt.setString(1, tourId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
 				 allInfos.add(rs.getString(1));
@@ -638,7 +677,7 @@ public class BookingDBEngine extends DBEngine {
 					+ " FROM "+OFFERTABLE+" o, "+BOOKTABLE+" b"
 					+ " WHERE o.bootableid = b.bootableid"
 					+ " AND o.tourid = ?"
-					+ " AND o.registerednum < o.tourcapcity");
+					+ " AND b.registerednum < b.tourcapcity");
 			nstmt.setString(1, tourId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -647,6 +686,8 @@ public class BookingDBEngine extends DBEngine {
 				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ???? 
 				if(!allDates.equals(""))
 					allDates = allDates + "," + date;
+				else
+					allDates = allDates + date;
 			}
 			nstmt.close();
 			rs.close();
@@ -695,6 +736,44 @@ public class BookingDBEngine extends DBEngine {
 					+ " WHERE name = ?");
 			nstmt.setString(1, name);
 			this.execute(nstmt);
+			nstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	public void updateRegisteredNumber(String userId) {
+		// TODO Auto-generated method stub
+		PreparedStatement nstmt = null;
+		int num = 0;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT registerednum"
+					+ " FROM "+BOOKTABLE+" b, "+CUSTOMER+" c, "+LINEUSER+" l"
+					+ " WHERE c.customername = l.name "
+					+ " AND l.userID = ?"
+					+ " AND c.bootableid = l.bootableid");
+			nstmt.setString(1, userId);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				num = rs.getInt(1);
+			}
+			nstmt.close();
+			nstmt = null;
+			int adult = this.getAdult(userId);
+			int child = this.getChildren(userId);
+			int toddler = this.getToddler(userId);
+			int total = adult + child + toddler;
+			nstmt = connection.prepareStatement(
+					"UPDATE "+BOOKTABLE
+					+ " SET registerednum = ? "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l, "+BOOKTABLE+" b "
+					+ "WHERE c.customername = l.name "
+					+ "AND l.userID = ? ");
+			nstmt.setInt(1, total);
+			nstmt.setString(2, userId);
+			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
