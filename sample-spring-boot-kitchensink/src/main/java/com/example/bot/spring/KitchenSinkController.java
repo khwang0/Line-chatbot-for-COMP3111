@@ -212,7 +212,13 @@ public class KitchenSinkController {
         String text = content.getText();
         String userId = event.getSource().getUserId();
         String reply = null;
-        reply = processor.processText(userId, text);
+        try {
+        	reply = processor.processText(userId, text);
+        }catch(Exception e) {
+        	System.err.println("XXXXXXXXXXXXXXXXXXXXXXXX");
+        	System.err.println(e.getMessage());
+        	reply = "I'm stupid";
+        }
         log.info("Returns echo message {}: {}", replyToken, reply);
         this.replyText(replyToken,reply);
     }
