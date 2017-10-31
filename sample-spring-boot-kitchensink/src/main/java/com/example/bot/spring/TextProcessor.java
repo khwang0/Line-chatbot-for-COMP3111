@@ -22,21 +22,21 @@ public class TextProcessor {
 			if(text.toLowerCase().contains("recommend")||
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
-				//reply += rsender.process(userId, text);
+				reply += rsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization","reco");				
 				return reply; //return "in recomend";
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
 				GQTextSender gqsender = new GQTextSender();
-				//reply += gqsender.process(userId, text);
+				reply += gqsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization", "gq");				
 				return reply; //return "in general q";
 			}
 
 			if(text.toLowerCase().contains("book")) {
 				BookingTextSender bsender = new BookingTextSender();
-				//reply += bsender.process(userId, text);
+				reply += bsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization","book");				
 				return reply; //return "in booking";
 			}
