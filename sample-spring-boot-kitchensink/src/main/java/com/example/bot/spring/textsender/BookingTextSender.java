@@ -25,7 +25,7 @@ public class BookingTextSender implements TextSender {
 	 */
 	public String process(String userId, String msg) throws Exception {
 		bookingDB.openConnection();
-		String status = null;
+		String status = "";
 		try {
 			status = bookingDB.getStatus(userId);
 		} catch (Exception e1) {
@@ -48,6 +48,8 @@ public class BookingTextSender implements TextSender {
 			
 			// Status name: asking for user's actual name
 			case "name":{
+				 = getInfoQuestion("adult");
+				bookingDB.setStatus("adult", userId);
 				bookingDB.createNewBooking(userId, msg);
 				break;
 			}
@@ -72,8 +74,8 @@ public class BookingTextSender implements TextSender {
 				String date = Integer.toString(mm)+Integer.toString(dd);
 				if(dates.contains(date)) {
 					bookingDB.recordDate(userId,dd,mm);
-					reply = getInfoQuestion("adult");
-					bookingDB.setStatus("adult", userId);
+					reply = getInfoQuestion("name");
+					bookingDB.setStatus("name", userId);
 				}else {
 					reply = "Invalid date. Please enter a valid date.";
 				}
@@ -156,6 +158,7 @@ public class BookingTextSender implements TextSender {
 				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")
 						||msg.toLowerCase().contains("good")) {
 					bookingDB.setStatus("default",userId);
+					
 					reply = "Thank you. Please pay the tour fee by ATM to "
 							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
 							+ "When you complete the ATM payment, please send the bank "
@@ -165,17 +168,13 @@ public class BookingTextSender implements TextSender {
 				}
 				break;
 			}
-			case "default":{
-				reply = defaultCaseHandler(userId,msg);
-				break;
-			}
 			default:{
 				//log.info("Illegal status for user id: {}. ", userId);
 				reply = defaultCaseHandler(userId,msg);
 			}
 		}
 		bookingDB.close();
-		if(reply.equals(null)) {
+		if(reply == null) {
 			throw new Exception("CANNOT ANSWER");
 		}
 		return reply;

@@ -215,16 +215,14 @@ public class BookingDBEngine extends DBEngine {
 	public void setTourid(String userId, String tourId) {
 		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
-		String cat = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+LINEUSER
-					+ " SET status = ?, categoriztion = ?"
+					+ " SET tourId = ?"
 					+ " WHERE userID = ?");
 		
 			nstmt.setString(1, tourId);
-			nstmt.setString(2, cat);
-			nstmt.setString(3, userId);
+			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
 		} catch (SQLException e) {
@@ -327,8 +325,12 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT status "
-					+ "FROM "+ LINEUSER
-					+ "WHERE userID = ?");
+					+ " FROM "+ LINEUSER
+					+ " WHERE userID = ?");
+			System.out.println("-----------------------------");
+			System.out.println("SELECT status "
+					+ " FROM "+ LINEUSER
+					+ " WHERE userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -719,6 +721,9 @@ public class BookingDBEngine extends DBEngine {
 	
 	private ResultSet query(PreparedStatement nstmt) {
 		ResultSet rs = null;
+		System.out.println("------------------------------");
+		System.out.println(nstmt);
+		System.out.println("------------------------------");
 		try {
 			rs = nstmt.executeQuery();
 		} catch (SQLException e) {
