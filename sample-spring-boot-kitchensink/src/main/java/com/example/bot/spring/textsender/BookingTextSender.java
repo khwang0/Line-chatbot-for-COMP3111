@@ -25,7 +25,7 @@ public class BookingTextSender implements TextSender {
 	 */
 	public String process(String userId, String msg) throws Exception {
 		bookingDB.openConnection();
-		String status = null;
+		String status = "";
 		try {
 			status = bookingDB.getStatus(userId);
 		} catch (Exception e1) {
@@ -51,6 +51,8 @@ public class BookingTextSender implements TextSender {
 			
 			// Status name: asking for user's actual name
 			case "name":{
+				reply = getInfoQuestion("adult");
+				bookingDB.setStatus("adult", userId);
 				bookingDB.createNewBooking(userId, msg);
 				// >>>>>>>>>>>>> reply = getInfoQuestion("date");?
 				// >>>>>>>>>>>>> bookingDB.setStatus("date",userId);
@@ -77,8 +79,8 @@ public class BookingTextSender implements TextSender {
 				String date = Integer.toString(mm)+Integer.toString(dd);
 				if(dates.contains(date)) {
 					bookingDB.recordDate(userId,dd,mm);
-					reply = getInfoQuestion("adult");
-					bookingDB.setStatus("adult", userId);
+					reply = getInfoQuestion("name");
+					bookingDB.setStatus("name", userId);
 				}else {
 					reply = "Invalid date. Please enter a valid date.";
 				}
@@ -161,6 +163,7 @@ public class BookingTextSender implements TextSender {
 				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")
 						||msg.toLowerCase().contains("good")) {
 					bookingDB.setStatus("default",userId);
+					bookingDB.updateRegisteredNumber(userId);
 					reply = "Thank you. Please pay the tour fee by ATM to "
 							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
 							+ "When you complete the ATM payment, please send the bank "
@@ -168,10 +171,6 @@ public class BookingTextSender implements TextSender {
 				}else {
 					reply = stopCurrentBooking(userId);
 				}
-				break;
-			}
-			case "default":{
-				reply = defaultCaseHandler(userId,msg);
 				break;
 			}
 			default:{
@@ -224,8 +223,10 @@ public class BookingTextSender implements TextSender {
 		LinkedList<String> tourIds = bookingDB.getAllTourIds();
 		String reply = null;
 		for(int i = 0; i < tourIds.size(); i++) {
-			if(msg.contains(tourIds.get(i))) {
+			if(msg.contains(tourIds.get(i).substring(0,5))) {
 				reply = this.getConfirmation(userId, tourIds.get(i));
+				System.out.println("-----------------------------");
+				System.out.println(reply);
 				return reply;
 			}
 		}
@@ -289,6 +290,7 @@ public class BookingTextSender implements TextSender {
 			String reply = String.format("Total price is %f, confirm? "
 					+ "Please notice that there will be no refund for "
 					+ "cancellation due to personal reasons.", totalPrice);
+			bookingDB.recordTotalPrice(totalPrice,userId);
 			bookingDB.setStatus("confirm",userId);
 			return reply;
 		}
@@ -312,7 +314,7 @@ public class BookingTextSender implements TextSender {
 				sb.append(" and ");
 			else if(i != 0)
 				sb.append(", ");
-			sb.append(allDates[i].substring(2)+"//"+allDates[i].substring(0,2));
+			sb.append(allDates[i].substring(2)+"/"+allDates[i].substring(0,2));
 		}
 		sb.append(" still available for booking.\n");
 		sb.append("The fee for this tour is: Weekday: ");
@@ -321,7 +323,9 @@ public class BookingTextSender implements TextSender {
 		sb.append(tourInfo.get(3)).append("\n");
 		sb.append("Do you want to book this one?");
 		bookingDB.setTourid(userId, tourId);
-		return sb.toString();
+		bookingDB.setStatus("new", userId);
+		String reply = sb.toString();
+		return reply;
 	}
 
 
