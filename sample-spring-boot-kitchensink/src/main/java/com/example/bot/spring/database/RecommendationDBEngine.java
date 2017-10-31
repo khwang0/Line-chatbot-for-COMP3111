@@ -30,13 +30,16 @@ public class RecommendationDBEngine extends DBEngine {
 					String temp="Tours with good "+text.get(i)+" : ";
 				
 					rs=stmt.executeQuery();
-					if (rs==null) {
+					// the return value of "executeQuery()":
+					// ResultSet object that contains the data produced by the given query; never null					
+					//if (rs==null) {
+					if(!rs.next())	{
 						response="No tours with good "+text.get(i)+"\n";
 					}
 					else {
 						while (rs.next()) {	
 							String tourid = rs.getString(1);
-							temp+=tourid+", ";
+							temp+=tourid+", "; // shall we also append tourName? 
 							idList+=tourid+", ";
 						}
 						temp=temp.replaceAll(", $", "");

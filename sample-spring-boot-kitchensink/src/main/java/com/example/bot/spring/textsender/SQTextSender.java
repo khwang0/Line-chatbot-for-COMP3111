@@ -21,24 +21,14 @@ public class SQTextSender implements TextSender {
 		// if msg contains certain keywords, label it
 			
 			label = sqdbengine.search(msg);
-			label = label.replaceAll("\\s+$", "");	// trunc the whitespace at the end 
-			
-			//int length = label.length();
-			//System.out.print(length);
-			
-			/*
-			if (msg == "Hi") {
-				label = "greeting";
-			}
-			*/
-
-		
+			// label = label.replaceAll("\\s+$", "");	// trunc the whitespace at the end 
+					
 		switch (label) {
 			case "greeting":{
 				System.out.print("should be here");
 				return "Hi! How can I help you?";
 			}
-			case "thanks":{
+			case "thank":{
 				return "You are welcome =)";
 			}
 			case "goodbye":{

@@ -643,7 +643,8 @@ public class BookingDBEngine extends DBEngine {
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
 				String offerId = rs.getString(1);
-				String date = offerId.substring(9);
+				String date = offerId.substring(9); // parse date from the last 4 digit of offerID?
+				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ???? 
 				if(!allDates.equals(""))
 					allDates = allDates + "," + date;
 			}
