@@ -22,23 +22,23 @@ public class TextProcessor {
 			if(text.toLowerCase().contains("recommend")||
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
-				reply += rsender.process(userId, text);
+				//reply += rsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization","reco");
-				return reply;
+				return "in recomend";
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
 				GQTextSender gqsender = new GQTextSender();
-				reply += gqsender.process(userId, text);
+				//reply += gqsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization", "gq");
-				return reply;
+				return "in general q";
 			}
 
 			if(text.toLowerCase().contains("book")) {
 				BookingTextSender bsender = new BookingTextSender();
-				reply += bsender.process(userId, text);
+				//reply += bsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization","book");
-				return reply;
+				return "in booking";
 			}
 			
 			tag=DBE.getLineUserInfo(userId,"categorization");
@@ -46,14 +46,17 @@ public class TextProcessor {
 			case "reco":
 				RecommendationTextSender rsender = new RecommendationTextSender();
 				reply += rsender.process(userId, text);
+				//return "in recomend via tag";
 				break;
 			case "book":
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);
+				//return "in booking via tag";
 				break;
 			case "gq":
 				GQTextSender gqsender = new GQTextSender();
 				reply += gqsender.process(userId, text);
+				//return "in general q via tag";
 				break;
 			default:
 				reply += "Could you please specify that you want some recommendation, asking some general question, or booking a trip";
@@ -63,6 +66,7 @@ public class TextProcessor {
 		} catch (Exception e) {
 			UQAutomateSender uqSender = new UQAutomateSender();
 			reply = uqSender.process(userId, text);
+			//return "exception here";
 			return reply;
 		}
 
@@ -70,7 +74,7 @@ public class TextProcessor {
 
 	public String processText(String userId, String text) throws Exception{
 		DBE.updateLineUserInfo(userId,"lastq",text);
-		if (text==null) {
+		if (text==null) {// yet text won't be null?
 			throw new Exception("no input");
 		}
 		String reply=classifyText(userId,text);

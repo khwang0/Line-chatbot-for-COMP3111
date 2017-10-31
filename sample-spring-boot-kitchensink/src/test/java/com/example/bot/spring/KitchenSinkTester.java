@@ -47,12 +47,81 @@ import com.example.bot.spring.textsender.*;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { KitchenSinkTester.class, SQTextSender.class })
+@SpringBootTest(classes = { KitchenSinkTester.class, TextProcessor.class, SQTextSender.class })
 public class KitchenSinkTester {
+	@Autowired
+	private TextProcessor textprocessor;
 	@Autowired
 	private SQTextSender sqsender;
 	
 	@Test
-	public void simpleReply() throws Exception {
+	public void testProcessText() throws Exception {
+		boolean thrown = false;
+
+		String[] result = new String[5];
+		
+		String[] message= { 
+				"hi",
+				"can you recommend",
+				"tell me more",
+				"can I book that",
+				"not sure why here"
+				};
+		String[] reply = {
+				"Hi! How can I help you?",
+				"in recomend",
+				"in general q",
+				"in booking",
+				"exception here"
+		};
+		
+		String userid = "123456";
+		
+		try {
+			for (int i = 0; i < 5; i++) {
+				result[i] = this.sqsender.process(userid, message[i]);
+				System.out.println(result[i]);
+			}	
+			
+		} catch (Exception e) {
+			thrown = true;	
+		}
+		
+		for (int i = 0; i < 5; i++) {
+			assertThat(result[i].contains(reply[i])).isEqualTo(true);
+		}
+	}
+	
+	@Test
+	public void testSQsender() throws Exception {
+		boolean thrown = false;
+		
+		String[] SQresult = new String[4];
+		
+		String userid = "123456";
+		
+		String[] message= { "hi","hello", "thanks", "bye" };
+		String[] reply = {
+			"Hi! How can I help you?", 
+			"Hi! How can I help you?", 
+			"You are welcome =)", 
+			"have a nice day!"
+		};
+		
+		try {
+			for (int i = 0; i < 4; i++) {
+				SQresult[i] = this.sqsender.process(userid, message[i]);
+			}
+						
+		} catch (Exception e) {
+			thrown = true;	
+			for (int i = 0; i < 4; i++) {
+				System.err.println(SQresult[i]);
+			}
+		}
+		
+		for (int i = 0; i < 4; i++) {
+			assertThat(SQresult[i].contains(reply[i])).isEqualTo(true);
+		}
 	}
 }
