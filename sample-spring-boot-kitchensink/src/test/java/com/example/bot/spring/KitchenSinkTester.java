@@ -45,15 +45,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.example.bot.spring.textsender.*;
 
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { KitchenSinkTester.class, TextProcessor.class, SQTextSender.class })
+@SpringBootTest(classes = { KitchenSinkTester.class, TextProcessor.class, SQTextSender.class, GQTextSender.class })  
 public class KitchenSinkTester {
+	@Autowired
+	private GQTextSender gqsender;   
 	@Autowired
 	private TextProcessor textprocessor;
 	@Autowired
 	private SQTextSender sqsender;
-	
+  
+  private String testerId="123456";
+  
+  /*
+  // only applicable when textProcessor calling no external function
 	@Test
 	public void testProcessText() throws Exception {
 		boolean thrown = false;
@@ -72,11 +77,10 @@ public class KitchenSinkTester {
 				"in booking",
 				"exception here"
 		};		
-		String userid = "123456";
 		
 		try {
 			for (int i = 0; i < 5; i++) {
-				result[i] = this.sqsender.process(userid, message[i]);
+				result[i] = this.sqsender.process(testerId, message[i]);
 				System.out.println(result[i]);
 			}				
 		} catch (Exception e) {
@@ -86,6 +90,7 @@ public class KitchenSinkTester {
 		for (int i = 0; i < 5; i++)
 			assertThat(result[i].contains(reply[i])).isEqualTo(true);
 	}
+  */
 	
 	@Test
 	public void testSQsender() throws Exception {
@@ -105,7 +110,7 @@ public class KitchenSinkTester {
 		
 		try {
 			for (int i = 0; i < 4; i++) {
-				SQresult[i] = this.sqsender.process(userid, message[i]);
+				SQresult[i] = this.sqsender.process(testerId, message[i]);
 			}
 						
 		} catch (Exception e) {
@@ -118,5 +123,34 @@ public class KitchenSinkTester {
 		for (int i = 0; i < 4; i++) {
 			assertThat(SQresult[i].contains(reply[i])).isEqualTo(true);
 		}
+    
+	@Test
+	public void GQTester() throws Exception {
+		boolean thrown = false;
+		boolean WA = false;
+		int length=2;
+		String[] inputs= {
+				"could you please introduce the shenzhen city tour?",
+				"how long is the trip?"};
+		String[] outputs= {
+				"Window of The World  * Splendid China & Chinese Folk Culture Village * Dafen Oil Painting Village (All tickets included)",
+				"3 days"
+		};
+		//System.err.println("it is still working here");
+		String reply;
+		try {
+			for(int i=0;i<length;i++) {
+				reply=gqsender.process(testerId,inputs[i]);
+				//System.err.println(reply);
+				if(!reply.contains(outputs[i])) {
+					WA = true;
+				}
+			}
+		}catch(Exception e) {
+			//System.err.println("exception");
+			thrown = true;
+		}
+		assertThat(WA).isEqualTo(false);
+		assertThat(thrown).isEqualTo(false);
 	}
 }
