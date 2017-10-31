@@ -123,6 +123,7 @@ public class KitchenSinkTester {
 		for (int i = 0; i < 4; i++) {
 			assertThat(SQresult[i].contains(reply[i])).isEqualTo(true);
 		}
+	}
     
 	@Test
 	public void GQTester() throws Exception {
