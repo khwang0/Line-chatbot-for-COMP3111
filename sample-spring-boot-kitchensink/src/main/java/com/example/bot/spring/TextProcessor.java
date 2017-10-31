@@ -5,7 +5,7 @@ import com.example.bot.spring.textsender.*;
 
 public class TextProcessor {
 
-	DBEngine DBE;
+	private DBEngine DBE;
 	public TextProcessor() {
 		// TODO Auto-generated constructor stub
 		DBE=new DBEngine();

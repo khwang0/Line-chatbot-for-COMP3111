@@ -48,7 +48,7 @@ public class BookingTextSender implements TextSender {
 			
 			// Status name: asking for user's actual name
 			case "name":{
-				 = getInfoQuestion("adult");
+				reply = getInfoQuestion("adult");
 				bookingDB.setStatus("adult", userId);
 				bookingDB.createNewBooking(userId, msg);
 				break;
@@ -158,7 +158,7 @@ public class BookingTextSender implements TextSender {
 				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")
 						||msg.toLowerCase().contains("good")) {
 					bookingDB.setStatus("default",userId);
-					
+					bookingDB.updateRegisteredNumber(userId);
 					reply = "Thank you. Please pay the tour fee by ATM to "
 							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
 							+ "When you complete the ATM payment, please send the bank "
@@ -174,7 +174,7 @@ public class BookingTextSender implements TextSender {
 			}
 		}
 		bookingDB.close();
-		if(reply == null) {
+		if(reply.equals(null)) {
 			throw new Exception("CANNOT ANSWER");
 		}
 		return reply;
@@ -218,8 +218,10 @@ public class BookingTextSender implements TextSender {
 		LinkedList<String> tourIds = bookingDB.getAllTourIds();
 		String reply = null;
 		for(int i = 0; i < tourIds.size(); i++) {
-			if(msg.contains(tourIds.get(i))) {
+			if(msg.contains(tourIds.get(i).substring(0,5))) {
 				reply = this.getConfirmation(userId, tourIds.get(i));
+				System.out.println("-----------------------------");
+				System.out.println(reply);
 				return reply;
 			}
 		}
@@ -283,6 +285,7 @@ public class BookingTextSender implements TextSender {
 			String reply = String.format("Total price is %f, confirm? "
 					+ "Please notice that there will be no refund for "
 					+ "cancellation due to personal reasons.", totalPrice);
+			bookingDB.recordTotalPrice(totalPrice,userId);
 			bookingDB.setStatus("confirm",userId);
 			return reply;
 		}
@@ -306,7 +309,7 @@ public class BookingTextSender implements TextSender {
 				sb.append(" and ");
 			else if(i != 0)
 				sb.append(", ");
-			sb.append(allDates[i].substring(2)+"//"+allDates[i].substring(0,2));
+			sb.append(allDates[i].substring(2)+"/"+allDates[i].substring(0,2));
 		}
 		sb.append(" still available for booking.\n");
 		sb.append("The fee for this tour is: Weekday: ");
@@ -315,7 +318,9 @@ public class BookingTextSender implements TextSender {
 		sb.append(tourInfo.get(3)).append("\n");
 		sb.append("Do you want to book this one?");
 		bookingDB.setTourid(userId, tourId);
-		return sb.toString();
+		bookingDB.setStatus("new", userId);
+		String reply = sb.toString();
+		return reply;
 	}
 
 

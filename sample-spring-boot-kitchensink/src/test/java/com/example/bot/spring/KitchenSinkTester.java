@@ -53,6 +53,7 @@ public class KitchenSinkTester {
 	@Autowired
 	private SQTextSender sqsender;
 	private String testerId = "123456";
+	
 	@Test
 	public void simpleReply() throws Exception {
 	}
@@ -82,8 +83,5 @@ public class KitchenSinkTester {
 							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
 							+ "When you complete the ATM payment, please send the bank "
 							+ "in slip to us. Our staff will validate it.");
-		BookingDBEngine bookingDB = new BookingDBEngine();
-		reply = bookingDB.getTourJoined(testerId);
-		assertThat(reply).isEqualTo("2D00120171118");
 	}
 }
