@@ -57,9 +57,7 @@ public class KitchenSinkTester {
 	@Test
 	public void testProcessText() throws Exception {
 		boolean thrown = false;
-
-		String[] result = new String[5];
-		
+		String[] result = new String[5];		
 		String[] message= { 
 				"hi",
 				"can you recommend",
@@ -73,23 +71,20 @@ public class KitchenSinkTester {
 				"in general q",
 				"in booking",
 				"exception here"
-		};
-		
+		};		
 		String userid = "123456";
 		
 		try {
 			for (int i = 0; i < 5; i++) {
 				result[i] = this.sqsender.process(userid, message[i]);
 				System.out.println(result[i]);
-			}	
-			
+			}				
 		} catch (Exception e) {
 			thrown = true;	
 		}
 		
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
 			assertThat(result[i].contains(reply[i])).isEqualTo(true);
-		}
 	}
 	
 	@Test
