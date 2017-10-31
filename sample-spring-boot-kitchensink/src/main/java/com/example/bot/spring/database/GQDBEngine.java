@@ -76,13 +76,14 @@ public class GQDBEngine extends DBEngine {
 			   Text.toLowerCase().contains("how much time") ||
 			   Text.toLowerCase().contains("duration") ) 
 			{
+				//System.err.println("ask time");
 				stmt = connection.prepareStatement(
 					"SELECT tour_name,duration FROM tour_info WHERE tourid = ?");				
 				stmt.setString(1, TourID);
 				rs=stmt.executeQuery();
 								
 				if(rs.next()) {
-					answer+= rs.getString(1) + " takes " + rs.getString(2) + " days.\n";
+					answer+= rs.getString(1) + " takes " + rs.getInt(2) + " days.\n";
 				}
 			}
 			
@@ -90,12 +91,15 @@ public class GQDBEngine extends DBEngine {
 			   Text.toLowerCase().contains("descri") ||
 			   Text.toLowerCase().contains("introdu"))
 			{
+				//System.err.println("description tourid = "+TourID);
+				//System.err.println("SELECT description from tour_description WHERE tourid = ?");
 				stmt = connection.prepareStatement(
-						"SELECT tour_short_description from tour_description WHERE tourid=?");
-				stmt.setString(1, TourID);				
+						"SELECT description from tour_description WHERE tourid = ?");
+				stmt.setString(1, TourID);
 				rs=stmt.executeQuery();
 				
 				if(rs.next()) {
+					//System.err.println("updating in descri");
 					answer+= "These are what you can expect there:";
 					answer+="\n   "+rs.getString(1);
 					answer+=".\n";

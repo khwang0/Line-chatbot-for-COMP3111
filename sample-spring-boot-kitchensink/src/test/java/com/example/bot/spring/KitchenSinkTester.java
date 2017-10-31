@@ -45,17 +45,40 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.bot.spring.database.BookingDBEngine;
 import com.example.bot.spring.textsender.*;
 
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { KitchenSinkTester.class, SQTextSender.class, BookingTextSender.class,
-		BookingDBEngine.class})
+@SpringBootTest(classes = { KitchenSinkTester.class, GQTextSender.class })
 public class KitchenSinkTester {
 	@Autowired
-	private SQTextSender sqsender;
-	private String testerId = "123456";
-	
+	private GQTextSender gqsender;
+	private String testerId="123456";
 	@Test
-	public void simpleReply() throws Exception {
+	public void GQTester() throws Exception {
+		boolean thrown = false;
+		boolean WA = false;
+		int length=2;
+		String[] inputs= {
+				"could you please introduce the shenzhen city tour?",
+				"how long is the trip?"};
+		String[] outputs= {
+				"Window of The World  * Splendid China & Chinese Folk Culture Village * Dafen Oil Painting Village (All tickets included)",
+				"3 days"
+		};
+		//System.err.println("it is still working here");
+		String reply;
+		try {
+			for(int i=0;i<length;i++) {
+				reply=gqsender.process(testerId,inputs[i]);
+				//System.err.println(reply);
+				if(!reply.contains(outputs[i])) {
+					WA = true;
+				}
+			}
+		}catch(Exception e) {
+			//System.err.println("exception");
+			thrown = true;
+		}
+		assertThat(WA).isEqualTo(false);
+		assertThat(thrown).isEqualTo(false);
 	}
 	
 	@Test
