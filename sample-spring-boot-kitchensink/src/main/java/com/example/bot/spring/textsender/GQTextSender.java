@@ -12,7 +12,9 @@ public class GQTextSender implements TextSender {
 	@Override
 	public String process(String userID, String msg) {
 		try{
+			//System.err.println(userID+" : "+msg);
 			String TourID=DBE.getTourID(userID,msg);
+			//System.err.println(TourID);
 			DBE.update(userID,TourID);
 			return DBE.query(userID,msg,TourID);
 		}catch(Exception e) {
