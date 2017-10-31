@@ -32,17 +32,18 @@ public class SQDBEngine extends DBEngine {
 		
 		try {
 			connection = super.getConnection();
-			//String statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
-			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
+			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
+			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
 			//System.out.print(statement);
-			
+			System.out.print(text);
+			System.out.print("  " + statement);
 			stmt = connection.prepareStatement(statement);
 			
 			rs = stmt.executeQuery();			
 			if (rs.next()) {				
 				reply = rs.getString(1);
 			}
-			System.out.print(reply);
+			System.out.println(reply);
 		}catch(Exception e) {
 			System.out.println("---------- inside search ---------- ");
 			System.err.println(e.getMessage());

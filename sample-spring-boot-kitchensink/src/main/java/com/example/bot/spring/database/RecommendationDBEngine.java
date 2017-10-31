@@ -48,6 +48,7 @@ public class RecommendationDBEngine extends DBEngine {
 					rs.close();
 				}
 				if (idList!="") {
+
 					idList=idList.replaceAll(", $", "");
 				}
 				//stmt.close();
@@ -63,21 +64,7 @@ public class RecommendationDBEngine extends DBEngine {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-//		finally {
-//			try {
-//				rs.beforeFirst();
-//				if (rs.next()) rs.close();
-//				if (stmt != null) stmt.close();
-//				if (connection != null) connection.close();
-//			} catch (Exception e2) {
-//				System.err.println(e2.getMessage());
-//			}
-//			stmt.close();
-//			connection.close();
-//		}
-		//stmt.close();
-		//connection.close();
-		//return "hahaha";
+
 		return response;
 	}
 }

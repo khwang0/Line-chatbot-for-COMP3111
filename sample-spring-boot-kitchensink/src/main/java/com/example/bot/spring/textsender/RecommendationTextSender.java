@@ -28,8 +28,10 @@ public class RecommendationTextSender implements TextSender {
 			featureList.add("food");
 		}
 		String reply = searchEngine.recommendationQuery(userId, featureList);
-		if(reply.equals(null)||reply.equals(""))
+		if(reply.equals(null)||reply.equals("")) {
 			throw new Exception("No matching");
+			// when featureList is empty -> reply = "";
+		}
 		else
 			return reply;
 	}
