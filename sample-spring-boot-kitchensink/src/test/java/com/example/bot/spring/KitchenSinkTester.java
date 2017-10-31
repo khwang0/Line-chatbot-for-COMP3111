@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -42,21 +43,50 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+<<<<<<< HEAD
+import com.example.bot.spring.database.RecommendationDBEngine;
+import com.example.bot.spring.database.UQDBEngine;
+
+=======
 import com.example.bot.spring.database.BookingDBEngine;
+>>>>>>> f829eba2db25d5eb7c5a70f3d292c67e09132757
 import com.example.bot.spring.textsender.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { KitchenSinkTester.class, TextProcessor.class, SQTextSender.class, GQTextSender.class })  
+
+@SpringBootTest(classes = { KitchenSinkTester.class, RecommendationDBEngine.class, UQDBEngine.class, TextProcessor.class, SQTextSender.class, GQTextSender.class })
 public class KitchenSinkTester {
+	@Autowired
+	private UQDBEngine UQEngine;
+	@Autowired
+	private RecommendationDBEngine REngine;
 	@Autowired
 	private GQTextSender gqsender;   
 	@Autowired
 	private TextProcessor textprocessor;
 	@Autowired
 	private SQTextSender sqsender;
-  
-  private String testerId="123456";
-  
+	
+	private String testerId="123456";
+	
+//	@Test
+//	public void simpleReply() throws Exception {
+//	}
+	
+	@Test
+	public void testUQ() throws Exception {
+		boolean thrown = false;
+		String result = null;
+		UQEngine = new UQDBEngine();
+		try {
+			result = this.UQEngine.uqQuery("123456", "Stupid");
+		} catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(true);
+		assertThat(result).isEqualTo("Sorry, I can't answer your question. My colleague will follow up with you.");
+	}
+
   /*
   // only applicable when textProcessor calling no external function
 	@Test
@@ -123,6 +153,7 @@ public class KitchenSinkTester {
 		for (int i = 0; i < 4; i++) {
 			assertThat(SQresult[i].contains(reply[i])).isEqualTo(true);
 		}
+	}
     
 	@Test
 	public void GQTester() throws Exception {
@@ -152,6 +183,28 @@ public class KitchenSinkTester {
 		}
 		assertThat(WA).isEqualTo(false);
 		assertThat(thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void testRecommendation() throws Exception {
+		boolean thrown = false;
+		String result = null;
+		ArrayList<String> temp = new ArrayList<String>();
+		REngine = new RecommendationDBEngine();
+		temp.add("food");
+		temp.add("spring");
+		System.err.println(temp.get(0) + " " + temp.get(1));
+		System.err.println("it is good here");
+		try {
+			System.err.println("it is good here");
+			result = this.REngine.recommendationQuery("123456",temp);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			e.printStackTrace();
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(true);
+		assertThat(result).isEqualTo("Tours with good food : 2D005\nTours with good spring : 2D001, 2D002, 2D003\n");
 	}
 	
 	@Test
