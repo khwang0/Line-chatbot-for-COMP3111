@@ -13,8 +13,8 @@ public class RecommendationDBEngine extends DBEngine {
 	}
 	
 	public String recommendationQuery(String userId, ArrayList<String> text) {
-		System.err.println(text.get(0) + " " + text.get(1));
-		System.out.println("------Inside the function");
+		//System.err.println(text.get(0) + " " + text.get(1));
+		//System.out.println("------Inside the function");
 		String response="";
 		String idList="";
 		
@@ -27,7 +27,7 @@ public class RecommendationDBEngine extends DBEngine {
 			connection = getConnection();
 			
 			for(int i=0; i<text.size(); i++) {
-				System.out.println(text.get(i));
+				//System.out.println(text.get(i));
 				stmt = connection.prepareStatement(
 					"select * from tour_features where "+text.get(i)+"=1");
 				temp="Tours with good "+text.get(i)+" : ";

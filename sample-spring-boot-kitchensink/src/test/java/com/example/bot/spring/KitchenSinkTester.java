@@ -43,13 +43,10 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-<<<<<<< HEAD
 import com.example.bot.spring.database.RecommendationDBEngine;
 import com.example.bot.spring.database.UQDBEngine;
 
-=======
 import com.example.bot.spring.database.BookingDBEngine;
->>>>>>> f829eba2db25d5eb7c5a70f3d292c67e09132757
 import com.example.bot.spring.textsender.*;
 
 @RunWith(SpringRunner.class)
@@ -193,13 +190,13 @@ public class KitchenSinkTester {
 		REngine = new RecommendationDBEngine();
 		temp.add("food");
 		temp.add("spring");
-		System.err.println(temp.get(0) + " " + temp.get(1));
-		System.err.println("it is good here");
+		//System.err.println(temp.get(0) + " " + temp.get(1));
+		//System.err.println("it is good here");
 		try {
-			System.err.println("it is good here");
+			//System.err.println("it is good here");
 			result = this.REngine.recommendationQuery("123456",temp);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
 			e.printStackTrace();
 			thrown = true;
 		}
