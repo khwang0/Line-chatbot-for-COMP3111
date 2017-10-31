@@ -13,13 +13,14 @@ public class UQDBEngine extends DBEngine {
 	}
 	
 	public String uqQuery(String userId, String text) {
+		System.out.println("Success");
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		try {
 			connection = getConnection();
 			//insert into the unanswered question table to store the question
 			stmt = connection.prepareStatement(
-					"insert into unanswered_question values( \'"+userId+"\', \'"+text+"\', false)"
+					"insert into unanswered_question values( '"+userId+"', '"+text+"', false)"
 			);
 			stmt.executeUpdate();
 		} catch (URISyntaxException e) {

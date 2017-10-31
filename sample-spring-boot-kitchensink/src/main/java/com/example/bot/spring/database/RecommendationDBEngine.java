@@ -13,57 +13,71 @@ public class RecommendationDBEngine extends DBEngine {
 	}
 	
 	public String recommendationQuery(String userId, ArrayList<String> text) {
+		System.err.println(text.get(0) + " " + text.get(1));
+		System.out.println("------Inside the function");
 		String response="";
 		String idList="";
 		
 		Connection connection = null;
 		PreparedStatement stmt = null;
+		String temp;
 		ResultSet rs = null;
-		//insert into the unanswered question table to store the question
 
 		try {
 			connection = getConnection();
 			
 			for(int i=0; i<text.size(); i++) {
-					stmt = connection.prepareStatement(
-						"select * from tour_features where "+text.get(i)+"=1");
-					String temp="Tours with good "+text.get(i)+" : ";
+				System.out.println(text.get(i));
+				stmt = connection.prepareStatement(
+					"select * from tour_features where "+text.get(i)+"=1");
+				temp="Tours with good "+text.get(i)+" : ";
+			
+				rs=stmt.executeQuery();
 				
-					rs=stmt.executeQuery();
-					if (rs==null) {
-						response="No tours with good "+text.get(i)+"\n";
-					}
-					else {
-						while (rs.next()) {	
-							String tourid = rs.getString(1);
-							temp+=tourid+", ";
-							idList+=tourid+", ";
-						}
-						temp=temp.replaceAll(", $", "");
-						response+=temp+"\n";
-					}
+				if (rs==null) {
+					response+="No tours with good "+text.get(i)+"\n";
+				}
+				else {
+					while (rs.next()) {
+						String tourid = rs.getString(1);
+						temp+=tourid+", ";
+						idList+=tourid+", ";
+					} 
+					temp=temp.replaceAll(", $", "");
+					response+=temp+"\n";
+					rs.close();
+				}
+				if (idList!="") {
 					idList=idList.replaceAll(", $", "");
-					//stmt.close();
+				}
+				//stmt.close();
 			}
 			
 			stmt=connection.prepareStatement(
-					"update line_user_info set TourIDs ='"+idList+"'where UserID='"+userId+"';"
+					"update line_user_info set tourids ='"+idList+"' where userid='"+userId+"'"
 			);
 			stmt.executeUpdate();
 			
+			stmt.close();
+			connection.close();
 		}catch(Exception e) {
 			e.printStackTrace();
-		}finally {
-			try {
-				if (rs.next()) rs.close();
-				if (stmt != null) stmt.close();
-				if (connection != null) connection.close();
-			} catch (Exception e2) {
-				System.err.println(e2.getMessage());
-			}
-			//stmt.close();
-			//connection.close();
 		}
+//		finally {
+//			try {
+//				rs.beforeFirst();
+//				if (rs.next()) rs.close();
+//				if (stmt != null) stmt.close();
+//				if (connection != null) connection.close();
+//			} catch (Exception e2) {
+//				System.err.println(e2.getMessage());
+//			}
+//			stmt.close();
+//			connection.close();
+//		}
+		//stmt.close();
+		//connection.close();
+		//return "hahaha";
 		return response;
 	}
 }
