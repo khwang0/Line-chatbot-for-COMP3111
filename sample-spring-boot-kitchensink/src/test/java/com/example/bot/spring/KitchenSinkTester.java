@@ -17,12 +17,12 @@ import com.example.bot.spring.textsender.*;
 
 @RunWith(SpringRunner.class)
 
-@SpringBootTest(classes = { KitchenSinkTester.class, RecommendationDBEngine.class, UQDBEngine.class, TextProcessor.class, SQTextSender.class, GQTextSender.class })
+@SpringBootTest(classes = { KitchenSinkTester.class, RecommendationTextSender.class, UQAutomateSender.class, TextProcessor.class, SQTextSender.class, GQTextSender.class })
 public class KitchenSinkTester {
 	@Autowired
-	private UQDBEngine UQEngine;
+	private UQAutomateSender UQSender;
 	@Autowired
-	private RecommendationDBEngine REngine;
+	private RecommendationTextSender Rsender;
 	@Autowired
 	private GQTextSender gqsender;   
 	@Autowired
@@ -40,9 +40,9 @@ public class KitchenSinkTester {
 	public void testUQ() throws Exception {
 		boolean thrown = false;
 		String result = null;
-		UQEngine = new UQDBEngine();
+		UQSender = new UQAutomateSender();
 		try {
-			result = this.UQEngine.uqQuery("123456", "Stupid");
+			result = this.UQSender.process(testerId, "Stupid");
 		} catch (Exception e) {
 			thrown = true;
 		}
@@ -152,22 +152,42 @@ public class KitchenSinkTester {
 	public void testRecommendation() throws Exception {
 		boolean thrown = false;
 		String result = null;
-		ArrayList<String> temp = new ArrayList<String>();
-		REngine = new RecommendationDBEngine();
-		temp.add("food");
-		temp.add("spring");
-		System.err.println(temp.get(0) + " " + temp.get(1));
-		System.err.println("it is good here");
+		//ArrayList<String> temp = new ArrayList<String>();
+		Rsender = new RecommendationTextSender();
+		//temp.add("food");
+		//temp.add("spring");
+		//System.err.println(temp.get(0) + " " + temp.get(1));
+		//System.err.println("it is good here");
 		try {
-			System.err.println("it is good here");
-			result = this.REngine.recommendationQuery("123456",temp);
+			//System.err.println("it is good here");
+			result = this.Rsender.process(testerId,"food spring");
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
 			e.printStackTrace();
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Tours with good food : 2D005\nTours with good spring : 2D001, 2D002, 2D003\n");
+		assertThat(result).isEqualTo("Tours with good spring : 2D001, 2D002, 2D003\nNo tours with good food\n");
+		try {
+			//System.err.println("it is good here");
+			result = this.Rsender.process(testerId,"I want nothing");
+		} catch (Exception e) {
+			//System.err.println(e.getMessage());
+			e.printStackTrace();
+			thrown = true;
+		}
+		assertThat(thrown).isEqualTo(true);
+		//assertThat(result).isEqualTo("No matching");
+		try {
+			//System.err.println("it is good here");
+			result = this.Rsender.process(testerId,"hotel view");
+		} catch (Exception e) {
+			//System.err.println(e.getMessage());
+			e.printStackTrace();
+			thrown = true;
+		}
+		//assertThat(!thrown).isEqualTo(true);
+		assertThat(result).isEqualTo("Tours with good hotel : 2D001, 2D004\nTours with good view : 2D001, 2D002, 2D003, 2D004, 2D005\n");
 	}
 	
 	@Test
