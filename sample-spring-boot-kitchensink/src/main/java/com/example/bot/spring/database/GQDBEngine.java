@@ -74,6 +74,8 @@ public class GQDBEngine extends DBEngine {
 			   Text.toLowerCase().contains("how much time") ||
 			   Text.toLowerCase().contains("duration") ) 
 			{
+
+				if(TourID.length()<5)return ("Could you please specify which tour you what you ask?");
 				//System.err.println("ask time");
 				stmt = connection.prepareStatement(
 					"SELECT tour_name,duration FROM tour_info WHERE tourid = ?");				
@@ -91,6 +93,7 @@ public class GQDBEngine extends DBEngine {
 			{
 				//System.err.println("description tourid = "+TourID);
 				//System.err.println("SELECT description from tour_description WHERE tourid = ?");
+				if(TourID.length()<5)return ("Could you please specify which tour you what you ask?");
 				stmt = connection.prepareStatement(
 						"SELECT description from tour_description WHERE tourid = ?");
 				stmt.setString(1, TourID);
