@@ -86,7 +86,11 @@ public class TextProcessor {
 			//		break; //return "in general q via tag";
 			//	default:
 		} catch (Exception e) {
-			DBE.updateLineUserInfo(userId,"categorization", "default");
+			try {
+				DBE.updateLineUserInfo(userId,"categorization", "default");
+			}catch(Exception e2) {
+				// no action; 
+			}	
 			
 			UQAutomateSender uqSender = new UQAutomateSender();			
 			reply = uqSender.process(userId, text);			
@@ -106,15 +110,14 @@ public class TextProcessor {
 		return reply;
 	}
 	
-	private formatMsg(String message) {
+	private void formatMsg(String message) {
 		String processedMsg = null; 
 		// 01 clear unneeded whitespace and punctuation;
 		int len = message.length();
 		for (int i = 0; i < len; i++) {
-			
-		}
-		
-		
+			// add message content into processedMsg if it's not "  " or punctuation;
+		} 
+				
 		// 02 transfer the input message into lowercase
 	}
 }
