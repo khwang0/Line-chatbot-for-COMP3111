@@ -781,11 +781,7 @@ public class KitchenSinkController {
 			try {
 				if(Integer.parseInt(text) == 1) subStage = 1;
 				else {
-<<<<<<< HEAD
-					throw new Exception("Stage error");
-=======
 					throw new Exception("Going back to menu");
->>>>>>> 713c333bf8c2594c96712ad175e735127e1f5faa
 				}
 			}catch(Exception ex) {
 				subStage = 0;
