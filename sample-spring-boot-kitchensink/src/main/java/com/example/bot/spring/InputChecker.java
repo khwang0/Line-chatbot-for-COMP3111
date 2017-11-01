@@ -34,7 +34,7 @@ public class InputChecker {
 	public boolean ValidVegfruit(String text) throws NumberFormatException {
 		return( Double.parseDouble(text) < 50 && Double.parseDouble(text)> 0 );
 	}
-	public boolean ValidOtherinfo(String text) throws NumberFormatException {
+	public boolean ValidOtherinfo(String text){
 		return (text.length()<=1000);
 	}
 	

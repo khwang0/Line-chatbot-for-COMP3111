@@ -59,6 +59,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				newuser.setProtein(rs.getDouble(6));
 				newuser.setVegfruit(rs.getDouble(7));
 				newuser.setOtherInfo(rs.getString(9));
+				newuser.setAssessmentScore(rs.getInt(10));
 				Array sqlArray = rs.getArray(8);
 				newuser.setEatingHabits((Boolean[])sqlArray.getArray());
 				
@@ -98,7 +99,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO detailedusers VALUES(?,?,?,?,?,?,?,?,?)");
+					"INSERT INTO detailedusers VALUES(?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1,user.getID());
 			stmt.setInt(2, ((DetailedUser)user).getExercise());
 			stmt.setDouble(3, ((DetailedUser)user).getBodyFat());
@@ -112,6 +113,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Array sqlArray = connection.createArrayOf("bool",b);
 			stmt.setArray(8,sqlArray);
 			stmt.setString(9,((DetailedUser)user).getOtherInfo());
+			stmt.setInt(10,((DetailedUser)user).getAssessmentScore());
 			result = stmt.execute();
 			stmt.close();
 			connection.close();
@@ -149,7 +151,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
 			"UPDATE detailedusers SET amountofexercise=?,bodyfat=?,caloriesconsump=?,carbsconsump=?,proteinconsump=?,vegfruitsonsump=?,"
-			+ "eatinghabits=?,otherinformation = ? WHERE id = ?");
+			+ "eatinghabits=?,otherinformation = ?, assessmentscore = ? WHERE id = ?");
 			stmt.setInt(1, ((DetailedUser)user).getExercise());
 			stmt.setDouble(2, ((DetailedUser)user).getBodyFat());
 			stmt.setInt(3, ((DetailedUser)user).getCalories());
@@ -162,7 +164,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Array sqlArray = connection.createArrayOf("bool",b);
 			stmt.setArray(7,sqlArray);
 			stmt.setString(8,((DetailedUser)user).getOtherInfo());
-			stmt.setString(9,user.getID());
+			stmt.setInt(9,((DetailedUser)user).getAssessmentScore());
+			stmt.setString(10,user.getID());
 			result = stmt.execute();
 			stmt.close();
 			connection.close();
