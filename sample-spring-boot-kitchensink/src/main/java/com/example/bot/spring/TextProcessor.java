@@ -24,7 +24,7 @@ public class TextProcessor {
 				RecommendationTextSender rsender = new RecommendationTextSender();
 				reply += rsender.process(userId, text);
 				DBE.updateLineUserInfo(userId,"categorization","reco");				
-				return reply; //return "in recomend";
+				return reply; //return "in recommend";
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
@@ -46,7 +46,7 @@ public class TextProcessor {
 			case "reco":
 				RecommendationTextSender rsender = new RecommendationTextSender();
 				reply += rsender.process(userId, text);				
-				break;  //return "in recomend via tag";
+				break;  //return "in recommend via tag";
 			case "book":
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);				

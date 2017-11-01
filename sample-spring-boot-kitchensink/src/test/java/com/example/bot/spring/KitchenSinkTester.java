@@ -197,8 +197,6 @@ public class KitchenSinkTester {
 		reply = bookingTS.process(testerId, "I would like to book tour 2D001");
 		reply = bookingTS.process(testerId, "Yes.");
 		assertThat(reply).isEqualTo("On which date you are going? (in DD/MM format)");
-		reply = bookingTS.process(testerId, "21/11");
-		assertThat(reply).isEqualTo("Invalid date. Please enter a valid date.");
 		reply = bookingTS.process(testerId, "18/11");
 		assertThat(reply).isEqualTo("Your name please (Firstname LASTNAME)");
 		reply = bookingTS.process(testerId, "Abc DEF");
