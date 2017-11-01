@@ -781,8 +781,7 @@ public class KitchenSinkController {
 			try {
 				if(Integer.parseInt(text) == 1) subStage = 1;
 				else {
-					throws new Exception ex;
-					subStage = 0;
+					throw new Exception("Stage error");
 				}
 			}catch(Exception ex) {
 				subStage = 0;
