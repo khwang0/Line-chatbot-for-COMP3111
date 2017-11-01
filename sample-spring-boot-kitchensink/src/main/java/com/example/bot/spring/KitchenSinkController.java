@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.Date;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +97,7 @@ public class KitchenSinkController {
 	private String currentStage = "Init";
 	private int subStage = 0;
 	private Users currentUser = null;
+	private foodInput foodinput = null;
 	private SQLDatabaseEngine database;
 	private String itscLOGIN;
 	private InputChecker inputChecker = new InputChecker();
@@ -383,6 +386,85 @@ public class KitchenSinkController {
 		}break;
 		}
 	}
+	
+	
+	
+	/* Function added by ZK*/
+	
+	private void dietPlannerHandler(String replyToken, Event event, String text) {
+		
+		
+		switch(subStage) {
+		case 0:{		
+			this.replyText(replyToken,"Choose one to continue: \n\n"
+											+"1 Input daily diet\n"
+											+"2 Visualize your diet consumption"
+											+"(type other things to back to menu)");
+			subStage = -1;
+		}break;
+		case -1:{
+			try{
+				subStage = Integer.parseInt(text);
+				if (subStage >=1 && subStage <= 2) { 
+					this.replyText(replyToken, "Redirecting...type anything to continue.");
+				}
+				else {
+					this.replyText(replyToken, "All changed recorded. Type anything to return to main menu.");
+					//updata db
+					currentStage = "Main";//back to main 
+					subStage =0; 
+				}
+			}catch(Exception e) {
+				this.replyText(replyToken, "All changed recorded. Type anything to return to main menu.");
+				//update db
+				currentStage = "Main";//back to main 
+				subStage =0; 
+			}
+		}break;
+		case 1:{
+			Date date = new Date();
+			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
+			String time = ft.toString();
+			foodinput = new foodInput(event.getSource().getUserId(),time);	
+			this.replyText(replyToken, "Please enter the food name: ");
+			subStage +=10 ; 
+		}break;
+		case 11:{
+			if(inputChecker.foodAdd(text, foodinput, database, "set")) {
+        		this.replyText(replyToken, "Please enter the amount you intake(in g):");
+        		subStage +=1 ;   
+        		}
+			else 
+				this.replyText(replyToken, "Please enter a reasonable name!");
+		}break;
+		case 12:{
+			if(inputChecker.amountAdd(text, foodinput, database, "set")) {
+        		this.replyText(replyToken, "Please enter the amount you intake(in g):");
+        		subStage +=1 ;   
+        		}
+			else 
+				this.replyText(replyToken, "Please enter a reasonable number!");
+		}break;	
+		case 13:{
+      		this.replyText(replyToken, "Your data has been recorded.\nInput anything to conitnue.");
+       		subStage = 0;
+
+		}break;
+		
+		case 2:{
+			
+		}break;	
+		default:{}break;
+		}
+		
+		this.replyText(replyToken, "All set. Type anything to return to main menu...");
+		currentStage = "Main";//back to main 
+		subStage = 0; 
+		
+	}
+	
+
+	
 	
 	private void livingHabitCollectorEditor(String replyToken, Event event, String text) {
 
@@ -707,19 +789,7 @@ public class KitchenSinkController {
 			break;
 		}
 	}
-	private void dietPlannerHandler(String replyToken, Event event, String text) {
-		/*switch(subStage) {
-		case 0:{
-			
-		}break;
-		default:break;
-		}
-		*/
-		
-		this.replyText(replyToken, "All set. Type anything to return to main menu...");
-		currentStage = "Main";//back to main 
-		subStage = 0; 
-	}
+
 	private void healthPediaHandler(String replyToken, Event event, String text) {
 		//user key word input
 		//String 
