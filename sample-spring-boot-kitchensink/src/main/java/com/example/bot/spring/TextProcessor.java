@@ -22,13 +22,14 @@ public class TextProcessor {
 		}
 		try {			
 			String tag = null;
-			
+			//TODO:change this to database
 			tag=DBE.getLineUserInfo(userId,"categorization");		
 			if(tag == "book") {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);	
 				return reply;
 			}
+
 			if(text.toLowerCase().contains("recommend")||
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
