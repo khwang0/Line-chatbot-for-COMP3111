@@ -67,18 +67,7 @@ public class BookingDBEngine extends DBEngine {
 			}else {
 				tourId = tourId+"2017"+mm+dd;
 			}
-			nstmt = null;
-			try {
-				nstmt = connection.prepareStatement(
-						"UPDATE "+LINEUSER
-						+ " SET tourIDs = ?"
-						+ " WHERE userID = ?");
-			nstmt.setString(1, tourId);
-			nstmt.setString(2, userId);
-			this.update(nstmt);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			this.setTourid(userId, tourId);
 		}
 		try {
 			rs.close();
@@ -101,7 +90,8 @@ public class BookingDBEngine extends DBEngine {
 					+ " SET adultnum = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
 					+ "WHERE c.customername = l.name "
-					+ "AND l.userID = ? ");
+					+ "AND l.userID = ? "
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -124,7 +114,8 @@ public class BookingDBEngine extends DBEngine {
 					+ " SET childnum = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
 					+ "WHERE c.customername = l.name "
-					+ "AND l.userID = ? ");
+					+ "AND l.userID = ? "
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -170,7 +161,8 @@ public class BookingDBEngine extends DBEngine {
 					+ " SET phonenumber = ? "
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
 					+ "WHERE c.customername = l.name "
-					+ "AND l.userID = ? ");
+					+ "AND l.userID = ? "
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setString(1, Integer.toString(i));
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -231,7 +223,11 @@ public class BookingDBEngine extends DBEngine {
 		}
 	}
 	
-	
+	/** Set the name of a user given userid
+	 * 
+	 * @param userId
+	 * @param name
+	 */
 	private void setName(String userId, String name) {
 		PreparedStatement nstmt = null;
 		try {
@@ -277,7 +273,7 @@ public class BookingDBEngine extends DBEngine {
 	 * @param userId
 	 * @return
 	 */
-	public int checkValidDate(int dd, int mm, String userId) {
+	public boolean checkValidDate(int dd, int mm, String userId) throws Exception{
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
@@ -288,26 +284,68 @@ public class BookingDBEngine extends DBEngine {
 					+ " AND l.userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
+			int quota = -100;
 			while(rs.next()) {
 				String offerId = rs.getString(1);
-				int quota = rs.getInt(2);
-				if(offerId!=null&&offerId!="") {
+				if(!offerId.equals("")) {
 					String date = offerId.substring(9);
-					int d = Integer.parseInt(date.substring(0,2));
-					int m = Integer.parseInt(date.substring(2));
-					if(d==dd && m==mm && quota > 0) {
-						nstmt.close();
-						rs.close();
-						return quota;
+					int m = Integer.parseInt(date.substring(0,2));
+					int d = Integer.parseInt(date.substring(2));
+					if(d==dd && m==mm) {
+						quota = rs.getInt(2);
+						break;
 					}
 				}
 			}
-			nstmt.close();
-			rs.close();
+			if(quota > 0) {
+				nstmt.close();
+				nstmt = null;
+				nstmt = connection.prepareStatement(
+						"SELECT bootableid"
+						+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l "
+						+ " WHERE c.customername = l.name"
+						+ " AND l.userid = ?");
+				nstmt.setString(1, userId);
+				rs.close();
+				rs = null;
+				rs = this.query(nstmt);
+				while(rs.next()) {
+					String offerId = rs.getString(1);
+					if(offerId!=null&&offerId!="") {
+						String date = offerId.substring(9);
+						int m = Integer.parseInt(date.substring(0,2));
+						int d = Integer.parseInt(date.substring(2));
+						if(dd == d && mm == m) {
+							nstmt.close();
+							rs.close();
+							throw new Exception("OCCUPIED");
+						}
+						Calendar cal = new GregorianCalendar(2017,m-1,d);
+						int len = Integer.parseInt(offerId.substring(0, 1));
+						for(int i = 0; i < len; i++) {
+							cal.add(Calendar.DATE, 1);
+							if(dd == cal.get(Calendar.DATE) && mm == cal.get(Calendar.MONTH)) {
+								nstmt.close();
+								rs.close();
+								throw new Exception("OCCUPIED");
+							}
+						}
+					}
+				}
+				return true;
+			}else if(quota == -100){
+				nstmt.close();
+				rs.close();
+				throw new Exception("NO SUCH DATE");
+			}else {
+				nstmt.close();
+				rs.close();
+				throw new Exception("FULL");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return false;
 	}
 
 	/** Start a new booking request from user
@@ -320,6 +358,8 @@ public class BookingDBEngine extends DBEngine {
 		PreparedStatement nstmt;
 		String tourId = this.getTourIds(userId)[0];
 		try {
+			nstmt = connection.prepareStatement(
+					"SELECT");
 			nstmt = connection.prepareStatement(
 					"INSERT INTO "+CUSTOMER
 					+ " VALUES (0,?,'',0,?,0,0,0,0,0,'') ");
@@ -334,14 +374,19 @@ public class BookingDBEngine extends DBEngine {
 		return null;
 	}
 
+	/** Get the user name given the userid
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	public String getName(String userId) {
 		String name = null;
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT name "
-					+ "FROM "+ LINEUSER
-					+ "WHERE userID = ?");
+					+ " FROM "+ LINEUSER
+					+ " WHERE userID = ?");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -424,7 +469,8 @@ public class BookingDBEngine extends DBEngine {
 					"SELECT c.adultnum "
 					+ " FROM "+CUSTOMER+ " c, "+LINEUSER+" l"
 					+ " WHERE c.customername = l.name"
-					+ " AND l.userID = ?");
+					+ " AND l.userID = ?"
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -451,7 +497,8 @@ public class BookingDBEngine extends DBEngine {
 					"SELECT c.toodlernum "
 					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
 					+ " WHERE c.customername = l.name"
-					+ " AND l.userID = ?");
+					+ " AND l.userID = ?"
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -478,7 +525,8 @@ public class BookingDBEngine extends DBEngine {
 					"SELECT c.childnum "
 					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
 					+ " WHERE c.customername = l.name"
-					+ " AND l.userID = ?");
+					+ " AND l.userID = ?"
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -505,7 +553,8 @@ public class BookingDBEngine extends DBEngine {
 					"SELECT c.bootableid "
 					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
 					+ " WHERE c.customername = l.name"
-					+ " AND l.userID = ?");
+					+ " AND l.userID = ?"
+					+ " AND l.tourids = c.bootableid");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -733,7 +782,7 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"DELETE FROM "+CUSTOMER
-					+ " WHERE name = ?");
+					+ " WHERE customername = ?");
 			nstmt.setString(1, name);
 			this.execute(nstmt);
 			nstmt.close();
@@ -742,9 +791,11 @@ public class BookingDBEngine extends DBEngine {
 		}
 	}
 	
-
+	/** Update the registered number of people after finishing a booking request
+	 * 
+	 * @param userId
+	 */
 	public void updateRegisteredNumber(String userId) {
-		// TODO Auto-generated method stub
 		PreparedStatement nstmt = null;
 		int num = 0;
 		try {
@@ -753,7 +804,7 @@ public class BookingDBEngine extends DBEngine {
 					+ " FROM "+BOOKTABLE+" b, "+CUSTOMER+" c, "+LINEUSER+" l"
 					+ " WHERE c.customername = l.name "
 					+ " AND l.userID = ?"
-					+ " AND c.bootableid = l.bootableid");
+					+ " AND c.bootableid = l.tourids");
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
@@ -771,7 +822,7 @@ public class BookingDBEngine extends DBEngine {
 					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l, "+BOOKTABLE+" b "
 					+ "WHERE c.customername = l.name "
 					+ "AND l.userID = ? ");
-			nstmt.setInt(1, total);
+			nstmt.setInt(1, num+total);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
