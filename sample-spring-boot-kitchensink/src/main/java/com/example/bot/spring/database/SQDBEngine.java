@@ -27,12 +27,21 @@ public class SQDBEngine extends DBEngine {
 		
 		try {
 			connection = super.getConnection();
-			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
+			
+			//String pattern = "(^(keywords)$)|"
+			//		   + "(^(keywords)[^\\d\\w])|"
+			//		   + "([^\\d\\w](keywords)$)|"
+			//		   + "([^\\d\\w](keywords)[^\\d\\w])";
+			
+			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' SIMILAR TO ? ";
+			//stmt = connection.prepareStatement(statement);
+			//stmt.setString(1, pattern);	
+
 			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
-			//System.out.print(statement);
-			System.out.print(text);
-			System.out.print("  " + statement);
+			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
 			stmt = connection.prepareStatement(statement);
+			System.out.println("statement" + statement);
+			System.out.println("text" + text);
 			
 			rs = stmt.executeQuery();			
 			if (rs.next()) {				

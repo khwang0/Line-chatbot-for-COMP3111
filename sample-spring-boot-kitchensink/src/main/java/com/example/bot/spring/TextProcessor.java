@@ -24,7 +24,7 @@ public class TextProcessor {
 			String tag = null;
 			//TODO:change this to database
 			tag=DBE.getLineUserInfo(userId,"categorization");		
-			if(tag == "book") {
+			if(tag.equals("book")) {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);	
 				return reply;
@@ -38,7 +38,8 @@ public class TextProcessor {
 				return reply; //return "in recomend";
 			}
 
-			if(text.toLowerCase().contains("tell me")) {
+			if(text.toLowerCase().contains("tell me")||
+			   text.toLowerCase().contains("introduc")) {
 				GQTextSender gqsender = new GQTextSender();
 				DBE.updateLineUserInfo(userId,"categorization", "gq");	
 				reply += gqsender.process(userId, text);			
@@ -58,13 +59,13 @@ public class TextProcessor {
 				return reply;
 			}
 			
-			if (tag == "gq") {
+			if (tag.equals("gq")) {
 				GQTextSender gqsender = new GQTextSender();
 				reply += gqsender.process(userId, text);	
 				return reply;
 			}
 			
-			reply += "Could you please specify that you want some recommendation, asking some general question, or booking a trip";
+			reply += "You can send your request by specifying: recommendation/ general question/booking a trip";
 			UQAutomateSender uqSender = new UQAutomateSender();
 			uqSender.process(userId, text);	
 			
