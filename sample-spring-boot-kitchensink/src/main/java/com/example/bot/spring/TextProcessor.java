@@ -12,57 +12,85 @@ public class TextProcessor {
 	}
 	
 	private String classifyText(String userId, String text){
-		String reply="";
-		String tag;
+		String reply="";		
+		
 		try {
 			SQTextSender sqsender = new SQTextSender();
-			reply = sqsender.process(userId, text)+"\n";
-		}catch(Exception e) {}
-		try {	
+			reply = sqsender.process(userId, text)+"\n";					
+		}catch(Exception e) {
+			// no action; 
+		}
+		try {			
+			String tag = null;
+			
+			tag=DBE.getLineUserInfo(userId,"categorization");		
+			if(tag == "book") {
+				BookingTextSender bsender = new BookingTextSender();
+				reply += bsender.process(userId, text);	
+				return reply;
+			}
 			if(text.toLowerCase().contains("recommend")||
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
-				reply += rsender.process(userId, text);
-				DBE.updateLineUserInfo(userId,"categorization","reco");				
+				DBE.updateLineUserInfo(userId,"categorization","reco");	
+				reply += rsender.process(userId, text);			
 				return reply; //return "in recomend";
 			}
 
 			if(text.toLowerCase().contains("tell me")) {
 				GQTextSender gqsender = new GQTextSender();
-				reply += gqsender.process(userId, text);
-				DBE.updateLineUserInfo(userId,"categorization", "gq");				
+				DBE.updateLineUserInfo(userId,"categorization", "gq");	
+				reply += gqsender.process(userId, text);			
 				return reply; //return "in general q";
 			}
 
 			if(text.toLowerCase().contains("book")) {
 				BookingTextSender bsender = new BookingTextSender();
-				reply += bsender.process(userId, text);
-				DBE.updateLineUserInfo(userId,"categorization","book");				
+				DBE.updateLineUserInfo(userId,"categorization","book");	
+				reply += bsender.process(userId, text);			
 				return reply; //return "in booking";
 			}
 			
-			tag=DBE.getLineUserInfo(userId,"categorization");
-			switch(tag) {
-			case "reco":
+			if (tag.equals("reco")) {				
 				RecommendationTextSender rsender = new RecommendationTextSender();
-				reply += rsender.process(userId, text);				
-				break;  //return "in recomend via tag";
-			case "book":
-				BookingTextSender bsender = new BookingTextSender();
-				reply += bsender.process(userId, text);				
-				break; //return "in booking via tag";
-			case "gq":
-				GQTextSender gqsender = new GQTextSender();
-				reply += gqsender.process(userId, text);				
-				break; //return "in general q via tag";
-			default:
-				reply += "Could you please specify that you want some recommendation, asking some general question, or booking a trip";
+				reply += rsender.process(userId, text);	
+				return reply;
 			}
+			
+			if (tag == "gq") {
+				GQTextSender gqsender = new GQTextSender();
+				reply += gqsender.process(userId, text);	
+				return reply;
+			}
+			
+			reply += "Could you please specify that you want some recommendation, asking some general question, or booking a trip";
+			UQAutomateSender uqSender = new UQAutomateSender();
+			uqSender.process(userId, text);	
+			
 			return reply;
 			
+			// tag=DBE.getLineUserInfo(userId,"categorization");
+			// switch(tag) {
+			//	case "reco":
+			//		RecommendationTextSender rsender = new RecommendationTextSender();
+			//		reply += rsender.process(userId, text);				
+			//		break;  //return "in recomend via tag";
+			
+			//	case "book":
+			//		BookingTextSender bsender = new BookingTextSender();
+			//		reply += bsender.process(userId, text);				
+			//		break; //return "in booking via tag";
+			//	case "gq":
+			//		GQTextSender gqsender = new GQTextSender();
+			//		reply += gqsender.process(userId, text);	
+			//		break; //return "in general q via tag";
+			//	default:
 		} catch (Exception e) {
-			UQAutomateSender uqSender = new UQAutomateSender();
+			DBE.updateLineUserInfo(userId,"categorization", "default");
+			
+			UQAutomateSender uqSender = new UQAutomateSender();			
 			reply = uqSender.process(userId, text);			
+			
 			return reply; //return "exception here";
 		}
 
@@ -76,5 +104,17 @@ public class TextProcessor {
 		String reply=classifyText(userId,text);
 		DBE.updateLineUserInfo(userId,"lasta",reply);
 		return reply;
+	}
+	
+	private formatMsg(String message) {
+		String processedMsg = null; 
+		// 01 clear unneeded whitespace and punctuation;
+		int len = message.length();
+		for (int i = 0; i < len; i++) {
+			
+		}
+		
+		
+		// 02 transfer the input message into lowercase
 	}
 }
