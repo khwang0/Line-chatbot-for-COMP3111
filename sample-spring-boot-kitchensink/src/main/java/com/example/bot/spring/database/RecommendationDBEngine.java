@@ -12,6 +12,23 @@ public class RecommendationDBEngine extends DBEngine {
 		
 	}
 	
+	public void updateQuery(String tourids, String userid) {
+		Connection connection = null;
+		PreparedStatement stmt = null;
+
+		try {
+			connection=getConnection();
+			stmt=connection.prepareStatement(
+					"update line_user_info set tourids ='"+tourids+"' where userid='"+userid+"'"
+			);
+			stmt.executeUpdate();
+			stmt.close();
+			connection.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String recommendationQuery(String userId, ArrayList<String> text) {
 		//System.err.println(text.get(0) + " " + text.get(1));
 		//System.out.println("------Inside the function");
@@ -56,13 +73,17 @@ public class RecommendationDBEngine extends DBEngine {
 				idList=idList.replaceAll(", $", "");
 			}
 			
-			stmt=connection.prepareStatement(
-					"update line_user_info set tourids ='"+idList+"' where userid='"+userId+"'"
-			);
-			stmt.executeUpdate();
-			
 			stmt.close();
 			connection.close();
+			
+			//make it a seperate file for easy handling
+			updateQuery(idList, userId);
+			
+//			stmt=connection.prepareStatement(
+//					"update line_user_info set tourids ='"+idList+"' where userid='"+userId+"'"
+//			);
+//			stmt.executeUpdate();
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
