@@ -10,7 +10,7 @@ public class DetailedUser extends Users{
     private double vegfruitConsump = 0; // in servings
     private boolean[] eatingHabits = {false,false,false,false,false,false};//eatBF,eatLunch,eatAFT,eatDinner,eatMS, eatMore 
     private String otherInfo  = "Default";
-    private int assessmentScore = 0;
+    private int assessmentScore = -1;
 	
     public DetailedUser(Users u) {
     	super(u);
@@ -45,7 +45,15 @@ public class DetailedUser extends Users{
 	
 	@Override
 	public String toString() { // this converts user to Json format
-		return super.toString()
+		String temp = null;
+		if(assessmentScore == -1)
+			temp = "*AssessmentScore will be updated once you complete assessments in Planner)" + "\n";
+		else if (assessmentScore >=0 && assmentScore <=100)
+			temp = "AssessmentScore" + Integer.toString(assessmentScore) + "\n";
+		else
+			temp = "AssessmentScore: error(invalid score)";
+		
+		String msg =  super.toString()
 			   +"Excercise(hours/day): "+ Integer.toString(amountOfExercise) + "\n"
 			   +"BodyFat(%): "+ Double.toString(bodyFat) + "\n"
 			   +"Calories(kcal/day): "+ Integer.toString(caloriesConsump) + "\n"
@@ -58,7 +66,10 @@ public class DetailedUser extends Users{
 			   +"Eat dinner: "+ Boolean.toString(eatingHabits[3]) +"\n"
 			   +"Eat midnight snacks: "+ Boolean.toString(eatingHabits[4]) +"\n"
 			   +"More meals: "+ Boolean.toString(eatingHabits[5]) +"\n"
+			   + temp
 			   +"Other information: "+ otherInfo ;
+		
+		return msg;
 	}
 	
 }
