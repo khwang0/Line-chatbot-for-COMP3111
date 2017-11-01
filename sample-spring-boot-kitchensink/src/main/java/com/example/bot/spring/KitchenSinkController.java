@@ -398,7 +398,7 @@ public class KitchenSinkController {
 		case 0:{		
 			this.replyText(replyToken,"Choose one to continue: \n\n"
 											+"1 Input daily diet\n"
-											+"2 Visualize your diet consumption"
+											+"2 Visualize your diet consumption\n"
 											+"(type other things to back to menu)");
 			subStage = -1;
 		}break;
@@ -439,18 +439,12 @@ public class KitchenSinkController {
 		}break;
 		case 12:{
 			if(inputChecker.amountAdd(text, foodinput, database, "set")) {
-        		this.replyText(replyToken, "Please enter the amount you intake(in g):");
-        		subStage +=1 ;   
+        		this.replyText(replyToken, "Your data has been recorded.\nInput anything to conitnue.");
+        		subStage =0 ;   
         		}
 			else 
 				this.replyText(replyToken, "Please enter a reasonable number!");
 		}break;	
-		case 13:{
-      		this.replyText(replyToken, "Your data has been recorded.\nInput anything to conitnue.");
-       		subStage = 0;
-
-		}break;
-		
 		case 2:{
 			
 		}break;	
