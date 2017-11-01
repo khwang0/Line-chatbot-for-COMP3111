@@ -309,7 +309,7 @@ public class BookingTextSender implements TextSender {
 		for(int i = 0; i < tourNames.size(); i++) {
 			String[] t = tourNames.get(i).split("\\s|-");
 			for(int j = 0; j < t.length; j++) {
-				if(!msg.contains(t[j])) {
+				if(!msg.toLowerCase().contains(t[j].toLowerCase())) {
 					break;
 				}else if(j == t.length-1) {
 					String tourId = bookingDB.findTourId(tourNames.get(i));

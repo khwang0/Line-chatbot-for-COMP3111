@@ -35,10 +35,11 @@ public class SQDBEngine extends DBEngine {
 			
 			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' SIMILAR TO ? ";
 			//stmt = connection.prepareStatement(statement);
-			//stmt.setString(1, pattern);
-			
-			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
+			//stmt.setString(1, pattern);	
+
 			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
+			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
+			stmt = connection.prepareStatement(statement);
 			System.out.println("statement" + statement);
 			System.out.println("text" + text);
 			
