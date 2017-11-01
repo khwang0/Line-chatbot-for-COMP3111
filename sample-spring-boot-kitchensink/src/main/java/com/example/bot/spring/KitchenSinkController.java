@@ -87,8 +87,6 @@ import java.net.URI;
 @Slf4j
 @LineMessageHandler
 public class KitchenSinkController {
-	
-
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
