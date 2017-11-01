@@ -15,11 +15,6 @@ public class SQDBEngine extends DBEngine {
 		this.column1_2 = "label";
 	}
 	
-	public int sqQuery(String text) {
-	
-		return 0;
-	}
-	
 	public String search(String text) throws Exception {
 		//Write your code here
 		String reply = null;

@@ -31,7 +31,7 @@ public class SQTextSender implements TextSender {
 			case "thank":{
 				return "You are welcome =)";
 			}
-			case "goodbye":{
+			case "bye":{
 				return "have a nice day!";
 			}
 			default:{
