@@ -206,7 +206,7 @@ public class BookingDBEngine extends DBEngine {
 		if(status == "default")
 			cat = "default";
 		else
-			cat = "booking";
+			cat = "book";
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+LINEUSER
