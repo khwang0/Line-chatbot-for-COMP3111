@@ -48,11 +48,12 @@ public class RecommendationDBEngine extends DBEngine {
 					response+=temp+"\n";
 					rs.close();
 				}
-				if (idList!="") {
 
-					idList=idList.replaceAll(", $", "");
-				}
 				//stmt.close();
+			}
+			
+			if (idList!="") {
+				idList=idList.replaceAll(", $", "");
 			}
 			
 			stmt=connection.prepareStatement(

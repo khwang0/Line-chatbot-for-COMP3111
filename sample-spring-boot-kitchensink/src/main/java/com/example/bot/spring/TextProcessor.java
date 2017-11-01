@@ -14,11 +14,13 @@ public class TextProcessor {
 	private String classifyText(String userId, String text){
 		String reply="";
 		String tag;
+		
 		try {
 			SQTextSender sqsender = new SQTextSender();
 			reply = sqsender.process(userId, text)+"\n";
 		}catch(Exception e) {}
-		try {	
+		
+		try {	//TODO:change this to database
 			if(text.toLowerCase().contains("recommend")||
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();

@@ -13,7 +13,7 @@ public class RecommendationTextSender implements TextSender {
 	public String process(String userId, String msg) throws Exception {
 		// TODO Auto-generated method stub
 		RecommendationDBEngine searchEngine = new RecommendationDBEngine();
-		//assume the features are 1.hotel, 2.spring, 3.view
+		//assume the features are 1.hotel, 2.spring, 3.view 4. food
 		ArrayList<String> featureList = new ArrayList<String>();
 		if (msg.contains("hotel")){
 			featureList.add("hotel");
