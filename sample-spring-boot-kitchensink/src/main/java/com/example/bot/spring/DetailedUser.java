@@ -48,7 +48,7 @@ public class DetailedUser extends Users{
 		String temp = null;
 		if(assessmentScore == -1)
 			temp = "*AssessmentScore will be updated once you complete assessments in Planner)" + "\n";
-		else if (assessmentScore >=0 && assmentScore <=100)
+		else if (assessmentScore >=0 && assessmentScore <=100)
 			temp = "AssessmentScore" + Integer.toString(assessmentScore) + "\n";
 		else
 			temp = "AssessmentScore: error(invalid score)";
