@@ -125,15 +125,16 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return result;	
 	}
 	boolean pushDietRecord(foodInput foodinput) {
+		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
 					"INSERT INTO dietrecord VALUES(?,?,?,?,?)");
 			stmt.setString(1,foodinput.getKey());
-			stmt.setString(2,getId());
-			stmt.setString(3,getFoodName());
-			stmt.setInt(4,getAmount());
-			stmt.setString(5,getTime());
+			stmt.setString(2,foodinput.getId());
+			stmt.setString(3,foodinput.getFoodName());
+			stmt.setInt(4,foodinput.getAmount());
+			stmt.setString(5,foodinput.getTime());
 			result = stmt.execute();
 			stmt.close();
 			connection.close();
@@ -141,6 +142,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			System.out.println(e);
 			return result;
 		} 
+		return result;
 	}
 	boolean updateUser(Users user) {
 		boolean result = false;

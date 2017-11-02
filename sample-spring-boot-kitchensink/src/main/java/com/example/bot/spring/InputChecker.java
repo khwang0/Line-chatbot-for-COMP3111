@@ -209,7 +209,7 @@ public class InputChecker {
 		try {
 		if(ValidAmount(text)) {
 			foodinput.setAmount(Integer.parseInt(text));
-			database.updateDietRecord(foodinput);
+			database.pushDietRecord(foodinput);
     		return true;
     	}
 		else

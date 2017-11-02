@@ -179,6 +179,8 @@ public class KitchenSinkController {
 			currentUser = database.searchUser(event.getSource().getUserId());
 			try {
 				currentUser = database.searchDetailedUser(currentUser);
+				
+				//load other data from db
 			}catch(Exception e) {
 				log.info(e.getMessage());
 			}finally {
