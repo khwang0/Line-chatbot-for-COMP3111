@@ -29,29 +29,56 @@ public class TextProcessor {
 		}
 		try {			
 			String tag = null;
-			//TODO:change this to database
+			String label = null;
+
 			tag=DBE.getLineUserInfo(userId,"categorization");		
 			if(tag.equals("book")) {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);	
 				return reply;
 			}
-
-			// classify input according to classify_table
-			// get returned type; 
-			// if there r multiple types;
-			// 1) for each type:
-			// 		check position: if position correct, save keywords and label; 
-			// 2) select one of the label:
-			//		if (rs.next().getString(3) != label):
-			//		compare length of keywords, choose the label to the longer keywords
-			// 3) if same, shuffle
-			
 			// after decide the label:
 			// - update user tag;
 			// - pass the info to corresponding text processor;
 			
 			
+			label = DBE.getTextType(text);
+			switch (label) {
+			case "reco": 
+				RecommendationTextSender rsender = new RecommendationTextSender();
+				DBE.updateLineUserInfo(userId,"categorization","reco");	
+				reply += rsender.process(userId, text);			
+				return reply;
+				
+			case "gq":
+				GQTextSender gqsender = new GQTextSender();
+				DBE.updateLineUserInfo(userId,"categorization", "gq");	
+				reply += gqsender.process(userId, text);			
+				return reply;
+				
+			case "book":
+				BookingTextSender bsender = new BookingTextSender();
+				DBE.updateLineUserInfo(userId,"categorization","book");	
+				reply += bsender.process(userId, text);			
+				return reply;
+				
+			default:
+				// no action, continue to next checking state; 				
+			}
+			
+			switch (tag) {
+			case "reco":
+				RecommendationTextSender rsender = new RecommendationTextSender();
+				reply += rsender.process(userId, text);	
+				return reply;
+			case "gq":
+				GQTextSender gqsender = new GQTextSender();
+				reply += gqsender.process(userId, text);	
+				return reply;
+			default:
+				// no action, continue to unanswered question processor; 
+			}
+			/*
 			if(text.toLowerCase().contains("recommend")||
 			   text.toLowerCase().contains("do you have")) {
 				RecommendationTextSender rsender = new RecommendationTextSender();
@@ -86,6 +113,7 @@ public class TextProcessor {
 				reply += gqsender.process(userId, text);	
 				return reply;
 			}
+			*/
 			
 			reply += "You can send your request by specifying: recommendation/ general question/booking a trip";
 			UQAutomateSender uqSender = new UQAutomateSender();
@@ -111,10 +139,9 @@ public class TextProcessor {
 		if (text == null) {// yet text won't be null?
 			throw new Exception("no input");
 		}
-		String reply = "";
+		String reply = "";		
 		
-		// format the text before classification 
-		text = formatMsg(text);
+		text = formatMsg(text);	// format the text before classification 
 		DBE.updateLineUserInfo(userId,"lastq",text); // insert the formatted text into database; 
 		
 		if(text.equals("")) {
