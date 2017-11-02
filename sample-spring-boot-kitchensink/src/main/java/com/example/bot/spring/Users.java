@@ -7,6 +7,8 @@ public class Users {
 	protected double weight = 0;
 	protected double height = 0;
 	protected int age = 10;
+	protected int subStage;
+	protected String stage;
 
 	public Users(String UID) {
 		this.UID = UID;
@@ -37,6 +39,8 @@ public class Users {
 	public boolean setWeight(double w) {this.weight = w;return true;}
 	public boolean setHeight(double h) {this.height = h;return true;}
 	public boolean setAge(int a) {this.age = a;return true;}
+	public boolean setSubStage(int a){this.subStage = a; return true;}
+	public boolean setStage(String a){this.stage = a; return true;}
 	//assume inputs are always valid
 	public String getID() {return UID;}
 	public String getName() {return name;}	
@@ -44,6 +48,8 @@ public class Users {
 	public double getWeight() {return weight;}
 	public double getHeight() {return height;}
 	public int getAge() {return age;}
+	public int getSubStage() {return subStage;}
+	public String getStage() {return stage;}
 
 	
 	@Override

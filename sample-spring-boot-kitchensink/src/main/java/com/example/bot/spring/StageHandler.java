@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
 package com.example.bot.spring;
 
 import java.io.IOException;
@@ -86,208 +70,45 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+public class StageHandler {
 
-@Slf4j
-@LineMessageHandler
-public class KitchenSinkController {
-
-
-
-	@Autowired
-	private LineMessagingClient lineMessagingClient;
-	private String currentStage = "Init";
-	private int subStage = 0;
-	private Users currentUser = null;
+	private InputChecker inputChecker = new InputChecker();
 	private foodInput foodinput = null;
-	private SQLDatabaseEngine database;
-	private String itscLOGIN;
-	private String replymsg;
-	private StageHandler stageHandler = new StageHandler();
-
-    private	String[] question = {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"};
+	private	String[] question = {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"};
 	private String[][] feedback = {{"F1","T1"},{"F2","T2"},{"F3","T3"},{"F4","T4"},{"F5","T5"},{"F6","T6"},{"F7","T7"},{"F8","T8"},{"F9","T9"},{"F10","T10"}};
 	private String suggestion = "";
-
-	public KitchenSinkController() {
-		database = new SQLDatabaseEngine();
-		itscLOGIN = System.getenv("ITSC_LOGIN");
-	}
+	private HealthSearch healthSearcher = new HealthSearch();
 
 
-
-	@EventMapping
-	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
-		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		log.info("This is your entry point:");
-		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		TextMessageContent message = event.getMessage();
-		handleTextContent(event.getReplyToken(), event, message);
-
-	}
-
-	@EventMapping
-	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
-		handleSticker(event.getReplyToken(), event.getMessage());
-	}
-
-	@EventMapping
-	public void handleLocationMessageEvent(MessageEvent<LocationMessageContent> event) {
-		LocationMessageContent locationMessage = event.getMessage();
-		reply(event.getReplyToken(), new LocationMessage(locationMessage.getTitle(), locationMessage.getAddress(),
-				locationMessage.getLatitude(), locationMessage.getLongitude()));
-	}
-
-	@EventMapping
-	public void handleImageMessageEvent(MessageEvent<ImageMessageContent> event) throws IOException {
-		final MessageContentResponse response;
-		String replyToken = event.getReplyToken();
-		String messageId = event.getMessage().getId();
-		try {
-			response = lineMessagingClient.getMessageContent(messageId).get();
-		} catch (InterruptedException | ExecutionException e) {
-			reply(replyToken, new TextMessage("Cannot get image: " + e.getMessage()));
-			throw new RuntimeException(e);
-		}
-		DownloadedContent jpg = saveContent("jpg", response);
-		reply(((MessageEvent) event).getReplyToken(), new ImageMessage(jpg.getUri(), jpg.getUri()));
-
-	}
-
-	@EventMapping
-	public void handleAudioMessageEvent(MessageEvent<AudioMessageContent> event) throws IOException {
-		final MessageContentResponse response;
-		String replyToken = event.getReplyToken();
-		String messageId = event.getMessage().getId();
-		try {
-			response = lineMessagingClient.getMessageContent(messageId).get();
-		} catch (InterruptedException | ExecutionException e) {
-			reply(replyToken, new TextMessage("Cannot get image: " + e.getMessage()));
-			throw new RuntimeException(e);
-		}
-		DownloadedContent mp4 = saveContent("mp4", response);
-		reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));
-	}
-
-	@EventMapping
-	public void handleUnfollowEvent(UnfollowEvent event) {
-		log.info("unfollowed this bot: {}", event);
-		currentStage = "Init";
-		subStage = 0;
-		currentUser = null;
-	}
-
-	@EventMapping
-	public void handleFollowEvent(FollowEvent event) {
-		String replyToken = event.getReplyToken();
-		String msgbuffer = null;
-		try{
-			currentUser = database.searchUser(event.getSource().getUserId());
-			try {
-				currentUser = database.searchDetailedUser(currentUser);
-
-				//load other data from db
-			}catch(Exception e) {
-				log.info(e.getMessage());
-			}finally {
-				currentStage = "Main";
-				subStage = 0;
-				msgbuffer = "User data reloaded. Type anything to continue...";
-			}
-		}catch(Exception e){
-			msgbuffer = "Welcome!!\nTo start using our services, please follow the instructions below.\n\n"
-					+ "Create Personal Diet Tracker: type \'1\'\n\n"
-					+ "Say goodbye to me: type any\n";
-			currentStage = "Init";
-			subStage = 0;
-			currentUser = null;
-		}finally {
-			this.replyText(replyToken, msgbuffer);
-		}
-	}
-
-	@EventMapping
-	public void handleJoinEvent(JoinEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Joined " + event.getSource());
-	}
-
-	@EventMapping
-	public void handlePostbackEvent(PostbackEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got postback " + event.getPostbackContent().getData());
-	}
-
-	@EventMapping
-	public void handleBeaconEvent(BeaconEvent event) {
-		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got beacon message " + event.getBeacon().getHwid());
-	}
-
-	@EventMapping
-	public void handleOtherEvent(Event event) {
-		log.info("Received message(Ignored): {}", event);
-	}
-
-	private void reply(@NonNull String replyToken, @NonNull Message message) {
-		reply(replyToken, Collections.singletonList(message));
-	}
-
-	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
-		try {
-			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
-			log.info("Sent messages: {}", apiResponse);
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private void replyText(@NonNull String replyToken, @NonNull String message) {
-		if (replyToken.isEmpty()) {
-			throw new IllegalArgumentException("replyToken must not be empty");
-		}
-		if (message.length() > 1000) {
-			message = message.substring(0, 1000 - 2) + "..";
-		}
-		this.reply(replyToken, new TextMessage(message));
-	}
-
-
-	private void handleSticker(String replyToken, StickerMessageContent content) {
-		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
-	}
-
-	/*private void initStageHandler(String replyToken, Event event, String text) {
-		switch(subStage) {
+	public String initStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		switch(currentUser.getSubStage()) {
 		case 0:{
 			if(text.equals("1")) {
 				currentUser = new Users(event.getSource().getUserId());
-        		//this.replyText(replyToken, "Please enter your name: (1-32 characters)");
         		replymsg = "Please enter your name: (1-32 characters)";
-        		subStage += 1;
+        		currentUser.setSubStage(currentUser.getSubStage()+1);
         	}
         	else {
         		replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
-        		//this.replyText(replyToken,msg);
-        		currentStage = "";
-        		subStage = 0;
+        		currentUser.setStage("");
+        		currentUser.setSubStage(0);
         		currentUser = null;
         	}
 		}break;
 		case 1:{
 			if(inputChecker.NameEditting(text,currentUser,database,"set")) {
-				//this.replyText(replyToken, "Please enter your gender: (M for male F for female)");
 				replymsg = "Please enter your gender: (M for male F for female)";
-				subStage += 1;
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 				}
 			else {
-				//this.replyText(replyToken,"Please enter your name: (1-32 characters)");
 				replymsg = "Please enter your name: (1-32 characters)";
 			}
 		}break;
 		case 2:{
 			if(inputChecker.GenderEditting(text,currentUser,database,"set")) {
 				replymsg="Please enter your height in cm:";
-				subStage+=1;
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else
 				replymsg="Please enter your gender: (M for male F for female):";
@@ -295,7 +116,7 @@ public class KitchenSinkController {
 		case 3:{
 			if( inputChecker.HeightEditting(text,currentUser,database,"set") ) {
 				replymsg="Please enter your weight in kg:";
-				subStage+=1;
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
@@ -303,7 +124,7 @@ public class KitchenSinkController {
 		case 4:{
 			if( inputChecker.WeightEditting(text,currentUser,database,"set") ) {
 				replymsg="Please enter your age in years old:";
-				subStage+=1;
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
@@ -312,132 +133,132 @@ public class KitchenSinkController {
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
        			database.pushUser(currentUser);
-       			currentStage = "Main";
-       			subStage = 0;
+       			currentUser.setStage("Main");
+       			currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
-		default:{log.info("Stage error.");}
+		default:{
+				//log.info("Stage error.");
+			}
 		}
-	}*/
+		return replymsg;
+	}
 
-	// private void mainStageHandler(String replyToken, Event event, String text) {
-	// 	switch(subStage) {
-	// 	case 0:{
-	// 		String msg = null;
-	// 		if(! (currentUser instanceof DetailedUser)) {
-	// 			replymsg = "Welcome to ZK's Diet Planner!\n\n"
-	// 			+ "We provide serveral functions for you to keep your fitness."
-	// 			+ "Please type the number of function you wish to use. :)\n\n"
-	// 			+ "1 Living Habit Collector (INSERT YOUR DATA HERE)\n"
-	// 			+ "2 Diet Planner(Please complete 1 first)\n"
-	// 			+ "3 Healthpedia \n"
-	// 			+ "4 Feedback \n"
-	// 			+ "5 User Guide(recommended for first-time users)\n"
-	// 			+ "6 Self Assessment(recommened for first-time users)\n\n"
-	// 			+ "Please enter your choice:(1-6)";
-	// 		}else {
-	// 			replymsg = "Welcome to ZK's Diet Planner!\n\n"
-	// 					+ "We provide serveral functions for you to keep your fitness."
-	// 					+ "Please type the number of function you wish to use. :)\n\n"
-	// 					+ "1 Living Habot Editor\n"
-	// 					+ "2 Diet Planner\n"
-	// 					+ "3 Healthpedia \n"
-	// 					+ "4 Feedback \n"
-	// 					+ "5 User Guide(recommended for first-time users)\n"
-	// 					+ "6 Self Assessment(recommened for first-time users)\n\n"
-	// 					+ "Please enter your choice:(1-5)";
-	// 		}
-	// 		//this.replyText(replyToken, msg);
-	// 		subStage+=1;
-	//
-	// 	}break;
-	// 	case 1:{
-	// 		String msg = null;
-	// 		switch(text) {
-	// 		case "1":{
-	// 			//move to diet planner
-	// 			replymsg = "Wellcome to Living Habit Collector! You can edit or input more detailed information"
-	// 					+ "about yourself. This can help us make a more precise suggestion for you!\n"
-	// 					+ "please follow the instructions below (type any to continue)";
-	// 			if(!(currentUser instanceof DetailedUser)) {
-	// 				currentStage = "LivingHabitCollector";
-	// 				subStage = 0;
-	// 			}else {
-	// 				currentStage = "LivingHabitEditor";
-	// 				subStage = 0;
-	// 			}
-	// 		}break;
-	// 		case "2":{
-	// 			//move to diet planner
-	// 			replymsg = "Moving to Diet Planner...Input anything to continue...";
-	// 			currentStage = "DietPlanner";
-	// 			subStage = 0;
-	// 		}break;
-	// 		case "3":{
-	// 			//move to health pedia
-	// 			replymsg = "Moving to HealthPedia...Input anything to continue...";
-	// 			currentStage = "HealthPedia";
-	// 			subStage = 0;
-	// 		}break;
-	// 		case "4":{
-	// 			//move to feedback
-	// 			replymsg = "Moving to FeedBack...Input anything to continue...";
-	// 			currentStage = "FeedBack";
-	// 			subStage = 0;
-	// 		}break;
-	// 		case "5":{
-	// 			replymsg ="Moving to User Guide...Input anything to continue...";
-	// 			currentStage = "UserGuide";
-	// 			subStage = 0;
-	// 			//move to user guide
-	// 		}break;
-	// 		case "6":{
-	// 			replymsg ="Moving to Self Assessment...Input anything to continue...";
-	// 			currentStage = "SelfAssessment";
-	// 			subStage = 0;
-	// 			//move to self assessment
-	// 		}break;
-	// 		default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
-	// 		}
-	// 		//this.replyText(replyToken, msg);
-	// 	}break;
-	// 	}
-	// }
+	public String mainStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		switch(currentUser.getSubStage()) {
+		case 0:{
+			if(! (currentUser instanceof DetailedUser)) {
+				replymsg = "Welcome to ZK's Diet Planner!\n\n"
+				+ "We provide serveral functions for you to keep your fitness."
+				+ "Please type the number of function you wish to use. :)\n\n"
+				+ "1 Living Habit Collector (INSERT YOUR DATA HERE)\n"
+				+ "2 Diet Planner(Please complete 1 first)\n"
+				+ "3 Healthpedia \n"
+				+ "4 Feedback \n"
+				+ "5 User Guide(recommended for first-time users)\n"
+				+ "6 Self Assessment(recommened for first-time users)\n\n"
+				+ "Please enter your choice:(1-6)";
+			}else {
+				replymsg = "Welcome to ZK's Diet Planner!\n\n"
+						+ "We provide serveral functions for you to keep your fitness."
+						+ "Please type the number of function you wish to use. :)\n\n"
+						+ "1 Living Habot Editor\n"
+						+ "2 Diet Planner\n"
+						+ "3 Healthpedia \n"
+						+ "4 Feedback \n"
+						+ "5 User Guide(recommended for first-time users)\n"
+						+ "6 Self Assessment(recommened for first-time users)\n\n"
+						+ "Please enter your choice:(1-5)";
+			}
+			//this.replyText(replyToken, msg);
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 
+		}break;
+		case 1:{
+			String msg = null;
+			switch(text) {
+			case "1":{
+				//move to diet planner
+				replymsg = "Wellcome to Living Habit Collector! You can edit or input more detailed information"
+						+ "about yourself. This can help us make a more precise suggestion for you!\n"
+						+ "please follow the instructions below (type any to continue)";
+				if(!(currentUser instanceof DetailedUser)) {
+					currentUser.setStage("LivingHabitCollector");
+					currentUser.setSubStage(0);
+				}else {
+					currentUser.setStage("LivingHabitEditor");
+					currentUser.setSubStage(0);
+				}
+			}break;
+			case "2":{
+				//move to diet planner
+				replymsg = "Moving to Diet Planner...Input anything to continue...";
+				currentUser.setStage( "DietPlanner");
+				currentUser.setSubStage(0);
+			}break;
+			case "3":{
+				//move to health pedia
+				replymsg = "Moving to HealthPedia...Input anything to continue...";
+				currentUser.setStage("HealthPedia");
+				currentUser.setSubStage(0);
+			}break;
+			case "4":{
+				//move to feedback
+				replymsg = "Moving to FeedBack...Input anything to continue...";
+				currentUser.setStage("FeedBack");
+				currentUser.setSubStage(0);
+			}break;
+			case "5":{
+				replymsg ="Moving to User Guide...Input anything to continue...";
+				currentUser.setStage("UserGuide");
+				currentUser.setSubStage(0);
+				//move to user guide
+			}break;
+			case "6":{
+				replymsg ="Moving to Self Assessment...Input anything to continue...";
+				currentUser.setStage("SelfAssessment");
+				currentUser.setSubStage(0);
+				//move to self assessment
+			}break;
+			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
+			}
+			//this.replyText(replyToken, msg);
+		}break;
+		}
+		return replymsg;
+	}
 
+	public String dietPlannerHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
 
-	/* Function added by ZK*/
-	/*
-	private void dietPlannerHandler(String replyToken, Event event, String text) {
-
-
-		switch(subStage) {
+		switch(currentUser.getSubStage()) {
 		case 0:{
 			replymsg = "Choose one to continue: \n\n"
 											+"1 Input daily diet\n"
 											+"2 Visualize your diet consumption in a specific day\n"
 											+"(type other things to back to menu)";
-			subStage = -1;
+			currentUser.setSubStage(-1);
 		}break;
 		case -1:{
 			try{
-				subStage = Integer.parseInt(text);
-				if (subStage >=1 && subStage <= 2) {
+				currentUser.setSubStage(Integer.parseInt(text));
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 2) {
 					replymsg="Redirecting...type anything to continue.";
 				}
 				else {
 					replymsg="All changed recorded. Type anything to return to main menu.";
 					//updata db
-					currentStage = "Main";//back to main
-					subStage =0;
+					currentUser.setStage("Main");//back to main
+					currentUser.setSubStage(0);
 				}
 			}catch(Exception e) {
 				replymsg="All changed recorded. Type anything to return to main menu.";
 				//update db
-				currentStage = "Main";//back to main
-				subStage =0;
+				currentUser.setStage("Main");//back to main
+				currentUser.setSubStage(0);
 			}
 		}break;
 		case 1:{
@@ -447,12 +268,12 @@ public class KitchenSinkController {
 			String time = ft.format(date);
 			foodinput = new foodInput(event.getSource().getUserId(),time);
 			replymsg="Please enter the food name: ";
-			subStage +=10 ;
+			currentUser.setSubStage(currentUser.getSubStage()+10) ;
 		}break;
 		case 11:{
 			if(inputChecker.foodAdd(text, foodinput, database)) {
         		replymsg="Please enter the amount you intake(in g):";
-        		subStage +=1 ;
+        		currentUser.setSubStage(currentUser.getSubStage()+1) ;
         		}
 			else
 				replymsg="Please enter a reasonable name!";
@@ -460,14 +281,14 @@ public class KitchenSinkController {
 		case 12:{
 			if(inputChecker.amountAdd(text, foodinput, database)) {
         		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-        		subStage =0 ;
+        		currentUser.setSubStage(0) ;
         		}
 			else
 				replymsg="Please enter a reasonable number!";
 		}break;
 		case 2:{
 			replymsg="Please enter the date(yyyymmdd): ";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 22:{
 			if(inputChecker.dateCheck(text)) {
@@ -475,7 +296,7 @@ public class KitchenSinkController {
 
 
 				replymsg="Your diet consumption in "+text+" : "+"\n"+report+"\n Input anything to conitnue.";
-        		subStage =0 ;
+        		currentUser.setSubStage(0) ;
 
 			}
 			else {
@@ -486,18 +307,16 @@ public class KitchenSinkController {
 		default:{}break;
 		}
 
-		replymsg="All set. Type anything to return to main menu...";
-		currentStage = "Main";//back to main
-		subStage = 0;
+		return replymsg;
 
 	}
 
 
 
 
-	private void livingHabitCollectorEditor(String replyToken, Event event, String text) {
-
-		switch(subStage) {
+	public String livingHabitCollectorEditor(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		switch(currentUser.getSubStage()) {
 		case 0:{
 			replymsg="Looks like you have already input your data. "
 											+ "Do you wish to edit it? Please type the choice you wish to edit below:\n\n"
@@ -514,47 +333,47 @@ public class KitchenSinkController {
 											+ "11 Edit Other Information about you\n"
 											+ "12 Show all your states \n"
 											+ "(type other things to back to menu)";
-			subStage = -1;
+			currentUser.setSubStage(-1);
 		}break;
 		case -1:{ // redirecting stage
 			try{
-				subStage = Integer.parseInt(text);
-				if (subStage >=1 && subStage <= 12) {
+				currentUser.setSubStage(Integer.parseInt(text));
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 12) {
 					replymsg="Redirecting...type anything to continue.";
 				}
 				else {
 					replymsg="All changed recorded. Type anything to return to main menu.";
 					//updata db
-					currentStage = "Main";//back to main
-					subStage =0;
+					currentUser.setStage("Main");//back to main
+					currentUser.setSubStage(0);
 				}
 			}catch(Exception e) {
 				replymsg="All changed recorded. Type anything to return to main menu.";
 				//update db
-				currentStage = "Main";//back to main
-				subStage =0;
+				currentUser.setStage("Main");//back to main
+				currentUser.setSubStage(0);
 			}
 		}break;
 		case 1:{
 			replymsg="Please enter the age you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 21:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "update")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-       			subStage = 0;
+       			currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 2:{
 			replymsg="Please enter the name you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 22:{
 			if(inputChecker.NameEditting(text, currentUser, database, "update")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-       			subStage = 0;
+       			currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
@@ -562,138 +381,140 @@ public class KitchenSinkController {
 
 		case 3:{
 			replymsg="Please enter the weight you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 23:{
 			if(inputChecker.WeightEditting(text, currentUser, database, "update")) {
 	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 4:{
 			replymsg="Please enter the height you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 24:{
 			if(inputChecker.HeightEditting(text, currentUser, database, "update")) {
 	    		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 5:{
 			replymsg="Please enter the bodyfat(%) you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 25:{
 			if(inputChecker.BodyfatEditting(text, currentUser, database, "update")) {
 	      		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 6:{
 			replymsg="Please enter the hours of excercise per day you wish to change:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 26:{
 			if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
 	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
         		}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 7:{
 			replymsg="Please enter the calories consumption(kcal) per day you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 27:{
 			if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
 	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
         		}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 8:{
 			replymsg="Please enter the carbohydrates consumption(g) per day you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 28:{
 			if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
 	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
         		}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 9:{
 			replymsg="Please enter the protein consumption(g) per day you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 29:{
 			if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
 	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
         		}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 10:{
 			replymsg="Please enter the veg/fruit consumption(servings) per day you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 30:{
 			if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
 	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		subStage = 0;
+	       		currentUser.setSubStage(0);
         		}
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 11:{
 			replymsg="Please enter other information about yourself that you wish to change to:";
-			subStage +=20 ;
+			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
 		case 31:{
 			if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-       			subStage = 0;
+       			currentUser.setSubStage(0);
 			}
 			else
 				replymsg="Please enter some with characters less then 1000!";
 		}break;
 		case 12:{
 			replymsg="These are all about your body:\n\n" 	+ currentUser.toString()+"\nType any to continue.";
-			subStage = 0;
+			currentUser.setSubStage(0);
 		}break;
 
 		default:{
 			replymsg="Some problem occurs.Type any key to return to main menu.";
-			log.info("Stage Error!!");
-			currentStage = "Main";//back to main
-			subStage =0;
+			//log.info("Stage Error!!");
+			currentUser.setStage("Main");//back to main
+			currentUser.setSubStage(0);
 		}break;
 		}
+		return replymsg;
 	}
 
 
-	private void livingHabitCollectorHandler(String replyToken, Event event, String text) {
-		switch(subStage){
+	public String livingHabitCollectorHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		switch(currentUser.getSubStage()){
 		case 0:{
 			currentUser = new DetailedUser(currentUser);
 			replymsg = "Please tell us your body fat:(in %)";
-			subStage +=1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 1:{
 			if(inputChecker.BodyfatEditting(text, currentUser, database, "set")) {
         		replymsg = "Please tell us your average daily calories consumption(in kcal):";
-        		subStage +=1 ;
+        		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
 			else
 				replymsg = "Please enter reasonable numbers!";
@@ -702,7 +523,7 @@ public class KitchenSinkController {
 		case 2:{
 			if(inputChecker.CaloriesEditting(text, currentUser, database, "set")) {
         		replymsg = "Please tell us your average daily carbohydrates consumption(roughly in g):";
-        		subStage +=1 ;
+        		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
 			else
 				replymsg = "Please enter reasonable numbers!";
@@ -710,7 +531,7 @@ public class KitchenSinkController {
 		case 3:{
 			if(inputChecker.CarbsEditting(text, currentUser, database, "set")) {
         			replymsg = "Please tell us your average daily protein consumption(roughly in g):";
-        			subStage +=1 ;
+        			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
 				else {
 					replymsg = "Please enter reasonable numbers!";
@@ -719,7 +540,7 @@ public class KitchenSinkController {
 		case 4:{
 			if(inputChecker.ProteinEditting(text, currentUser, database, "set")) {
         			replymsg = "Please tell us your average daily vegetable/fruit consumption(in serving):";
-        			subStage +=1 ;
+        			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
 				else {
 					replymsg = "Please enter reasonable numbers!";
@@ -728,7 +549,7 @@ public class KitchenSinkController {
 		case 5:{
 			if(inputChecker.VegfruitEditting(text, currentUser, database, "set")) {
         			replymsg = "Do you eat breakfast?(y/n)";
-        			subStage +=1 ;
+        			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
 				else {
 					replymsg = "Please enter reasonable numbers!";
@@ -738,66 +559,66 @@ public class KitchenSinkController {
 			boolean input = false;
 			if (text.charAt(0)=='y' || text.charAt(0)=='Y') input = true;
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat breakfast?(y/n)"; return;}
+			else { replymsg = "Do you eat breakfast?(y/n)"; return replymsg;}
 
 			((DetailedUser)currentUser).setEatingHabits(input,0);
 			replymsg = "Do you eat lunch?(y/n)";
-			subStage +=1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 7:{
 			boolean input = false;
 			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='n') input = false;
-			else { replymsg = "Do you eat lunch?(y/n)"; return;}
+			else { replymsg = "Do you eat lunch?(y/n)"; return replymsg;}
 
 			((DetailedUser)currentUser).setEatingHabits(input,1);
 			replymsg = "Do you eat afternoon tea?(y/n)";
-			subStage +=1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 8:{
 			boolean input = false;
 			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat afternoon tea?(y/n)"; return;}
+			else { replymsg = "Do you eat afternoon tea?(y/n)"; return replymsg;}
 
 			((DetailedUser)currentUser).setEatingHabits(input,2);
 			replymsg = "Do you eat dinner?(y/n)";
-			subStage +=1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 9:{
 			boolean input = false;
 			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat dinner?(y/n)"; return;}
+			else { replymsg = "Do you eat dinner?(y/n)"; return replymsg;}
 
 			((DetailedUser)currentUser).setEatingHabits(input,3);
 			replymsg = "Do you eat midnight snacks?(y/n)";
-			subStage +=1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 10:{
 			boolean input = false;
 			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat midnight snacks?(y/n)"; return;}
+			else { replymsg = "Do you eat midnight snacks?(y/n)"; return replymsg;}
 
 			((DetailedUser)currentUser).setEatingHabits(input,4);
 			replymsg = "Do you eat any extra meals?(y/n)";
-			subStage +=1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 11:{
 			boolean input = false;
 			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat any extra meals?(y/n)"; return;}
+			else { replymsg = "Do you eat any extra meals?(y/n)"; return replymsg;}
 
 			((DetailedUser)currentUser).setEatingHabits(input,5);
 			replymsg = "How many hours per day do you exercise in a weekly average?";
-			subStage += 1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 12:{
 			if(inputChecker.ExerciseEditting(text, currentUser, database, "set")) {
 				replymsg = "Any other infomation about your body you wish to let us know?(in 1000 characters)";
-				subStage +=1;
+				currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
 			else
 				replymsg = "Please enter reasonable numbers!";
@@ -807,8 +628,8 @@ public class KitchenSinkController {
 			if(inputChecker.OtherinfoEditting(text, currentUser, database, "set")) {
 				database.pushUser(currentUser);
 				replymsg = "All set and recorded. Type anything to return to main menu.";
-				currentStage = "Main";//back to main
-				subStage =0;
+				currentUser.setStage("Main");//back to main
+				currentUser.setSubStage(0);
 			}
 			else
 				replymsg = "Please enter something in 1000 characters!!";
@@ -817,12 +638,14 @@ public class KitchenSinkController {
 		default:
 			break;
 		}
+		return replymsg;
 	}
 
-	private void healthPediaHandler(String replyToken, Event event, String text) {
+	public String healthPediaHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
 		//user key word input
 		//String
-		switch(subStage) {
+		switch(currentUser.getSubStage()) {
 		case 0:{
 			replymsg ="Welcome to HealthPedia! You are welcome to query any thing about food!\n"
 					+ "Please type the function choice you wish to use as below.\n\n"
@@ -831,30 +654,30 @@ public class KitchenSinkController {
 					+ "3\n"
 					+ "4\n\n"
 					+ "Type other things to go back to main menu.";
-			subStage -= 1;
+			currentUser.setSubStage(currentUser.getSubStage()-1);
 		}break;
 
 		case -1:{ // redirecting stage
 			try{
-				subStage = Integer.parseInt(text);
-				if (subStage >=1 && subStage <= 4) {
+				currentUser.setSubStage(Integer.parseInt(text));
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 4) {
 					replymsg = "Redirecting...type anything to continue.";
 				}
 				else {
 					replymsg = "Redirecting...type anything to continue.";
-					currentStage = "Main";//back to main
-					subStage =0;
+					currentUser.setStage("Main");//back to main
+					currentUser.setSubStage(0);
 				}
 			}catch(Exception e) {
 				replymsg = "Redirecting...type anything to continue.";
-				currentStage = "Main";//back to main
-				subStage =0;
+				currentUser.setStage("Main");//back to main
+				currentUser.setSubStage(0);
 			}
 		}break;
 
 		case 1:{
 			replymsg = "Please enter the name of food you wish to know about:";
-			subStage += 10;
+			currentUser.setSubStage(currentUser.getSubStage()+10);
 		}break;
 		case 11:{
 			healthSearcher.setKeyword(text);
@@ -867,59 +690,60 @@ public class KitchenSinkController {
 						+"Suger: "+healthSearcher.getSugar()+"g\n"
 						+"Water:"+healthSearcher.getWater()+"g\n"
 						+"\nType 1 to search for other food.\nType other thing to go back to Healthpedia.";
-				subStage += 10;
+				currentUser.setSubStage(currentUser.getSubStage()+10);
 			}
 			else {
 				replymsg = "Food not found.\nType 1 to search for other food.\nType other thing to go back to Healthpedia.";
-				subStage +=10;
+				currentUser.setSubStage(currentUser.getSubStage()+10);
 			}
 		}break;
 		case 21:{
 			try {
-				if(Integer.parseInt(text) == 1) subStage = 1;
+				if(Integer.parseInt(text) == 1) currentUser.setSubStage(1);
 				else {
 					throw new Exception("Going back to menu");
 				}
 			}catch(Exception ex) {
-				subStage = 0;
+				currentUser.setSubStage(0);
 			}finally { replymsg = "redirecting...type anything to continue.";}
 		}break;
 		default:break;
 		}
+		return replymsg;
+	}
 
+	public String feedBackHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
-		currentStage = "Main";//back to main
-		subStage = 0;
+		currentUser.setStage("Main");//back to main
+		currentUser.setSubStage(0);
+		return replymsg;
 	}
-	private void feedBackHandler(String replyToken, Event event, String text) {
+	public String userGuideHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
-		currentStage = "Main";//back to main
-		subStage = 0;
-	}
-	private void userGuideHandler(String replyToken, Event event, String text) {
-		replymsg = "All set. Type anything to return to main menu...";
-		currentStage = "Main";//back to main
-		subStage = 0;
+		currentUser.setStage("Main");//back to main
+		currentUser.setSubStage(0);
+		return replymsg;
 	}
 
 	// this is self assessment Handler function
-	private void selfAssessmentHandler(String replyToken, Event event, String text) {
-		if(subStage == 0){
+	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		if(currentUser.getSubStage() == 0){
 			if(!(currentUser instanceof DetailedUser))
 			currentUser = new DetailedUser(currentUser);
 			((DetailedUser)currentUser).setAssessmentScore(0);
 			replymsg = "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 								+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
 								+ "\n reply anything to start or reply 'q' to reutrn to the main menu...";
-			subStage = -1;
-			return;
+			currentUser.setSubStage(-1);
 		}
-		else if (subStage == -1){
+		else if (currentUser.getSubStage() == -1){
 			if(text.equals("q")) {
-			currentStage = "Main";
+			currentUser.setStage("Main");
 			replymsg = "back to mainMenu...";//back to main
-			subStage = 0;
-			return;
+			currentUser.setSubStage(0);
 			}
 		//else the quiz start
 			replymsg = "Then let's start the quiz ;) \n Q1. You eat at least five portions of fruits and vegetables a day"
@@ -927,9 +751,9 @@ public class KitchenSinkController {
 				+ "\n reply 'T' as ture and 'F' as false"
 				+ "\n reply 'q' to reutrn to the main menu";
 
-			subStage = 1;
+			currentUser.setSubStage(1);
 		}
-		else if (subStage == 11) {
+		else if (currentUser.getSubStage() == 11) {
 			String reply = "Congratulations that you have finished the quiz!:)\n";
 			int score = ((DetailedUser)currentUser).getAssessmentScore();
 			if(score >= 90) {
@@ -955,158 +779,41 @@ public class KitchenSinkController {
 			reply = reply + "Would you like to customize your personal plan now? "
 					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
 			replymsg =reply;
-			subStage += 1;
+			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}
-		else if(subStage == 12) {
+		else if(currentUser.getSubStage() == 12) {
 			if(text.equalsIgnoreCase("Y")) {
-				subStage = 0;
-				currentStage = "DietPlanner";
+				currentUser.setSubStage(0);
+				currentUser.setStage("DietPlanner");
 				replymsg ="Heading to DietPlanner...";
 			}else {
-				subStage = 0;
-				currentStage = "Main";
+				currentUser.setSubStage(0);
+				currentUser.setStage("Main");
 				replymsg ="Heading to Main menu...";
 			}
-			return;
 		}
 		else {
 			if(text.equalsIgnoreCase("T")) {
 				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
-				suggestion.concat(feedback[subStage-1][1]);
+				suggestion.concat(feedback[currentUser.getSubStage()-1][1]);
 			}
 			else if(text.equalsIgnoreCase("F")){
-				suggestion.concat(feedback[subStage-1][0]);
+				suggestion.concat(feedback[currentUser.getSubStage()-1][0]);
 			}
 			else if(text.equalsIgnoreCase("q")) {
-				currentStage = "Main";
-				subStage = 0;
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
 				replymsg = "back to mainMenu...";//back to main
-				return;
 			}
 			else {
 				replymsg = "Please reply a valid answer(T/F)";
-				return;
 			}
-			if(subStage < 10)
-				replymsg = question[subStage];
-			subStage += 1;
+			if(currentUser.getSubStage() < 10)
+				replymsg = question[currentUser.getSubStage()];
+			currentUser.setSubStage(currentUser.getSubStage()+ 1);
 		}
-	}*/
-
-	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
-            throws Exception {
-        String text = content.getText();
-        switch(currentStage) {
-        	case "Init":
-        		stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "Main":
-        		stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "LivingHabitCollector":
-        		stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "LivingHabitEditor":
-        		stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
-        		break;
-        	case "DietPlanner":
-        		stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "HealthPedia":
-        		stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "FeedBack":
-        		stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "UserGuide":
-        		stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "SelfAssessment":
-        		stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	default:
-        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
-        		break;
-        }
-		this.replyText(replyToken,replymsg);
-
-    }
-
-	static String createUri(String path) {
-		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
+		return replymsg;
 	}
-
-	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
-	}
-
-	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
-		log.info("Got content-type: {}", responseBody);
-
-		DownloadedContent tempFile = createTempFile(ext);
-		try (OutputStream outputStream = Files.newOutputStream(tempFile.path)) {
-			ByteStreams.copy(responseBody.getStream(), outputStream);
-			log.info("Saved {}: {}", ext, tempFile);
-			return tempFile;
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
-
-	private static DownloadedContent createTempFile(String ext) {
-		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;
-		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);
-		tempFile.toFile().deleteOnExit();
-		return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
-	}
-
-
-
-	//The annontation @Value is from the package lombok.Value
-	//Basically what it does is to generate constructor and getter for the class below
-	//See https://projectlombok.org/features/Value
-	@Value
-	public static class DownloadedContent {
-		Path path;
-		String uri;
-	}
-
-
-	//an inner class that gets the user profile and status message
-	class ProfileGetter implements BiConsumer<UserProfileResponse, Throwable> {
-		private KitchenSinkController ksc;
-		private String replyToken;
-
-		public ProfileGetter(KitchenSinkController ksc, String replyToken) {
-			this.ksc = ksc;
-			this.replyToken = replyToken;
-		}
-		@Override
-    	public void accept(UserProfileResponse profile, Throwable throwable) {
-    		if (throwable != null) {
-            	ksc.replyText(replyToken, throwable.getMessage());
-            	return;
-        	}
-        	ksc.reply(
-                	replyToken,
-                	Arrays.asList(new TextMessage(
-                		"Display name: " + profile.getDisplayName()),
-                              	new TextMessage("Status message: "
-                            		  + profile.getStatusMessage()))
-        	);
-    	}
-    }
-
 
 
 }

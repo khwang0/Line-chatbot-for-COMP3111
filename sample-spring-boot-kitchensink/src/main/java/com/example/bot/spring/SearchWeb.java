@@ -35,7 +35,7 @@ public class SearchWeb {
 			}
 		} catch (Exception e)
 		{
-			System.out.println("发送GET请求出现异常！" + e);
+			System.out.println("abnormal GET！" + e);
 			e.printStackTrace();
 		}
 		// 使用finally来关闭输入流
