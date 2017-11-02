@@ -1,9 +1,11 @@
 package com.example.bot.spring;
 
 import lombok.extern.slf4j.Slf4j;
+
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.net.URISyntaxException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -125,6 +127,79 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return result;	
 	}
 	
+	/*functions added by Xuhua*/
+	
+	//Generate user diet_plan
+	boolean gen_plan(String user_id){
+		boolean result = false;
+		
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"INSERT INTO diet_plan VALUES(?,?,?,?,?,?);");//id | protein | fat | sugar | food_name | food_amount
+			stmt.setString(1, user_id);
+			stmt.setInt(2, 100);//protein
+			stmt.setInt(3, 100);//fat
+			stmt.setInt(4, 100);//sugar
+			//set the food_name
+			String[] food_name = new String[2];
+			food_name[0] = "apple";
+			food_name[1] = "milk";
+			Array sqlArray1 = connection.createArrayOf("text[]",food_name);
+			stmt.setArray(5,sqlArray1);
+			//set the food_amount
+			//int[] food_amount = new int[2];
+			Integer[] food_amount = new Integer[2];
+			food_amount[0] = 10;
+			food_amount[1] = 5;
+			Array sqlArray2 = connection.createArrayOf("integer[]",food_amount);
+			stmt.setArray(6,sqlArray2);
+			
+		    result = stmt.execute();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+			return result;
+		}
+		return result;
+	}
+	
+	
+	//Query the target diet plan info from "diet_plan" table and return
+	ArrayList<Integer> search_plan(String user_id) throws Exception {
+		ArrayList<Integer> plan_info = new ArrayList<Integer>(); // store the query result from plan table
+		try {
+			//connect to the database with two tables: current & plan
+			Connection connection = this.getConnection();
+			//prepare a SQL statement while leaving some parameters
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_plan where id = ? ");
+			stmt.setString(1, user_id);//1 is the param location/index
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				plan_info.add(rs.getInt(1));//protein
+				plan_info.add(rs.getInt(2));//fat
+				plan_info.add(rs.getInt(3));//sugar
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			log.info("query error for search_plan: {}", e.toString());
+			//System.out.println(e);
+		}
+		if (plan_info.size() != 0)
+			return plan_info;
+		
+		throw new Exception("NOT FOUND");
+	}
+	
+	//Query the current diet status info from "diet_conclusion" table and return
+	ArrayList<Integer> search_current(String user_id, String date) throws Exception {
+		ArrayList<Integer> current_info = new ArrayList<Integer>(); // store the query result from current table
+		return current_info;
+	}
+		
 	
 	
 	/*  Function added by ZK*/
