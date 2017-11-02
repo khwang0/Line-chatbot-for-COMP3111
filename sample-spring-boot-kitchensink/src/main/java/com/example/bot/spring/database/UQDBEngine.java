@@ -13,7 +13,7 @@ public class UQDBEngine extends DBEngine {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String retrieveReply() {
+	public String retrieveReply(){
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		String reply="";

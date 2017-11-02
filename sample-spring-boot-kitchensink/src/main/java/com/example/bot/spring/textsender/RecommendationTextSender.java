@@ -1,5 +1,6 @@
 package com.example.bot.spring.textsender;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import com.example.bot.spring.database.*;
 
@@ -15,19 +16,25 @@ public class RecommendationTextSender implements TextSender {
 		RecommendationDBEngine searchEngine = new RecommendationDBEngine();
 		//assume the features are 1.hotel, 2.spring, 3.view 4. food
 		ArrayList<String> featureList = new ArrayList<String>();
-		if (msg.contains("hotel")){
-			featureList.add("hotel");
-		}
-		if (msg.contains("spring")){
-			featureList.add("spring");
-		}
-		if (msg.contains("view")||msg.contains("sight")){
-			featureList.add("view");
-		}
-		if (msg.contains("food")){
-			featureList.add("food");
-		}
+		
+		//get the features
+		featureList=searchEngine.getFeatures(msg);
+		
+//		if (msg.contains("hotel")){
+//			featureList.add("hotel");
+//		}
+//		if (msg.contains("spring")){
+//			featureList.add("spring");
+//		}
+//		if (msg.contains("view")||msg.contains("sight")){
+//			featureList.add("view");
+//		}
+//		if (msg.contains("food")){
+//			featureList.add("food");
+//		}
+		
 		String reply = searchEngine.recommendationQuery(userId, featureList);
+		
 		if(reply.equals(null)||reply.equals("")) {
 			throw new Exception("No matching");
 			// when featureList is empty -> reply = "";
