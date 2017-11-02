@@ -167,7 +167,7 @@ public class KitchenSinkTester {
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Tours with good spring : 2D001, 2D002, 2D003\nNo tours with good food\n");
+		assertThat(result).isEqualTo("Tours with good spring : 2D001, 2D002, 2D003\nNo tours with good food.");
 		try {
 			//System.err.println("it is good here");
 			result = this.Rsender.process(testerId,"I want nothing");
@@ -187,7 +187,7 @@ public class KitchenSinkTester {
 			thrown = true;
 		}
 		//assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Tours with good hotel : 2D001, 2D004\nTours with good view : 2D001, 2D002, 2D003, 2D004, 2D005\n");
+		assertThat(result).isEqualTo("Tours with good hotel : 2D001, 2D004\nTours with good view : 2D001, 2D002, 2D003, 2D004, 2D005.");
 	}
 	
 	@Test

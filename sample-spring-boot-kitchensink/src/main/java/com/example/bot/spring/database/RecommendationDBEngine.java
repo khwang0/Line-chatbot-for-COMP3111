@@ -69,6 +69,10 @@ public class RecommendationDBEngine extends DBEngine {
 				//stmt.close();
 			}
 			
+			if (!response.equals("")){
+				response=response.replaceAll("\n$", ".");
+			}
+			
 			if (idList!="") {
 				idList=idList.replaceAll(", $", "");
 			}
