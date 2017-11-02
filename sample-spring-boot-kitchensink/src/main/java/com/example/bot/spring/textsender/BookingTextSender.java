@@ -12,7 +12,6 @@ public class BookingTextSender implements TextSender {
 	private BookingDBEngine bookingDB;
 
 	public BookingTextSender() {
-		// TODO Auto-generated constructor stub
 		bookingDB = new BookingDBEngine();
 	}
 	
@@ -29,14 +28,12 @@ public class BookingTextSender implements TextSender {
 		try {
 			status = bookingDB.getStatus(userId);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		String reply = null;
 		switch(status) {
 			case "new":{
-				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")||
-						msg.toLowerCase().contains("good")) {
+				if(bookingDB.detectPositive(msg)) {
 					bookingDB.setStatus("date",userId);
 					reply = getInfoQuestion("date");
 				}else {
@@ -56,14 +53,14 @@ public class BookingTextSender implements TextSender {
 			
 			// Status date: asking for the desired departing date
 			case "date":{
-				if(this.detectCancel(msg)) {
+				if(bookingDB.detectCancel(msg)) {
 					bookingDB.setStatus("default", userId);
-					reply = "You just stopped your booking request. Please start a new booking request if you want.";
+					reply = this.getInfoQuestion("cancel");
 					break;
 				}
 				String[] s = msg.split("/");
 				if(s.length != 2) {
-					reply = "Invalid date format. Please enter in (DD/MM) format.";
+					reply = this.getInfoQuestion("invalid date");
 					break;
 				}
 				int dd,mm;
@@ -71,41 +68,27 @@ public class BookingTextSender implements TextSender {
 					dd = Integer.parseInt(s[0]);
 					mm = Integer.parseInt(s[1]);
 				}catch(NumberFormatException e){
-					reply = "Invalid date format. Please enter in (DD/MM) format.";
+					reply = this.getInfoQuestion("invalid date");
 					break;
 				}
-				/*
-				String tourId = bookingDB.getTourIds(userId)[0]; // >>>>>>>>>>>>>> not necessarily the first one; 
-				String dates = bookingDB.getAllDates(tourId);
-				String date = Integer.toString(mm)+Integer.toString(dd);
-				if(dates.contains(date)) {
-					bookingDB.recordDate(userId,dd,mm);
-					String name = bookingDB.getName(userId);
-					if(name.equals("")) {
-						reply = getInfoQuestion("name");
-						bookingDB.setStatus("name", userId);
-					}else {
-						bookingDB.createNewBooking(userId, name);
-					}
-				}else {
-					reply = "Invalid date. Please enter a valid date.";
-				}
-				*/
+				
 				boolean valid = false;
 				try {
 					valid = bookingDB.checkValidDate(dd, mm, userId);
 				}catch(Exception e) {
 					if(e.getMessage().equals("FULL")) {
-						reply = "The tour on date "+msg+" is already full. Please change to another date.";
+						reply = this.getInfoQuestion("fulltour");
 						break;
 					}else if(e.getMessage().equals("NO SUCH DATE")){
-						reply = "Sorry. We don't offer tours on the date you specified. Please change to another date.";
+						reply = this.getInfoQuestion("no such date");
 						break;
 					}else if(e.getMessage().equals("OCCUPIED")) {
-						reply = "We would like to remind you that you already booked a tour on the date you specified.\n"+
-									"Do you want to continue?";
+						reply = this.getInfoQuestion("occupied");
 						bookingDB.setStatus("hold", userId);
 						bookingDB.recordDate(userId, dd, mm);
+						break;
+					}else if(e.getMessage().equals("REBOOK")) {
+						reply = this.getInfoQuestion("no rebook");
 						break;
 					}
 				}
@@ -126,15 +109,19 @@ public class BookingTextSender implements TextSender {
 			
 			// Status adult; asking for number of adults
 			case "adult":{
-				if(detectCancel(msg)) {
+				if(bookingDB.detectCancel(msg)) {
 					this.stopCurrentBooking(userId);
 					break;
 				}
 				try {
 					int i = Integer.parseInt(msg);
+					if(i<0) {
+						reply = this.getInfoQuestion("invalid adult");
+						break;
+					}
 					bookingDB.recordAdults(userId,i);
 				}catch(NumberFormatException e) {
-					reply = "Invalid number of adults. Please enter again.";
+					reply = this.getInfoQuestion("invalid adult");;
 					break;
 				}
 				reply = getInfoQuestion("children");
@@ -144,15 +131,19 @@ public class BookingTextSender implements TextSender {
 			
 			// Status children: asking for number of children (Age 4 to 11)
 			case "children":{
-				if(detectCancel(msg)) {
+				if(bookingDB.detectCancel(msg)) {
 					this.stopCurrentBooking(userId);
 					break;
 				}
 				try {
 					int i = Integer.parseInt(msg);
+					if(i<0) {
+						reply = this.getInfoQuestion("invalid children");
+						break;
+					}
 					bookingDB.recordChildren(userId,i);
 				}catch(Exception e) {
-					reply = "Invalid number of children (Age 4 to 11). Please enter again.";
+					reply = this.getInfoQuestion("invalid children");
 					break;
 				}
 				reply = getInfoQuestion("toddler");
@@ -162,15 +153,19 @@ public class BookingTextSender implements TextSender {
 			
 			//Status toddler: asking for number of children (Age 0 to 3)
 			case "toddler":{
-				if(detectCancel(msg)) {
+				if(bookingDB.detectCancel(msg)) {
 					this.stopCurrentBooking(userId);
 					break;
 				}
 				try {
 					int i = Integer.parseInt(msg);
+					if(i<0) {
+						reply = this.getInfoQuestion("invalid toddler");
+						break;
+					}
 					bookingDB.recordToddler(userId,i);
 				}catch(Exception e) {
-					reply = "Invalid number of children (Age 0 to 3). Please enter again.";
+					reply = this.getInfoQuestion("invalid toddler");
 					break;
 				}
 				reply = getInfoQuestion("phone");
@@ -180,15 +175,15 @@ public class BookingTextSender implements TextSender {
 			
 			//Status phone: asking for phone number
 			case "phone" :{
-				if(detectCancel(msg)) {
+				if(bookingDB.detectCancel(msg)) {
 					this.stopCurrentBooking(userId);
 					break;
 				}
 				try {
-					int i = Integer.parseInt(msg);
+					long i = Long.parseLong(msg);
 					bookingDB.recordPhone(userId,i);
 				}catch(Exception e) {
-					reply = "Invalid phone number. Please enter again.";
+					reply = this.getInfoQuestion("invalid phone");
 					break;
 				}
 				reply = getTotalPrice(userId);
@@ -197,22 +192,17 @@ public class BookingTextSender implements TextSender {
 			
 			// Status confirm: last step before everything finished
 			case "confirm" :{
-				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")
-						||msg.toLowerCase().contains("good")) {
+				if(bookingDB.detectPositive(msg)) {
 					bookingDB.setStatus("default",userId);
 					bookingDB.updateRegisteredNumber(userId);
-					reply = "Thank you. Please pay the tour fee by ATM to "
-							+ "123-345-432-211 of ABC Bank or by cash in our store.\n"
-							+ "When you complete the ATM payment, please send the bank "
-							+ "in slip to us. Our staff will validate it.";
+					reply = this.getInfoQuestion("confirm");
 				}else {
 					reply = stopCurrentBooking(userId);
 				}
 				break;
 			}
 			case "hold" :{
-				if(msg.toLowerCase().contains("yes")||msg.toLowerCase().contains("yeah")||
-						msg.toLowerCase().contains("good")) {
+				if(bookingDB.detectPositive(msg)) {
 					String name = bookingDB.getName(userId);
 					if(name.equals("")) {
 						bookingDB.setStatus("name", userId);
@@ -229,7 +219,6 @@ public class BookingTextSender implements TextSender {
 				break;
 			}
 			default:{
-				//log.info("Illegal status for user id: {}. ", userId);
 				reply = defaultCaseHandler(userId,msg);
 			}
 		}
@@ -238,22 +227,6 @@ public class BookingTextSender implements TextSender {
 			throw new Exception("CANNOT ANSWER");
 		}
 		return reply;
-	}
-	
-
-	/** determine if a message has the potential to cancel
-	 * 
-	 * @param msg
-	 * @return
-	 */
-	private boolean detectCancel(String msg) {
-		String[] negativeFlags = {"don't", "cancel", "stop", "remove", "quit", "sorry", "no"};
-		for(int i = 1; i < negativeFlags.length; i++) {
-			if(msg.toLowerCase().contains(negativeFlags[i])) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/** stop the current booking request of one user
@@ -264,7 +237,7 @@ public class BookingTextSender implements TextSender {
 	private String stopCurrentBooking(String userId) {
 		bookingDB.setStatus("default",userId);
 		bookingDB.removeBooking(userId);
-		return "You just stopped your booking request. Please start a new booking request if you want.";
+		return this.getInfoQuestion("cancel");
 	}
 
 	/** handle a question if the user is not in the booking flow
@@ -283,6 +256,8 @@ public class BookingTextSender implements TextSender {
 				return reply;
 			}
 		}
+		
+		/*
 		// If he specifies the number of the tour
 		String[] candiTours = bookingDB.getTourIds(userId);
 		String[] orders = {"first", "second", "third", "fourth", "fifth", "seventh", "eighth", "ninth", "tenth", "eleventh"};
@@ -303,6 +278,7 @@ public class BookingTextSender implements TextSender {
 				}
 			}
 		}
+		*/
 		
 		// If he specifies the name of the tour
 		LinkedList<String> tourNames = bookingDB.getAllTourNames();
@@ -314,12 +290,17 @@ public class BookingTextSender implements TextSender {
 				}else if(j == t.length-1) {
 					String tourId = bookingDB.findTourId(tourNames.get(i));
 					reply = this.getConfirmation(userId, tourId);
+					return reply;
 				}
 			}
 		}
 		
-		if(this.detectCancel(msg))
-			reply = "You just stopped your booking request. Please start a new booking request if you want.";
+		if(bookingDB.detectAsk(msg)) {
+			reply = this.getInfoQuestion("asking");
+			return reply;
+		}
+		if(bookingDB.detectCancel(msg))
+			reply = this.getInfoQuestion("cancel");
 		return reply;
 	}
 
@@ -332,20 +313,17 @@ public class BookingTextSender implements TextSender {
 		int adult = bookingDB.getAdult(userId);
 		int toodler = bookingDB.getToddler(userId);
 		int children = bookingDB.getChildren(userId);
-		String tourId = bookingDB.getTourJoined(userId);
+		String tourId = bookingDB.getTourIds(userId)[0];
 		int quota = bookingDB.getQuota(tourId);
 		if(quota < (adult+toodler+children)) {
-			String reply = String.format("We only have a quota of %d left for tour %s. "
-					+ "Please change to another tour. Sorry", quota, tourId);
+			String reply = String.format(this.getInfoQuestion("no quota"), quota, tourId);
 			bookingDB.setStatus("default",userId);
 			bookingDB.removeBooking(userId);
 			return reply;
 		}else {
 			double price = bookingDB.getPrice(tourId);
 			double totalPrice = price*adult+price*0.8*children;
-			String reply = String.format("Total price is %.2f, confirm? "
-					+ "Please notice that there will be no refund for "
-					+ "cancellation due to personal reasons.", totalPrice);
+			String reply = String.format(this.getInfoQuestion("price"), totalPrice);
 			bookingDB.recordTotalPrice(totalPrice,userId);
 			bookingDB.setStatus("confirm",userId);
 			return reply;
@@ -361,9 +339,6 @@ public class BookingTextSender implements TextSender {
 		LinkedList<String> tourInfo = bookingDB.getTourInfos(tourId);
 		String dates = bookingDB.getAllDates(tourId);
 		StringBuilder sb = new StringBuilder();
-		sb.append(tourId+" "+tourInfo.get(0));
-		sb.append(":"+tourInfo.get(1)+".\n");
-		sb.append("We have tours on ");
 		String[] allDates = dates.split(",");
 		for(int i = 0; i < allDates.length; i++) {
 			if(i == allDates.length-1 && i != 0)
@@ -372,46 +347,26 @@ public class BookingTextSender implements TextSender {
 				sb.append(", ");
 			sb.append(allDates[i].substring(2)+"/"+allDates[i].substring(0,2));
 		}
-		sb.append(" still available for booking.\n");
-		sb.append("The fee for this tour is: Weekday: ");
-		sb.append(tourInfo.get(2));
-		sb.append(" / Weekend: ");
-		sb.append(tourInfo.get(3)).append("\n");
-		sb.append("Do you want to book this one?");
+		String dateSeg = sb.toString();
+		String reply = this.getInfoQuestion("allinfo");
 		bookingDB.setTourid(userId, tourId);
 		bookingDB.setStatus("new", userId);
-		String reply = sb.toString();
-		return reply;
+		return String.format(reply, tourId, tourInfo.get(0), tourInfo.get(1), 
+				dateSeg, tourInfo.get(2), tourInfo.get(3));
 	}
+	/*
+
+	*/
 
 
-	/** Return next question according to the current status
+	/** Return next question according to tag
 	 * 
 	 * @param nextQ
 	 * @return
 	 */
 	private String getInfoQuestion(String nextQ) {
-		switch(nextQ) {
-			case "name": {
-				return "Your name please (Firstname LASTNAME)";
-			}
-			case "date": {
-				return "On which date you are going? (in DD/MM format)";
-			}
-			case "adult":{
-				return "How many adults?";
-			}
-			case "children":{
-				return "How many children (Age 4 to 11)?";
-			}
-			case "toddler":{
-				return "How many children (Age 0 to 3)?";
-			}
-			case "phone":{
-				return "Your phone number please.";
-			}
-		}
-		return null;
+		String reply = bookingDB.getReplyMessage(nextQ);
+		return reply;
 	}
-
+	
 }
