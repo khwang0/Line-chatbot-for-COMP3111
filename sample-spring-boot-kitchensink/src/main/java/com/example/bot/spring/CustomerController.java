@@ -1,4 +1,4 @@
-package com.example.bot.spring.webapplication;
+package com.example.bot.spring;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
