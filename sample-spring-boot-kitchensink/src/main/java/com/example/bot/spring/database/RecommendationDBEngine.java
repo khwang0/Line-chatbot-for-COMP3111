@@ -30,8 +30,7 @@ public class RecommendationDBEngine extends DBEngine {
 	}
 	
 	public String recommendationQuery(String userId, ArrayList<String> text) {
-		//System.err.println(text.get(0) + " " + text.get(1));
-		//System.out.println("------Inside the function");
+
 		String response="";
 		String idList="";
 		

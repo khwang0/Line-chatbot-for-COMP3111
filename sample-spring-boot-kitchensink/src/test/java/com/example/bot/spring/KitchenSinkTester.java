@@ -47,7 +47,7 @@ public class KitchenSinkTester {
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Sorry, I can't answer your question. My colleague will follow up with you.");
+		assertThat(result).isEqualTo("Sorry, I cannot answer your question.");
 	}
 
   /*
