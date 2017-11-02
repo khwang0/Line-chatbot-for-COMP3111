@@ -141,7 +141,7 @@ public class KitchenSinkTester {
 				}
 			}
 		}catch(Exception e) {
-			//System.err.println("exception");
+			System.err.println(e.getMessage());
 			thrown = true;
 		}
 		assertThat(WA).isEqualTo(false);
