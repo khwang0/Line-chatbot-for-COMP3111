@@ -13,9 +13,6 @@ public class foodInput{
 		currentTime = time;
 		key = UID+time;
 	}
-	
-	
-	
 	public String getId() {return UID;}
 	public String getTime() {return currentTime;}
 	public int getAmount() {return amount;}

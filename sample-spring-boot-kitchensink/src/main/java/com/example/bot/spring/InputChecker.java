@@ -48,7 +48,7 @@ public class InputChecker {
 		default:System.out.println("Mode error. Set failed.");
 		}
 	}
-	
+
 	public boolean AgeEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidAge(text)) {
@@ -194,7 +194,7 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	/* added by ZK*/
-	public boolean foodAdd(String text, foodInput foodinput, SQLDatabaseEngine database, String mode) {
+	public boolean foodAdd(String text, foodInput foodinput, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
     		foodinput.setFood(text);
@@ -205,10 +205,11 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	
-	public boolean amountAdd(String text,foodInput foodinput, SQLDatabaseEngine database, String mode) {
+	public boolean amountAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
 		try {
 		if(ValidAmount(text)) {
 			foodinput.setAmount(Integer.parseInt(text));
+			database.updateDietRecord(foodinput);
     		return true;
     	}
 		else

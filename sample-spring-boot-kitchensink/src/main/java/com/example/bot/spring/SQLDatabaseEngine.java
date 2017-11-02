@@ -124,7 +124,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;	
 	}
-	
+	boolean updateDietRecord(foodInput foodinput) {
+		
+	}
 	boolean updateUser(Users user) {
 		boolean result = false;
 		

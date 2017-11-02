@@ -430,7 +430,7 @@ public class KitchenSinkController {
 			subStage +=10 ; 
 		}break;
 		case 11:{
-			if(inputChecker.foodAdd(text, foodinput, database, "set")) {
+			if(inputChecker.foodAdd(text, foodinput, database)) {
         		this.replyText(replyToken, "Please enter the amount you intake(in g):");
         		subStage +=1 ;   
         		}
@@ -438,7 +438,7 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please enter a reasonable name!");
 		}break;
 		case 12:{
-			if(inputChecker.amountAdd(text, foodinput, database, "set")) {
+			if(inputChecker.amountAdd(text, foodinput, database)) {
         		this.replyText(replyToken, "Your data has been recorded.\nInput anything to conitnue.");
         		subStage =0 ;   
         		}
