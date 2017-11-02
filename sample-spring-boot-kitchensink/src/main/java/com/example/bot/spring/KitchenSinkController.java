@@ -998,31 +998,31 @@ public class KitchenSinkController {
         String text = content.getText();
         switch(currentUser.getStage()) {
         	case "Init":
-        		stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "Main":
-        		stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "LivingHabitCollector":
-        		stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "LivingHabitEditor":
-        		stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
         		break;
         	case "DietPlanner":
-        		stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "HealthPedia":
-        		stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "FeedBack":
-        		stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "UserGuide":
-        		stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "SelfAssessment":
-        		stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
+        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
         		break;
         	default:
         		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
