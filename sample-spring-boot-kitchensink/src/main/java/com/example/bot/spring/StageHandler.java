@@ -387,9 +387,6 @@ public class StageHandler {
 		default:{}break;
 		}
 
-		replymsg= "All set. Type anything to return to main menu...";
-		currentUser.setStage("Main");//back to main
-		currentUser.setSubStage(0);
 		return replymsg;
 
 	}

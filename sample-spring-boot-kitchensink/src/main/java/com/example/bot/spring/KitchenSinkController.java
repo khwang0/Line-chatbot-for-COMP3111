@@ -173,7 +173,7 @@ public class KitchenSinkController {
 		log.info("unfollowed this bot: {}", event);
 		currentUser.setStage("Init");
 		currentUser.setSubStage(0);
-		database.updateUser(currentUser);
+		//database.updateUser(currentUser);
 		currentUser = null;
 	}
 
