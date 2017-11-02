@@ -135,7 +135,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT * FROM dietrecord WHERE time LIKE (?%)");
+					"SELECT * FROM dietrecord WHERE time LIKE '?%'");
 			stmt.setString(1, text);
 			ResultSet rs = stmt.executeQuery();
             
