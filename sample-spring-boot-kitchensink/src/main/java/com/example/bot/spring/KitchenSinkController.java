@@ -17,12 +17,14 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -411,26 +413,29 @@ public class KitchenSinkController {
 		
 		switch(subStage) {
 		case 0:{		
-			this.replyText(replyToken,"Choose one to continue: \n\n"
-											+"1 Input daily diet\n"
-											+"2 Visualize your diet consumption in a specific day\n"
-											+"(type other things to back to menu)");
+			this.replyText(replyToken,"Welcome to Diet Planner!\n"
+					+"Please type the function choice you wish to use as below.\n\n"
+									  +"1 Input daily diet\n"
+									  +"2 Visualize your diet consumption in a specific day\n"
+									  +"3 Design My Diet Plan\n"
+									  +"4 Reminder(ON/OFF)\n"
+									  +"(type other things to back to menu)");
 			subStage = -1;
 		}break;
 		case -1:{
 			try{
 				subStage = Integer.parseInt(text);
-				if (subStage >=1 && subStage <= 2) { 
+				if (subStage >=1 && subStage <= 4) { 
 					this.replyText(replyToken, "Redirecting...type anything to continue.");
 				}
 				else {
-					this.replyText(replyToken, "All changed recorded. Type anything to return to main menu.");
+					this.replyText(replyToken, "All changes recorded. Type anything to return to main menu.");
 					//updata db
 					currentStage = "Main";//back to main 
 					subStage =0; 
 				}
 			}catch(Exception e) {
-				this.replyText(replyToken, "All changed recorded. Type anything to return to main menu.");
+				this.replyText(replyToken, "All changes recorded. Type anything to return to main menu.");
 				//update db
 				currentStage = "Main";//back to main 
 				subStage =0; 
@@ -477,6 +482,101 @@ public class KitchenSinkController {
 			else {
 				this.replyText(replyToken, "Please enter a valid date(yyyymmdd): ");
 			}
+		}break;
+		//substage 3: Diet plan genereator
+		case 3:{
+			/*
+			 * TODO:Update corresponding user's "diet_plan" table based on his/her information - will be done in Milestone 3
+			 * For now just manually input data
+			 * */
+			String reply;
+			String user_id = event.getSource().getUserId();
+			if (database.search_diet_plan(user_id)) {
+				reply = "You've already generated a diet plan!\n";
+			}
+			else {
+				boolean result = database.gen_plan(user_id);//tempory
+				if (result) {
+					reply = "We have successfully generated a diet plan for you!\n";
+				}
+				else {
+					reply  = "Sorry, we fail to generate a diet plan for you now.\n";
+				}
+			}
+			reply += "Type anything to go back to Diet Planner...\n";
+			this.replyText(replyToken, reply);
+			subStage = 0;
+		}break;
+		
+		
+		//substage 4: Reminder
+		case 4:{
+			String reply = "Reminder List:\n";
+			try {
+				/*TODO: compare plan and current status*/
+				String user_id = currentUser.getID();
+				// Instantiate a Date object
+				Date dNow = new Date();     
+				SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd");
+				String date = ft.format(dNow);//20171102
+				
+				ArrayList<Integer> plan_info = database.search_plan(user_id);
+				ArrayList<Integer> current_info = new ArrayList<Integer>();
+				//ArrayList<Integer> current_info = database.search_current(user_id, date); // diet current status
+				for (int i = 0; i < plan_info.size(); i++) {
+					//int diff = Integer.parseInt(plan_info[i]) - Integer.parseInt(current_info[i]);
+					current_info.add(50);
+					int diff = plan_info.get(i) - current_info.get(i);
+					//protein
+					if (i==0) {
+						reply += "Protein: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							reply += String.format("You still need to consume %d g\n", diff);
+						}
+						else
+							reply += "Finish!\n";
+					}
+					//fat
+					else if (i== 1){
+						reply += "Fat: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							reply += String.format("You still need to consume %d g\n", diff);
+						}
+						else
+							reply += "Finish!\n";
+					}
+					//sugar
+					else if (i== 2){
+						reply += "Sugar: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							reply += String.format("You still need to consume %d g\n", diff);
+						}
+						else
+							reply += "Finish!\n";
+					}
+					//other nutrient
+					else{
+						reply += "Not yet set for this type.\n";
+					}
+				}				
+			} catch (Exception e) {
+				log.info("plan not found: {}", e.toString());
+				reply += "We can not find your diet plan, please design your own diet plan first!\n";
+			}
+			reply += "Type 1 to go back to Diet Planner...\nType other things to return to main menu...\n";
+			this.replyText(replyToken, reply);
+			subStage +=10;		
+		}break;
+		case 14:{		
+			try {
+				if(Integer.parseInt(text) == 1) subStage = 0;
+				else {
+					throw new Exception("Going back to menu");// handle parseInt()'s exception
+				}
+			}catch(Exception ex) {
+				currentStage = "Main";
+				subStage = 0;
+			}finally { this.replyText(replyToken, "redirecting...type anything to continue.");}			
 		}break;
 		
 		default:{}break;
