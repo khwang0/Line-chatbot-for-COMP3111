@@ -9,8 +9,8 @@ public class HealthSearch {
 	private String carbohydrate;
 	private String sugar;
 	private String water;
-	private String ca;
-	private String na;
+	private String calcium;
+	private String sodium;
 	private String unit;
 	//private int mode;
 	
