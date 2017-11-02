@@ -18,7 +18,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT * FROM users WHERE id=(?)");
+					"SELECT * FROM users WHERE id=(?)");          // SELECT * FROM dietrecord WHERE userid= id GROUP by time
 			stmt.setString(1,uidkey);
 			ResultSet rs = stmt.executeQuery();
             
@@ -123,6 +123,37 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} 
 		}
 		return result;	
+	}
+	
+	
+	
+	/*  Function added by ZK*/
+	
+	String reportDiet(String text, String id) {
+		String answer =" ";
+		try {
+
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT foodname,amount,time,userid FROM dietrecord WHERE time LIKE concat( ?, '%') ");
+			stmt.setString(1, text);
+			ResultSet rs = stmt.executeQuery();
+            
+			while(rs.next()) {
+				if(rs.getString(4).equals(id)) {
+					answer += (rs.getString(1)+"  "+rs.getInt(2)+"g  "+rs.getString(3).substring(8,10)+":"+rs.getString(3).substring(10,12)+":"+rs.getString(3).substring(12,14)+"\n");
+				}
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		} 
+		
+		return answer;
+		
 	}
 	boolean pushDietRecord(foodInput foodinput) {
 		boolean result = false;

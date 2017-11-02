@@ -1,4 +1,7 @@
 package com.example.bot.spring;
+
+import java.sql.DatabaseMetaData;
+
 public class InputChecker {
 	
 	public boolean ValidName(String text) {
@@ -28,6 +31,9 @@ public class InputChecker {
 	public boolean ValidAmount(String text) throws NumberFormatException {
 		return( Integer.parseInt(text) < 15000 && Integer.parseInt(text)> 0 );
 	}	
+	public boolean ValidDate(String text) throws NumberFormatException{
+		return( Integer.parseInt(text) < 30000000 && Integer.parseInt(text)>20170000 );
+	};
 	public boolean ValidCarbs(String text) throws NumberFormatException {
 		return( Double.parseDouble(text) < 3000 && Double.parseDouble(text)> 0 ) ;
 	}
@@ -215,5 +221,17 @@ public class InputChecker {
 		else
 			return false;
 		}catch(NumberFormatException ne){return false;}
+	}
+	public boolean dateCheck(String text) {
+		try {
+			if(ValidDate(text)) {
+				return true;
+			}
+			else return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+	
+	public String dietsearch(String text, SQLDatabaseEngine database, String id ) {
+		return database.reportDiet(text,id);
 	}
 }
