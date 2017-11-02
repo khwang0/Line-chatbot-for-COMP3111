@@ -426,7 +426,7 @@ public class KitchenSinkController {
 		case 1:{
 			Date date = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
-			String time = ft.toString();
+			String time = ft.format(date);
 			foodinput = new foodInput(event.getSource().getUserId(),time);	
 			this.replyText(replyToken, "Please enter the food name: ");
 			subStage +=10 ; 
