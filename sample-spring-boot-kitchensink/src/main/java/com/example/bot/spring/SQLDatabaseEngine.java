@@ -154,7 +154,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 //			Array sqlArray2 = connection.createArrayOf("integer[]",food_amount);
 //			stmt.setArray(6,sqlArray2);
 			
-		    result = stmt.execute();
+		    stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
