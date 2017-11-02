@@ -163,14 +163,14 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			String[] food_name = new String[2];
 			food_name[0] = "apple";
 			food_name[1] = "milk";
-			Array sqlArray1 = connection.createArrayOf("text[]",food_name);
+			Array sqlArray1 = connection.createArrayOf("text",food_name);
 			stmt.setArray(5,sqlArray1);
 			//set the food_amount
 			//int[] food_amount = new int[2];
 			Integer[] food_amount = new Integer[2];
 			food_amount[0] = 10;
 			food_amount[1] = 5;
-			Array sqlArray2 = connection.createArrayOf("integer[]",food_amount);
+			Array sqlArray2 = connection.createArrayOf("integer",food_amount);
 			stmt.setArray(6,sqlArray2);
 					    
 			stmt.execute();
