@@ -37,14 +37,17 @@ public class HealthSearch {
 	}
 	public boolean search() {
 		String url = "";
-		//switch(this.mode){
-		//	case 0:
-				url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Standard+Reference&&&qlookup=";
-		//	case 1:
-		//		url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Branded+Food+Products&&qlookup=";
-		//		break;
+	
+		url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Standard+Reference&&&qlookup=";
 		String result = this.searchweb.SendGet(url);
 		String newurl = this.searchweb.RegexString(result, "href=\"(/ndb/foods/show.+?)\"");
+		
+		if(newurl.equals("N/A")){
+			url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Branded+Food+Products&&qlookup=";
+			result = this.searchweb.SendGet(url);
+			newurl = this.searchweb.RegexString(result, "href=\"(/ndb/foods/show.+?)\"");
+		}
+		
 		if(!newurl.equals("N/A")) {
 			this.isFound = true;
 			newurl = "https://ndb.nal.usda.gov" + newurl;
