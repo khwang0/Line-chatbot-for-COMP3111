@@ -85,7 +85,6 @@ public class StageHandler {
 		switch(currentUser.getSubStage()) {
 		case 0:{
 			if(text.equals("1")) {
-				currentUser = new Users(event.getSource().getUserId());
         		replymsg = "Please enter your name: (1-32 characters)";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         	}
