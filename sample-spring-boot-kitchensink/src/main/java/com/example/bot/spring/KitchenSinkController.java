@@ -491,12 +491,17 @@ public class KitchenSinkController {
 			 * */
 			String reply;
 			String user_id = event.getSource().getUserId();
-			boolean result = database.gen_plan(user_id);//tempory
-			if (result) {
-				reply = "We have successfully generated a diet plan for you!\n";
+			if (database.search_diet_plan(user_id)) {
+				reply = "You've already generated a diet plan!\n";
 			}
 			else {
-				reply  = "Sorry, we fail to generate a diet plan for you now.\n";
+				boolean result = database.gen_plan(user_id);//tempory
+				if (result) {
+					reply = "We have successfully generated a diet plan for you!\n";
+				}
+				else {
+					reply  = "Sorry, we fail to generate a diet plan for you now.\n";
+				}
 			}
 			reply += "Type anything to go back to Diet Planner...\n";
 			this.replyText(replyToken, reply);

@@ -128,12 +128,30 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 	
 	/*functions added by Xuhua*/
+	//Search existing user in diet_plan
+	boolean search_diet_plan(String user_id) {	
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement("SELECT id FROM diet_plan WHERE id = ?");
+			stmt.setString(1, user_id);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()!=null) {	
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return false;
+	}
 	
 	//Generate user diet_plan
 	boolean gen_plan(String user_id){
 		
 		try {
 			Connection connection = this.getConnection();
+			
 			PreparedStatement stmt = connection.prepareStatement(
 					"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
 					//"INSERT INTO diet_plan VALUES(?,?,?,?,?,?)");//id | protein | fat | sugar | food_name | food_amount
@@ -154,8 +172,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			food_amount[1] = 5;
 			Array sqlArray2 = connection.createArrayOf("integer[]",food_amount);
 			stmt.setArray(6,sqlArray2);
-*/			
-		    stmt.execute();
+*/					    
+			stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
