@@ -82,8 +82,7 @@ public class DBEngine {
 	
 	protected Connection getConnection() throws URISyntaxException, SQLException {
 		Connection connection;
-		//URI dbUri = new URI(System.getenv("DATABASE_URL"));
-		URI dbUri = new URI("postgres://wwwbvxwsfefwqo:eb8451f02c101b8722c2ff3222814acae1a53125d0a3207dc871a5d23def557d@ec2-50-19-218-160.compute-1.amazonaws.com:5432/d6p7sk8brnkcvl");
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
 		String username = dbUri.getUserInfo().split(":")[0];
 		String password = dbUri.getUserInfo().split(":")[1];
