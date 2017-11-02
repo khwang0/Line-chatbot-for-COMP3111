@@ -490,7 +490,7 @@ public class KitchenSinkController {
 			 * For now just manually input data
 			 * */
 			String reply;
-			String user_id = currentUser.getID();
+			String user_id = event.getSource().getUserId();
 			boolean result = database.gen_plan(user_id);//tempory
 			if (result) {
 				reply = "We have successfully generated a diet plan for you!\n";
