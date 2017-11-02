@@ -5,15 +5,15 @@ public class DetailedUser extends Users{
 	private int amountOfExercise = 0; // in hour/day average a week
     private double bodyFat = 0; //in %
     private int caloriesConsump = 0; //per day
-    private double carbsConsump = 0; // in g 
+    private double carbsConsump = 0; // in g
     private double proteinConsump = 0; //in g
     private double vegfruitConsump = 0; // in servings
-    private boolean[] eatingHabits = {false,false,false,false,false,false};//eatBF,eatLunch,eatAFT,eatDinner,eatMS, eatMore 
+    private boolean[] eatingHabits = {false,false,false,false,false,false};//eatBF,eatLunch,eatAFT,eatDinner,eatMS, eatMore
     private String otherInfo  = "Default";
-   
+
    // modified user's assessment scores
-    private int assessmentScore = 0;
-	
+    private int assessmentScore = -1;
+
     public DetailedUser(Users u) {
     	super(u);
     }
@@ -25,7 +25,7 @@ public class DetailedUser extends Users{
 	public void setVegfruit(double v) {vegfruitConsump = v;}
 	public void setEatingHabits(boolean h, int i) {eatingHabits[i] = h;}
 	public void setEatingHabits(boolean[] h)  {
-		for(int i = 0; i < h.length ; i++) 
+		for(int i = 0; i < h.length ; i++)
 			eatingHabits[i] = h[i];
 	}
 	public void setEatingHabits(Boolean[] h)  {
@@ -42,17 +42,24 @@ public class DetailedUser extends Users{
 	public double getVegfruit() {return vegfruitConsump;}
 	public boolean[] getEatingHabits() {return eatingHabits;}
 	public String getOtherInfo() {return otherInfo;}
-	
+
 	// modified user's assessment scores
 	public int getAssessmentScore(){return assessmentScore;}
 	public void setAssessmentScore(int s){assessmentScore = s;}
-	
-	
-	
-	
-	
+
+
+
+
+
 	@Override
 	public String toString() { // this converts user to Json format
+		String temp = null;
+  		if(assessmentScore == -1)
+   			temp = "*AssessmentScore will be updated once you complete assessments in Planner)" + "\n";
+  		else if (assessmentScore >=0 && assessmentScore <=100)
+   			temp = "AssessmentScore: " + Integer.toString(assessmentScore) + "\n";
+  		else
+   			temp = "AssessmentScore: error(invalid score)\n";
 		return super.toString()
 			   +"Excercise(hours/day): "+ Integer.toString(amountOfExercise) + "\n"
 			   +"BodyFat(%): "+ Double.toString(bodyFat) + "\n"
@@ -61,12 +68,13 @@ public class DetailedUser extends Users{
 			   +"Protein(g/day): "+ Double.toString(proteinConsump) + "\n"
 			   +"Vegtables and Fruit(servings/day): "+ Double.toString(vegfruitConsump) + "\n"
 			   +"Eat Breakfast: "+ Boolean.toString(eatingHabits[0]) +"\n"
-			   +"Eat lunch: "+ Boolean.toString(eatingHabits[1]) +"\n"	
+			   +"Eat lunch: "+ Boolean.toString(eatingHabits[1]) +"\n"
 			   +"Eat afternoon tea: "+ Boolean.toString(eatingHabits[2]) +"\n"
 			   +"Eat dinner: "+ Boolean.toString(eatingHabits[3]) +"\n"
 			   +"Eat midnight snacks: "+ Boolean.toString(eatingHabits[4]) +"\n"
 			   +"More meals: "+ Boolean.toString(eatingHabits[5]) +"\n"
+			   +temp
 			   +"Other information: "+ otherInfo ;
 	}
-	
+
 }
