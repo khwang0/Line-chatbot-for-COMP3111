@@ -136,7 +136,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO diet_plan VALUES(?,?,?,?,{'apple'},{10});");//id | protein | fat | sugar | food_name | food_amount
+					"INSERT INTO diet_plan VALUES(?,?,?,?,{'apple'},{10})");//id | protein | fat | sugar | food_name | food_amount
 			stmt.setString(1, user_id);
 			stmt.setInt(2, 100);//protein
 			stmt.setInt(3, 100);//fat
