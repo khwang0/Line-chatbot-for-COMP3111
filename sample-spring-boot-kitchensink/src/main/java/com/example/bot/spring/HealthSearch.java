@@ -94,10 +94,10 @@ public class HealthSearch {
 		return this.water;
 	}
 	public String getCalcium(){
-		return this calcium;
+		return this.calcium;
 	}
 	public String getSodium(){
-		return this sodium;
+		return this.sodium;
 	}
 	public String getUnit(){
 		return this.unit;
