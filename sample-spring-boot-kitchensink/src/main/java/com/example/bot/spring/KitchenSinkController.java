@@ -455,7 +455,7 @@ public class KitchenSinkController {
 		}break;	
 		case 22:{
 			if(inputChecker.dateCheck(text)) {
-				String report = inputChecker.dietsearch(text,database);
+				String report = inputChecker.dietsearch(text,database,event.getSource().getUserId());
 				
 				
 				this.replyText(replyToken, "Your diet consumption in "+text+" : "+"\n"+report+"\n Input anything to conitnue.");

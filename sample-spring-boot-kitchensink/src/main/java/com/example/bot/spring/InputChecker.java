@@ -231,7 +231,7 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	
-	public String dietsearch(String text, SQLDatabaseEngine database) {
-		return database.reportDiet(text);
+	public String dietsearch(String text, SQLDatabaseEngine database, String id ) {
+		return database.reportDiet(text,id);
 	}
 }
