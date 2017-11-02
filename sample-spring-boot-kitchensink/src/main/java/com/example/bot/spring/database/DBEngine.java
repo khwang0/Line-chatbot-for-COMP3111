@@ -121,6 +121,7 @@ public class DBEngine {
 						// if no: check keywords length:
 						// if current keyword is longer: replce selectedKey with currentKey; 
 						if(keywords.length() > selectedKey.length()) {	
+							System.err.println("replacing : " + type + " with " + label + " 'cause length");
 							type = label;
 							selectedKey = keywords;
 							
