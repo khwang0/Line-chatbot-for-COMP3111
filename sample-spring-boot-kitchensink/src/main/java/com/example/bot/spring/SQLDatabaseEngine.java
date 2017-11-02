@@ -137,7 +137,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			if (rs.next()!=null) {	
+			if (rs.next() ) {
 				return true;
 			}
 		} catch (Exception e) {
