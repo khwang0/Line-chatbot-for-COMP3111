@@ -458,9 +458,7 @@ public class KitchenSinkController {
 				String report = inputChecker.dietsearch(text,database);
 				
 				
-				this.replyText(replyToken, "Your diet consumption in "+text+" : "+"\n");
-				this.replyText(replyToken, report);
-				this.replyText(replyToken, "\n Input anything to conitnue.");
+				this.replyText(replyToken, "Your diet consumption in "+text+" : "+"\n"+report+"\n Input anything to conitnue.");
         		subStage =0 ; 
 				
 			}
