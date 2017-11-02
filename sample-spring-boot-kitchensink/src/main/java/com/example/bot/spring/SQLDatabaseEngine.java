@@ -135,18 +135,13 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT * FROM dietrecord WHERE time LIKE '?%'");
+					"SELECT foodname,amount,time FROM dietrecord WHERE time LIKE concat( ?, '%') ");
 			stmt.setString(1, text);
 			ResultSet rs = stmt.executeQuery();
             
 			while(rs.next()) {
-				answer += (rs.getString(3)+"  "+rs.getInt(4)+"  "+rs.getString(5).substring(8,13)+"\n");
-				/*user = new Users(rs.getString(1),rs.getString(2));
-				user.setGender(rs.getString(3).charAt(0));
-				user.setHeight(rs.getDouble(4));
-				user.setWeight(rs.getDouble(5));
-				user.setAge(rs.getInt(6));
-			*/} 
+				answer += (rs.getString(1)+"  "+rs.getInt(2)+" "+rs.getString(3).substring(8,13)+"\n");
+			} 
 			rs.close();
 			stmt.close();
 			connection.close();
