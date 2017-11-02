@@ -18,6 +18,10 @@ public class BookingDBEngine extends DBEngine {
 	private static final String DESCRIPTION = "tour_description";
 	private static final String TOURINFO = "tour_info";
 	private static final String BOOKTABLE = "booking_table";
+	private static final String ASKKEYS = "askingkeys";
+	private static final String CANCELKEYS = "cancelkeys";
+	private static final String POSITIVEKEYS = "positivekeys";
+	private static final String REPLIES = "replies";
 	
 	private Connection connection = null;
 
@@ -88,10 +92,10 @@ public class BookingDBEngine extends DBEngine {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+CUSTOMER
 					+ " SET adultnum = ? "
-					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.customername = l.name "
+					+ "FROM "+LINEUSER+" l "
+					+ "WHERE customer_info.customername = l.name "
 					+ "AND l.userID = ? "
-					+ " AND l.tourids = c.bootableid");
+					+ " AND l.tourids = customer_info.bootableid");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -112,10 +116,10 @@ public class BookingDBEngine extends DBEngine {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+CUSTOMER
 					+ " SET childnum = ? "
-					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.customername = l.name "
+					+ "FROM "+LINEUSER+" l "
+					+ "WHERE customer_info.customername = l.name "
 					+ "AND l.userID = ? "
-					+ " AND l.tourids = c.bootableid");
+					+ " AND l.tourids = customer_info.bootableid");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -136,9 +140,10 @@ public class BookingDBEngine extends DBEngine {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+CUSTOMER
 					+ " SET toodlernum = ? "
-					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.customername = l.name "
-					+ "AND l.userID = ? ");
+					+ "FROM "+LINEUSER+" l "
+					+ "WHERE customer_info.customername = l.name "
+					+ "AND l.userID = ? "
+					+ " AND l.tourids = customer_info.bootableid");
 			nstmt.setInt(1, i);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -153,17 +158,17 @@ public class BookingDBEngine extends DBEngine {
 	 * @param userId
 	 * @param i
 	 */
-	public void recordPhone(String userId, int i) {
+	public void recordPhone(String userId, long i) {
 		PreparedStatement nstmt = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+CUSTOMER
 					+ " SET phonenumber = ? "
-					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.customername = l.name "
+					+ "FROM "+LINEUSER+" l "
+					+ "WHERE customer_info.customername = l.name "
 					+ "AND l.userID = ? "
-					+ " AND l.tourids = c.bootableid");
-			nstmt.setString(1, Integer.toString(i));
+					+ " AND l.tourids = customer_info.bootableid");
+			nstmt.setString(1, Long.toString(i));
 			nstmt.setString(2, userId);
 			this.update(nstmt);
 			nstmt.close();
@@ -183,9 +188,10 @@ public class BookingDBEngine extends DBEngine {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+CUSTOMER
 					+ " SET tourfee = ? "
-					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
-					+ "WHERE c.customername = l.name "
-					+ "AND l.userID = ? ");
+					+ "FROM "+LINEUSER+" l "
+					+ "WHERE customer_info.customername = l.name "
+					+ "AND l.userID = ? "
+					+ " AND l.tourids = customer_info.bootableid");
 			nstmt.setDouble(1, totalPrice);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -275,6 +281,7 @@ public class BookingDBEngine extends DBEngine {
 	 */
 	public boolean checkValidDate(int dd, int mm, String userId) throws Exception{
 		PreparedStatement nstmt;
+		String offerId = null;
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT o.bootableid, b.tourcapcity-b.registerednum "
@@ -286,7 +293,7 @@ public class BookingDBEngine extends DBEngine {
 			ResultSet rs = this.query(nstmt);
 			int quota = -100;
 			while(rs.next()) {
-				String offerId = rs.getString(1);
+				offerId = rs.getString(1);
 				if(!offerId.equals("")) {
 					String date = offerId.substring(9);
 					int m = Integer.parseInt(date.substring(0,2));
@@ -296,6 +303,17 @@ public class BookingDBEngine extends DBEngine {
 						break;
 					}
 				}
+			}
+			nstmt = connection.prepareStatement(
+					"SELECT c.bootableid "
+					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
+					+ " WHERE c.customername = l.name"
+					+ " AND l.userID = ?");
+			nstmt.setString(1,userId);
+			rs = this.query(nstmt);
+			while(rs.next()) {
+				if(rs.getString(1).equals(offerId))
+					throw new Exception("REBOOK");
 			}
 			if(quota > 0) {
 				nstmt.close();
@@ -310,7 +328,7 @@ public class BookingDBEngine extends DBEngine {
 				rs = null;
 				rs = this.query(nstmt);
 				while(rs.next()) {
-					String offerId = rs.getString(1);
+					offerId = rs.getString(1);
 					if(offerId!=null&&offerId!="") {
 						String date = offerId.substring(9);
 						int m = Integer.parseInt(date.substring(0,2));
@@ -380,7 +398,7 @@ public class BookingDBEngine extends DBEngine {
 	 * @return
 	 */
 	public String getName(String userId) {
-		String name = null;
+		String name = "";
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
@@ -390,7 +408,13 @@ public class BookingDBEngine extends DBEngine {
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
-				name = rs.getString(1);
+				try {
+				if(rs.getString(1).length()>=1) {
+					name = rs.getString(1);
+				}
+				}catch(NullPointerException e) {
+					return name;
+				}
 			}
 			nstmt.close();
 			rs.close();
@@ -406,7 +430,7 @@ public class BookingDBEngine extends DBEngine {
 	 * @return
 	 */
 	public String getStatus(String userId){
-		String status = null;
+		String status = "default";
 		PreparedStatement nstmt;
 		try {
 			nstmt = connection.prepareStatement(
@@ -416,7 +440,12 @@ public class BookingDBEngine extends DBEngine {
 			nstmt.setString(1, userId);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
-				status = rs.getString(1);
+				try {
+					if(!(rs.toString().length()==0))
+						status = rs.getString(1);
+				}catch(NullPointerException e) {
+					break;
+				}
 			}
 			nstmt.close();
 			rs.close();
@@ -540,34 +569,6 @@ public class BookingDBEngine extends DBEngine {
 		return children;
 	}
 
-	/** Get the id of the tour for one user
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	public String getTourJoined(String userId) {
-		PreparedStatement nstmt = null;
-		String tourId = null;
-		try {
-			nstmt = connection.prepareStatement(
-					"SELECT c.bootableid "
-					+ " FROM "+CUSTOMER+" c, "+LINEUSER+" l"
-					+ " WHERE c.customername = l.name"
-					+ " AND l.userID = ?"
-					+ " AND l.tourids = c.bootableid");
-			nstmt.setString(1, userId);
-			ResultSet rs = this.query(nstmt);
-			while(rs.next()) {
-				tourId = rs.getString(1);
-			}
-			rs.close();
-			nstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return tourId;
-	}
-
 	/** Get the quota remaining for one tour
 	 * 
 	 * @param tourId
@@ -623,7 +624,7 @@ public class BookingDBEngine extends DBEngine {
 			nstmt.setString(1, id);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
-				price = rs.getInt(1);
+				price = rs.getDouble(1);
 			}
 			rs.close();
 			nstmt.close();
@@ -759,7 +760,7 @@ public class BookingDBEngine extends DBEngine {
 					"SELECT DISTINCT tourid"
 					+ " FROM "+TOURINFO
 					+ " WHERE tour_name = ?");
-			nstmt.setString(2, tourName);
+			nstmt.setString(1, tourName);
 			ResultSet rs = this.query(nstmt);
 			while(rs.next()) {
 				 tourId = rs.getString(1);
@@ -819,9 +820,10 @@ public class BookingDBEngine extends DBEngine {
 			nstmt = connection.prepareStatement(
 					"UPDATE "+BOOKTABLE
 					+ " SET registerednum = ? "
-					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l, "+BOOKTABLE+" b "
+					+ "FROM "+CUSTOMER+" c, "+LINEUSER+" l "
 					+ "WHERE c.customername = l.name "
-					+ "AND l.userID = ? ");
+					+ "AND l.userID = ? "
+					+ "AND booking_table.bootableid = l.tourids");
 			nstmt.setInt(1, num+total);
 			nstmt.setString(2, userId);
 			this.update(nstmt);
@@ -829,6 +831,115 @@ public class BookingDBEngine extends DBEngine {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/** Determine if a message is asking about something
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	public boolean detectAsk(String msg) {
+		String key = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT keywords"
+					+ " FROM "+ASKKEYS);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 key = rs.getString(1);
+				 if(msg.toLowerCase().contains(key.toLowerCase())) {
+					 return true;
+				 }
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/** Determine if a message contains rejecting information
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	public boolean detectCancel(String msg) {
+		String key = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT keywords"
+					+ " FROM "+CANCELKEYS);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 key = rs.getString(1);
+				 if(msg.toLowerCase().contains(key.toLowerCase())) {
+					 return true;
+				 }
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+
+	/** Determine if a message contains positive information
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	public boolean detectPositive(String msg) {
+		String key = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT keywords"
+					+ " FROM "+POSITIVEKEYS);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				 key = rs.getString(1);
+				 if(msg.toLowerCase().contains(key.toLowerCase())) {
+					 return true;
+				 }
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/** Get the reply message from database tat is associated with the given tag
+	 * 
+	 * @param tag
+	 * @return
+	 */
+	public String getReplyMessage(String tag) {
+		String reply = null;
+		PreparedStatement nstmt;
+		try {
+			nstmt = connection.prepareStatement(
+					"SELECT reply"
+					+ " FROM "+REPLIES
+					+ " WHERE tag = ?");
+			nstmt.setString(1, tag);
+			ResultSet rs = this.query(nstmt);
+			while(rs.next()) {
+				reply = rs.getString(1);
+				return reply;
+			}
+			nstmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void openConnection() {
@@ -873,5 +984,7 @@ public class BookingDBEngine extends DBEngine {
 			e.printStackTrace();
 		}
 	}
+
+
 
 }

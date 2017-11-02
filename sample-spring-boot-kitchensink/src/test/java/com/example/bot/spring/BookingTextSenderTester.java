@@ -15,6 +15,7 @@ public class BookingTextSenderTester {
 
 	public static void main(String[] args) throws IOException{
 		// TODO Auto-generated method stub
+		
 		BookingTextSender ts = new BookingTextSender();
 		Scanner scanner = new Scanner(System.in);
 		while(true) {
@@ -26,10 +27,11 @@ public class BookingTextSenderTester {
 				System.out.println(ts.process(userId, input));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
 				System.out.println("Sorry, we cannot answer your question.");
 			}
 		}
 		scanner.close();
+		
 	}
-
 }
