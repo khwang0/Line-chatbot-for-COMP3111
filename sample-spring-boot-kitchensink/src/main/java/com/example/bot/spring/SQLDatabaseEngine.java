@@ -18,7 +18,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT * FROM users WHERE id=(?)");
+					"SELECT * FROM users WHERE id=(?)");          // SELECT * FROM dietrecord WHERE userid= id GROUP by time
 			stmt.setString(1,uidkey);
 			ResultSet rs = stmt.executeQuery();
             
@@ -123,6 +123,40 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} 
 		}
 		return result;	
+	}
+	
+	
+	
+	/*  Function added by ZK*/
+	
+	String reportDiet(String text) {
+		String answer = null;
+		try {
+
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM dietrecord WHERE time LIKE (?%)");
+			stmt.setString(1, text);
+			ResultSet rs = stmt.executeQuery();
+            
+			while(rs.next()) {
+				answer += (rs.getString(3)+"  "+rs.getInt(4)+"  "+rs.getString(5).substring(8,13)+"\n");
+				/*user = new Users(rs.getString(1),rs.getString(2));
+				user.setGender(rs.getString(3).charAt(0));
+				user.setHeight(rs.getDouble(4));
+				user.setWeight(rs.getDouble(5));
+				user.setAge(rs.getInt(6));
+			*/} 
+			rs.close();
+			stmt.close();
+			connection.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		} 
+		
+		return answer;
+		
 	}
 	boolean pushDietRecord(foodInput foodinput) {
 		boolean result = false;

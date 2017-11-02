@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.TimeZone; 
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -401,7 +401,7 @@ public class KitchenSinkController {
 		case 0:{		
 			this.replyText(replyToken,"Choose one to continue: \n\n"
 											+"1 Input daily diet\n"
-											+"2 Visualize your diet consumption\n"
+											+"2 Visualize your diet consumption in a specific day\n"
 											+"(type other things to back to menu)");
 			subStage = -1;
 		}break;
@@ -450,8 +450,25 @@ public class KitchenSinkController {
 				this.replyText(replyToken, "Please enter a reasonable number!");
 		}break;	
 		case 2:{
-			
+			this.replyText(replyToken, "Please enter the date(yyyymmdd): ");
+			subStage +=20 ; 
 		}break;	
+		case 22:{
+			if(inputChecker.dateCheck(text)) {
+				String report = inputChecker.dietsearch(text,database);
+				
+				
+				this.replyText(replyToken, "Your diet consumption in "+text+" : "+"\n");
+				this.replyText(replyToken, report);
+				this.replyText(replyToken, "\n Input anything to conitnue.");
+        		subStage =0 ; 
+				
+			}
+			else {
+				this.replyText(replyToken, "Please enter a valid date(yyyymmdd): ");
+			}
+		}break;
+		
 		default:{}break;
 		}
 		
@@ -827,7 +844,6 @@ public class KitchenSinkController {
 		}break;
 		case 11:{
 			healthSearcher.setKeyword(text);
-			healthSearcher.setMode(0);
 			if(healthSearcher.search()) {
 				String msg = healthSearcher.getUnit()+":\n"
 						+"Energy: "+healthSearcher.getEnergy()+"kcal\n"
