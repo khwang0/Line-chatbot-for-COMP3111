@@ -12,6 +12,33 @@ public class RecommendationDBEngine extends DBEngine {
 		
 	}
 	
+	public ArrayList<String> getFeatures(String msg) {
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		ResultSet rs=null;
+		ArrayList<String> result=new ArrayList<String>();
+		try {
+			connection=getConnection();
+			stmt=connection.prepareStatement(
+					"select * from key_features"
+			);
+			rs=stmt.executeQuery();
+			
+			while(rs.next()) {
+				if (msg.contains(rs.getString(1))) {
+					result.add(rs.getString(1));
+				}
+			}
+			
+			stmt.close();
+			connection.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public void updateQuery(String tourids, String userid) {
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -30,8 +57,7 @@ public class RecommendationDBEngine extends DBEngine {
 	}
 	
 	public String recommendationQuery(String userId, ArrayList<String> text) {
-		//System.err.println(text.get(0) + " " + text.get(1));
-		//System.out.println("------Inside the function");
+
 		String response="";
 		String idList="";
 		
@@ -46,7 +72,7 @@ public class RecommendationDBEngine extends DBEngine {
 			for(int i=0; i<text.size(); i++) {
 				//System.out.println(text.get(i));
 				stmt = connection.prepareStatement(
-					"select * from tour_features where "+text.get(i)+"=1",ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+					"select * from tour_features join tour_info on tour_features.tourid=tour_info.tourid where tour_features."+text.get(i)+"=1", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			
 				rs=stmt.executeQuery();
 				
@@ -58,7 +84,8 @@ public class RecommendationDBEngine extends DBEngine {
 					temp="Tours with good "+text.get(i)+" : ";
 					while (rs.next()) {
 						String tourid = rs.getString(1);
-						temp+=tourid+", ";
+						temp+=tourid+": ";
+						temp+=rs.getString(7)+"\n";
 						idList+=tourid+", ";
 					} 
 					temp=temp.replaceAll(", $", "");
@@ -67,6 +94,10 @@ public class RecommendationDBEngine extends DBEngine {
 				}
 
 				//stmt.close();
+			}
+			
+			if (!response.equals("")){
+				response=response.replaceAll("\n$", ".");
 			}
 			
 			if (idList!="") {
