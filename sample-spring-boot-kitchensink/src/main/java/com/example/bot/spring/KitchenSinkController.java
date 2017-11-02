@@ -827,7 +827,6 @@ public class KitchenSinkController {
 		}break;
 		case 11:{
 			healthSearcher.setKeyword(text);
-			healthSearcher.setMode(0);
 			if(healthSearcher.search()) {
 				String msg = healthSearcher.getUnit()+":\n"
 						+"Energy: "+healthSearcher.getEnergy()+"kcal\n"
