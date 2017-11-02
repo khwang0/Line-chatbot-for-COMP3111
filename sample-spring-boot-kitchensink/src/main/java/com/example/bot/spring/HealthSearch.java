@@ -9,6 +9,8 @@ public class HealthSearch {
 	private String carbohydrate;
 	private String sugar;
 	private String water;
+	private String calcium;
+	private String sodium;
 	private String unit;
 	//private int mode;
 	
@@ -21,20 +23,15 @@ public class HealthSearch {
 		this.carbohydrate = "N/A";
 		this.sugar = "N/A";
 		this.water = "N/A";
+		this.calcium = "N/A";
+		this.sodium = "N/A";
 		this.unit = "N/A";
 		this.searchweb = new SearchWeb();
-		//this.mode = 0;
 		this.isFound = false;
+
 		
 	}
-	/*public void setMode(int mode) {
-		if(mode<0||mode>2) {
-			return;
-		}
-		else {
-			this.mode = mode;
-		}
-	}*/
+
 	public void setKeyword(String keyword) {
 		this.searchweb.setKeyword(keyword);
 	}
@@ -43,14 +40,9 @@ public class HealthSearch {
 		//switch(this.mode){
 		//	case 0:
 				url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Standard+Reference&&&qlookup=";
-		//	break;
 		//	case 1:
 		//		url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Branded+Food+Products&&qlookup=";
 		//		break;
-		//	case 2:
-		//		url = "https://ndb.nal.usda.gov/ndb/search/list?qlookup=";
-		//		break;
-		//}
 		String result = this.searchweb.SendGet(url);
 		String newurl = this.searchweb.RegexString(result, "href=\"(/ndb/foods/show.+?)\"");
 		if(!newurl.equals("N/A")) {
@@ -70,6 +62,10 @@ public class HealthSearch {
 			this.sugar = searchweb.RegexStringProperty(result,"Sugar");
 			
 			this.water = searchweb.RegexStringProperty(result, "Water");
+
+			this.calcium = searchweb.RegexStringProperty(result,"Na");
+
+			this.sodium = searchweb.RegexStringProperty(result,"Ca");
 		}
 		else {
 			this.isFound=false;
@@ -96,6 +92,12 @@ public class HealthSearch {
 	}
 	public String getWater(){
 		return this.water;
+	}
+	public String getCalcium(){
+		return this.calcium;
+	}
+	public String getSodium(){
+		return this.sodium;
 	}
 	public String getUnit(){
 		return this.unit;
