@@ -131,7 +131,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	
 	//Generate user diet_plan
 	boolean gen_plan(String user_id){
-		boolean result = false;
 		
 		try {
 			Connection connection = this.getConnection();
@@ -160,9 +159,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
-			return result;
+			return false;
 		}
-		return result;
+		return true;
 	}
 	
 	
