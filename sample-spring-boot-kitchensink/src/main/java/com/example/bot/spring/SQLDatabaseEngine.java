@@ -130,7 +130,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	/*  Function added by ZK*/
 	
 	String reportDiet(String text) {
-		String answer = null;
+		String answer =" ";
 		try {
 
 			Connection connection = this.getConnection();
@@ -140,7 +140,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			ResultSet rs = stmt.executeQuery();
             
 			while(rs.next()) {
-				answer += (rs.getString(1)+"  "+rs.getInt(2)+" "+rs.getString(3).substring(8,13)+"\n");
+				answer += (rs.getString(1)+"  "+rs.getInt(2)+"g  "+rs.getString(3).substring(8,10)+":"+rs.getString(3).substring(10,12)+":"+rs.getString(3).substring(12,14)+"\n");
 			} 
 			rs.close();
 			stmt.close();
