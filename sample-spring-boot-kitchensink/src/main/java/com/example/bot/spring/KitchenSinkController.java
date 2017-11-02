@@ -32,6 +32,7 @@ import java.util.function.Consumer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.Date;
+import java.util.TimeZone;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -426,6 +427,7 @@ public class KitchenSinkController {
 		case 1:{
 			Date date = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
+			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 			String time = ft.format(date);
 			foodinput = new foodInput(event.getSource().getUserId(),time);	
 			this.replyText(replyToken, "Please enter the food name: ");
