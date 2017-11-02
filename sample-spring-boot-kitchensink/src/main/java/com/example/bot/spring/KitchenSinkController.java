@@ -270,6 +270,7 @@ public class KitchenSinkController {
         		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "LivingHabitCollector":{
+				if(!(currentUser instanceof DetailedUser))
 				currentUser = new DetailedUser(currentUser);
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         	}	break;
