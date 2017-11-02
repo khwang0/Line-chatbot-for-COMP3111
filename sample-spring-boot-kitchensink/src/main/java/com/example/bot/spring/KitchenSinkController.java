@@ -892,7 +892,7 @@ public class KitchenSinkController {
 			currentUser = new DetailedUser(currentUser);
 			((DetailedUser)currentUser).setAssessmentScore(0);
 			this.replyText(replyToken, "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
-								+ "Please reply 'T' as ture and 'F' as false according your eating habits."
+								+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
 								+ "\n reply anything to start or reply 'q' to reutrn to the main menu...");
 			subStage = -1;
 			return;
@@ -905,8 +905,7 @@ public class KitchenSinkController {
 			return;
 			}
 		//else the quiz start
-			this.replyText(replyToken, "Then let's start the quiz ;)");
-			this.replyText(replyToken, "Q1. You eat at least five portions of fruits and vegetables a day"
+			this.replyText(replyToken, "Then let's start the quiz ;) \n Q1. You eat at least five portions of fruits and vegetables a day"
 				+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
 				+ "\n reply 'T' as ture and 'F' as false"
 				+ "\n reply 'q' to reutrn to the main menu");
@@ -914,29 +913,31 @@ public class KitchenSinkController {
 			subStage = 1;
 		}
 		else if (subStage == 11) {
-			this.replyText(replyToken, "Congratulations that you have finished the quiz!:)");
+			String reply = "Congratulations that you have finished the quiz!:)\n";
 			int score = ((DetailedUser)currentUser).getAssessmentScore();
 			if(score >= 90) {
-				this.replyText(replyToken, "The healthy level of your eating habit is: A \n Congratulations! "
-						+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.");
+				reply = reply + "The healthy level of your eating habit is: A \n Congratulations! "
+						+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
+				
 			}
 			else if(score >= 70) {
-				this.replyText(replyToken, "The healthy level of your eating habit is: B \n That's not bad. "
+				reply = reply + "The healthy level of your eating habit is: B \n That's not bad. "
 						+ "Your eating habit is cool, but it can still be improve to a better level."
-						+ "Here comes some of the advice:\n" + suggestion);
+						+ "Here comes some of the advice:\n" + suggestion;
 			}
 			else if(score >= 40) {
-				this.replyText(replyToken, "The healthy level of your eating habit is: C \n You'd better pay attention. "
+				reply = reply + "The healthy level of your eating habit is: C \n You'd better pay attention. "
 						+ "Your eating habit is OK if you are always very fit, although some of those habit might be harmful to youre body.\n"
-						+ "Here comes some of the advice:\n" + suggestion);
+						+ "Here comes some of the advice:\n" + suggestion;
 			}
 			else {
-				this.replyText(replyToken, "Oops The healthy level of your eating habit is: D \n "
+				reply = reply + "Oops The healthy level of your eating habit is: D \n "
 						+ "If you're not kidding, you are strongly recommended to change those bad habits right now. "
-						+ "Here comes some of the advice:\n" + suggestion );
+						+ "Here comes some of the advice:\n" + suggestion;
 				}
-			this.replyText(replyToken, "Would you like to customize your personal plan now? "
-					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu");
+			reply = replye + "Would you like to customize your personal plan now? "
+					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
+			this.replyText(replyToken,"reply");
 			subStage += 1;
 		}
 		else if(subStage == 12) {
