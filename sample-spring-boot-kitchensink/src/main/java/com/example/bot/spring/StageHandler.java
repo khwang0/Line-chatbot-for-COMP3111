@@ -506,7 +506,7 @@ public class StageHandler {
 		String replymsg = "";
 		switch(currentUser.getSubStage()){
 		case 0:{
-			currentUser = new DetailedUser(currentUser);
+			//currentUser = new DetailedUser(currentUser);
 			replymsg = "Please tell us your body fat:(in %)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -730,8 +730,6 @@ public class StageHandler {
 	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(currentUser.getSubStage() == 0){
-			if(!(currentUser instanceof DetailedUser))
-			currentUser = new DetailedUser(currentUser);
 			((DetailedUser)currentUser).setAssessmentScore(0);
 			replymsg = "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 								+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."

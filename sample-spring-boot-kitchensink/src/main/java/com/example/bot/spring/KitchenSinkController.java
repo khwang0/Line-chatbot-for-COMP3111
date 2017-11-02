@@ -269,9 +269,10 @@ public class KitchenSinkController {
         	case "Main":
         		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
         		break;
-        	case "LivingHabitCollector":
+        	case "LivingHabitCollector":{
+				currentUser = new DetailedUser(currentUser);
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
-        		break;
+        	}	break;
         	case "LivingHabitEditor":
         		replymsg = stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
         		break;
@@ -287,9 +288,11 @@ public class KitchenSinkController {
         	case "UserGuide":
         		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
         		break;
-        	case "SelfAssessment":
+        	case "SelfAssessment":{
+				if(!(currentUser instanceof DetailedUser))
+				currentUser = new DetailedUser(currentUser);
         		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-        		break;
+        	}break;
         	default:
         		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
         		break;
