@@ -192,7 +192,6 @@ public class KitchenSinkController {
 			}finally {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
-				database.updateUser(currentUser);
 				msgbuffer = "User data reloaded. Type anything to continue...";
 			}
 		}catch(Exception e){
@@ -204,6 +203,7 @@ public class KitchenSinkController {
 
 		}finally {
 			this.replyText(replyToken, msgbuffer);
+		//database.updateUser(currentUser);
 		}
 	}
 
@@ -273,7 +273,7 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
-		currentUser = getSourceUser(event);
+//		currentUser = getSourceUser(event);
         switch(currentUser.getStage()) {
         	case "Init":
         		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
@@ -284,7 +284,7 @@ public class KitchenSinkController {
         	case "LivingHabitCollector":{
 				if(!(currentUser instanceof DetailedUser)){
 					currentUser = new DetailedUser(currentUser);
-					database.pushUser(currentUser);
+					//database.pushUser(currentUser);
 				}
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         	}	break;
@@ -306,7 +306,7 @@ public class KitchenSinkController {
         	case "SelfAssessment":{
 				if(!(currentUser instanceof DetailedUser)){
 					currentUser = new DetailedUser(currentUser);
-					database.pushUser(currentUser);
+					//database.pushUser(currentUser);
 				}
         		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
         	}break;
@@ -314,7 +314,7 @@ public class KitchenSinkController {
         		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
         		break;
         }
-		database.updateUser(currentUser);
+		//database.updateUser(currentUser);
 		this.replyText(replyToken,replymsg);
 
     }

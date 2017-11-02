@@ -88,7 +88,7 @@ public class StageHandler {
         	}
 		}break;
 		case 1:{
-			if(inputChecker.NameEditting(text,currentUser,database,"update")) {
+			if(inputChecker.NameEditting(text,currentUser,database,"set")) {
 				replymsg = "Please enter your gender: (M for male F for female)";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 				}
@@ -97,7 +97,7 @@ public class StageHandler {
 			}
 		}break;
 		case 2:{
-			if(inputChecker.GenderEditting(text,currentUser,database,"update")) {
+			if(inputChecker.GenderEditting(text,currentUser,database,"set")) {
 				replymsg="Please enter your height in cm:";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -105,7 +105,7 @@ public class StageHandler {
 				replymsg="Please enter your gender: (M for male F for female):";
 		}break;
 		case 3:{
-			if( inputChecker.HeightEditting(text,currentUser,database,"update") ) {
+			if( inputChecker.HeightEditting(text,currentUser,database,"set") ) {
 				replymsg="Please enter your weight in kg:";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -113,7 +113,7 @@ public class StageHandler {
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 4:{
-			if( inputChecker.WeightEditting(text,currentUser,database,"update") ) {
+			if( inputChecker.WeightEditting(text,currentUser,database,"set") ) {
 				replymsg="Please enter your age in years old:";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -121,8 +121,9 @@ public class StageHandler {
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 5:{
-			if(inputChecker.AgeEditting(text, currentUser, database, "update")) {
+			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
+				database.pushUser(currentUser);
        			currentUser.setStage("Main");
        			currentUser.setSubStage(0);
 			}
@@ -592,7 +593,7 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 1:{
-			if(inputChecker.BodyfatEditting(text, currentUser, database, "update")) {
+			if(inputChecker.BodyfatEditting(text, currentUser, database, "set")) {
         		replymsg = "Please tell us your average daily calories consumption(in kcal):";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -601,7 +602,7 @@ public class StageHandler {
 
 		}break;
 		case 2:{
-			if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
+			if(inputChecker.CaloriesEditting(text, currentUser, database, "set")) {
         		replymsg = "Please tell us your average daily carbohydrates consumption(roughly in g):";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -609,7 +610,7 @@ public class StageHandler {
 				replymsg = "Please enter reasonable numbers!";
 		}break;
 		case 3:{
-			if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
+			if(inputChecker.CarbsEditting(text, currentUser, database, "set")) {
         			replymsg = "Please tell us your average daily protein consumption(roughly in g):";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -618,7 +619,7 @@ public class StageHandler {
 				}
 		}break;
 		case 4:{
-			if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
+			if(inputChecker.ProteinEditting(text, currentUser, database, "set")) {
         			replymsg = "Please tell us your average daily vegetable/fruit consumption(in serving):";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -627,7 +628,7 @@ public class StageHandler {
 				}
 		}break;
 		case 5:{
-			if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
+			if(inputChecker.VegfruitEditting(text, currentUser, database, "set")) {
         			replymsg = "Do you eat breakfast?(y/n)";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -696,7 +697,7 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 12:{
-			if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
+			if(inputChecker.ExerciseEditting(text, currentUser, database, "set")) {
 				replymsg = "Any other infomation about your body you wish to let us know?(in 1000 characters)";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -705,8 +706,9 @@ public class StageHandler {
 
 		}break;
 		case 13:{
-			if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
+			if(inputChecker.OtherinfoEditting(text, currentUser, database, "set")) {
 				replymsg = "All set and recorded. Type anything to return to main menu.";
+				database.pushUser(currentUser);
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
 			}
