@@ -17,12 +17,14 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -98,15 +100,13 @@ public class KitchenSinkController {
 	private String currentStage = "Init";
 	private int subStage = 0;
 	private Users currentUser = null;
-	private foodInput foodinput = null;
+
 	private SQLDatabaseEngine database;
 	private String itscLOGIN;
 	private String replymsg;
 	private StageHandler stageHandler = new StageHandler();
 
-    private	String[] question = {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"};
-	private String[][] feedback = {{"F1","T1"},{"F2","T2"},{"F3","T3"},{"F4","T4"},{"F5","T5"},{"F6","T6"},{"F7","T7"},{"F8","T8"},{"F9","T9"},{"F10","T10"}};
-	private String suggestion = "";
+
 
 	public KitchenSinkController() {
 		database = new SQLDatabaseEngine();
@@ -173,6 +173,7 @@ public class KitchenSinkController {
 		log.info("unfollowed this bot: {}", event);
 		currentUser.setStage("Init");
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);
 		currentUser = null;
 	}
 
@@ -191,6 +192,7 @@ public class KitchenSinkController {
 			}finally {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
+				database.updateUser(currentUser);
 				msgbuffer = "User data reloaded. Type anything to continue...";
 			}
 		}catch(Exception e){
@@ -198,8 +200,7 @@ public class KitchenSinkController {
 					+ "Create Personal Diet Tracker: type \'1\'\n\n"
 					+ "Say goodbye to me: type any\n";
 			currentUser = new Users(event.getSource().getUserId());
-			currentStage = "Init";
-			subStage = 0;
+			database.pushUser(currentUser);
 
 		}finally {
 			this.replyText(replyToken, msgbuffer);
@@ -257,11 +258,22 @@ public class KitchenSinkController {
 		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
 
+	private Users getSourceUser(Event event){
+		Users user = null;
+		try{
+			user = database.searchUser(event.getSource().getUserId());
+		}
+		catch(Exception ex){
+			return null;
+		}
+		return user;
+	}
 
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
+		currentUser = getSourceUser(event);
         switch(currentUser.getStage()) {
         	case "Init":
         		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
@@ -270,8 +282,10 @@ public class KitchenSinkController {
         		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "LivingHabitCollector":{
-				if(!(currentUser instanceof DetailedUser))
-				currentUser = new DetailedUser(currentUser);
+				if(!(currentUser instanceof DetailedUser)){
+					currentUser = new DetailedUser(currentUser);
+					database.pushUser(currentUser);
+				}
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         	}	break;
         	case "LivingHabitEditor":
@@ -290,14 +304,17 @@ public class KitchenSinkController {
         		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "SelfAssessment":{
-				if(!(currentUser instanceof DetailedUser))
-				currentUser = new DetailedUser(currentUser);
+				if(!(currentUser instanceof DetailedUser)){
+					currentUser = new DetailedUser(currentUser);
+					database.pushUser(currentUser);
+				}
         		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
         	}break;
         	default:
         		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
         		break;
         }
+		database.updateUser(currentUser);
 		this.replyText(replyToken,replymsg);
 
     }
@@ -376,7 +393,4 @@ public class KitchenSinkController {
         	);
     	}
     }
-
-
-
 }
