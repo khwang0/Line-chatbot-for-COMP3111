@@ -26,28 +26,30 @@ public class SQDBEngine extends DBEngine {
 		ResultSet rs = null;
 		
 		try {
-			connection = super.getConnection();
+			connection = super.getConnection();	
+		
+			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' SIMILAR TO "
+					+ "concat('(', keywords, ')|(', keywords, '[^\\d\\w](%)*)|((%)*[^\\d\\w](' ,keywords, '))|((%)*[^\\d\\w](', keywords, ')[^\\d\\w](%)*)')";
 			
-			//String pattern = "(^(keywords)$)|"
-			//		   + "(^(keywords)[^\\d\\w])|"
-			//		   + "([^\\d\\w](keywords)$)|"
-			//		   + "([^\\d\\w](keywords)[^\\d\\w])";
+			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' SIMILAR TO '" + pattern + "'";
+			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' SIMILAR TO "
+			//		+ "concat(keywords, '|(', keywords, '[^\\d\\w])|([^\\d\\w]' ,keywords, '|([^\\d\\w](', keywords, ')[^\\d\\w])')";
 			
-			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' SIMILAR TO ? ";
-			//stmt = connection.prepareStatement(statement);
 			//stmt.setString(1, pattern);	
-
 			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE keywords;";
-			statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
-			stmt = connection.prepareStatement(statement);
-			System.out.println("statement" + statement);
-			System.out.println("text" + text);
+						
+			//statement = "SELECT " + column1_2 + " FROM "+ tname1 + " WHERE \'" + text + "\' LIKE concat('%', keywords, '%')";
 			
+			stmt = connection.prepareStatement(statement);
+			System.out.println("statement: " + statement);			
 			rs = stmt.executeQuery();			
+			
 			if (rs.next()) {				
 				reply = rs.getString(1);
 			}
+			
 			System.out.println(reply);
+			
 		}catch(Exception e) {
 			System.out.println("---------- inside search ---------- ");
 			System.err.println(e.getMessage());
