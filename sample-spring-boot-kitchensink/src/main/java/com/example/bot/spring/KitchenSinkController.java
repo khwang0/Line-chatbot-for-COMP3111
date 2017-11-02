@@ -104,6 +104,10 @@ public class KitchenSinkController {
 	private InputChecker inputChecker = new InputChecker();
 	private HealthSearch healthSearcher = new HealthSearch();
 	
+    private	String[] question = {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"};
+	private String[][] feedback = {{"F1","T1"},{"F2","T2"},{"F3","T3"},{"F4","T4"},{"F5","T5"},{"F6","T6"},{"F7","T7"},{"F8","T8"},{"F9","T9"},{"F10","T10"}};
+	private String suggestion = "";
+	
 	public KitchenSinkController() {
 		database = new SQLDatabaseEngine();
 		itscLOGIN = System.getenv("ITSC_LOGIN");
@@ -326,8 +330,9 @@ public class KitchenSinkController {
 				+ "2 Diet Planner(Please complete 1 first)\n"
 				+ "3 Healthpedia \n"
 				+ "4 Feedback \n"
-				+ "5 User Guide(recommended for first-time users)\n\n"
-				+ "Please enter your choice:(1-5)";
+				+ "5 User Guide(recommended for first-time users)\n"
+				+ "6 Self Assessment(recommened for first-time users)\n\n"
+				+ "Please enter your choice:(1-6)";
 			}else {
 				msg = "Welcome to ZK's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
@@ -336,7 +341,8 @@ public class KitchenSinkController {
 						+ "2 Diet Planner\n"
 						+ "3 Healthpedia \n"
 						+ "4 Feedback \n"
-						+ "5 User Guide(recommended for first-time users)\n\n"
+						+ "5 User Guide(recommended for first-time users)\n"
+						+ "6 Self Assessment(recommened for first-time users)\n\n"
 						+ "Please enter your choice:(1-5)";
 			}
 			this.replyText(replyToken, msg);
@@ -382,6 +388,12 @@ public class KitchenSinkController {
 				currentStage = "UserGuide";
 				subStage = 0;
 				//move to user guide
+			}break;
+			case "6":{
+				msg ="Moving to Self Assessment...Input anything to continue...";
+				currentStage = "SelfAssessment";
+				subStage = 0;
+				//move to self assessment
 			}break;
 			default:{msg = "Invalid input! Please input numbers from 1 to 4!!";}
 			}
@@ -887,6 +899,144 @@ public class KitchenSinkController {
 		subStage = 0; 
 	}
 	
+	// this is self assessment Handler function
+	private void selfAssessmentHandler(String replyToken, Event event, String text) {
+		if(subStage == 0){
+			if(!(currentUser instanceof DetailedUser))
+			currentUser = new DetailedUser(currentUser);
+			((DetailedUser)currentUser).setAssessmentScore(0);
+			this.replyText(replyToken, "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
+								+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
+								+ "\n reply anything to start or reply 'q' to reutrn to the main menu...");
+			subStage = -1;
+			return;
+		}
+		else if (subStage == -1){
+			if(text.equals("q")) {
+			currentStage = "Main";
+			this.replyText(replyToken, "back to mainMenu...");//back to main 
+			subStage = 0;
+			return;
+			}
+		//else the quiz start
+			this.replyText(replyToken, "Then let's start the quiz ;) \n Q1. You eat at least five portions of fruits and vegetables a day"
+				+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
+				+ "\n reply 'T' as ture and 'F' as false"
+				+ "\n reply 'q' to reutrn to the main menu");
+		
+			subStage = 1;
+		}
+		else if (subStage == 11) {
+			String reply = "Congratulations that you have finished the quiz!:)\n";
+			int score = ((DetailedUser)currentUser).getAssessmentScore();
+			if(score >= 90) {
+				reply = reply + "The healthy level of your eating habit is: A \n Congratulations! "
+						+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
+				
+			}
+			else if(score >= 70) {
+				reply = reply + "The healthy level of your eating habit is: B \n That's not bad. "
+						+ "Your eating habit is cool, but it can still be improve to a better level."
+						+ "Here comes some of the advice:\n" + suggestion;
+			}
+			else if(score >= 40) {
+				reply = reply + "The healthy level of your eating habit is: C \n You'd better pay attention. "
+						+ "Your eating habit is OK if you are always very fit, although some of those habit might be harmful to youre body.\n"
+						+ "Here comes some of the advice:\n" + suggestion;
+			}
+			else {
+				reply = reply + "Oops The healthy level of your eating habit is: D \n "
+						+ "If you're not kidding, you are strongly recommended to change those bad habits right now. "
+						+ "Here comes some of the advice:\n" + suggestion;
+				}
+			reply = replye + "Would you like to customize your personal plan now? "
+					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
+			this.replyText(replyToken,"reply");
+			subStage += 1;
+		}
+		else if(subStage == 12) {
+			if(text.equalsIgnoreCase("Y")) {
+				subStage = 0;
+				currentStage = "DietPlanner";
+				this.replyText(replyToken,"Heading to DietPlanner...");
+			}else {
+				subStage = 0;
+				currentStage = "Main";
+				this.replyText(replyToken,"Heading to Main menu...");
+			}
+			return;
+		}
+		else {
+			if(text.equalsIgnoreCase("T")) {
+				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+				suggestion.concat(feedback[subStage-1][1]);
+			}
+			else if(text.equalsIgnoreCase("F")){
+				suggestion.concat(feedback[subStage-1][0]);
+			} 
+			else if(text.equalsIgnoreCase("q")) {
+				currentStage = "Main";
+				subStage = 0;
+				this.replyText(replyToken, "back to mainMenu...");//back to main 
+				return;
+			}
+			else {
+				this.replyText(replyToken, "Please reply a valid answer(T/F)");
+				return;
+			}
+			if(subStage < 10)
+				this.replyText(replyToken, question[subStage]);
+			subStage += 1;
+		}
+//		switch (subStage){
+//		case 0:{
+//			if(!(currentUser instanceof DetailedUser))
+//				currentUser = new DetailedUser(currentUser);
+//			((DetailedUser)currentUser).setAssessmentScore(0);
+//			this.replyText(replyToken, "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
+//									+ "Please reply 'T' as ture and 'F' as false according your eating habits."
+//									+ "\n reply anything to start or reply 'q' to reutrn to the main menu...");
+//			subStage = -1;
+//		}break;
+//		case -1:{ //this is the redirecting stage
+//			if(text.equals("q")) {
+//				currentStage = "Main";
+//				this.replyText(replyToken, "back to mainMenu...");//back to main 
+//				subStage = 0;
+//				return;
+//				}
+//			//else the quiz start
+//			this.replyText(replyToken, "Then let's start the quiz ;)");
+//			this.replyText(replyToken, "Q1. You eat at least five portions of fruits and vegetables a day"
+//					+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
+//					+ "\n reply 'T' as ture and 'F' as false"
+//					+ "\n reply 'q' to reutrn to the main menu");
+//			
+//			subStage = 1;
+//		}break;
+//		case 1:{
+//				switch(text) {
+//				case "T":{
+//					this.replyText(replyToken, "Well done! Hope that you can keep this habit!");
+//					((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore() + 10);
+//					subStage += 1; 
+//					this.replyText(replyToken, "Q2. When I snack I generally stick to nuts, fruits or vegetables snack	"
+//							+ "\n reply 'T' as ture and 'F' as false");
+//					return;
+//				}
+//				case "F":{					
+//					this.replyText(replyToken, "You are recommended to pay attention to this potential problem of your eating habit.");
+//					subStage += 1; 
+//					this.replyText(replyToken, "Q2. When I snack I generally stick to nuts, fruits or vegetables snack	"
+//							+ "\n reply 'T' as ture and 'F' as false");
+//					return;
+//				}
+//				case "q":{currentStage = "Main";subStage = 0;return;}//back to main
+//				default:{this.replyText(replyToken, "please reply a valid answer");return;}
+//				}
+//		}
+//		}
+	}
 	
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
@@ -915,6 +1065,9 @@ public class KitchenSinkController {
         		break;
         	case "UserGuide":
         		userGuideHandler(replyToken, event, text);
+        		break;
+        	case "SelfAssessment":
+        		selfAssessmentHandler(replyToken, event, text);
         		break;
         	default:
         		String msg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
