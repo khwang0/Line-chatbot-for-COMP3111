@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
 
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,9 +51,9 @@ public class KitchenSinkTester {
 		assertThat(result).isEqualTo("Sorry, I cannot answer your question.");
 	}
 
-  /*
+  
   // only applicable when textProcessor calling no external function
-	@Test
+	@Ignore("not ready yet") @Test
 	public void testProcessText() throws Exception {
 		boolean thrown = false;
 		String[] result = new String[5];		
@@ -83,37 +84,38 @@ public class KitchenSinkTester {
 		for (int i = 0; i < 5; i++)
 			assertThat(result[i].contains(reply[i])).isEqualTo(true);
 	}
-  */
 	
 	@Test
 	public void testSQsender() throws Exception {
 		boolean thrown = false;
+		int testNum = 5; 
 		
-		String[] SQresult = new String[4];
+		String[] SQresult = new String[testNum];
 		
 		String userid = "123456";
 		
-		String[] message= { "hi","hello", "thanks", "bye" };
+		String[] message= { "hi","hello", "thanks", "bye", "hi! I am wondering..." };
 		String[] reply = {
 			"Hi! How can I help you?", 
 			"Hi! How can I help you?", 
 			"You are welcome =)", 
-			"have a nice day!"
+			"have a nice day!",
+			"Hi! How can I help you?"
 		};
 		
 		try {
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < testNum; i++) {
 				SQresult[i] = this.sqsender.process(testerId, message[i]);
 			}
 						
 		} catch (Exception e) {
 			thrown = true;	
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < testNum; i++) {
 				System.err.println(SQresult[i]);
 			}
 		}
 		
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < testNum; i++) {
 			assertThat(SQresult[i].contains(reply[i])).isEqualTo(true);
 		}
 	}

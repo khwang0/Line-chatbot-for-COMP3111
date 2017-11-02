@@ -12,6 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DBEngine {
+	
+	private static final String CLASSIFYTABLE = "classify_table";
+	
+	private static final String CUSTOMER = "customer_info";
+	private static final String LINEUSER = "line_user_info";
+	private static final String PRICE = "tour_price";
+	private static final String DESCRIPTION = "tour_description";
+	private static final String TOURINFO = "tour_info";
+	private static final String BOOKTABLE = "booking_table";
+	
 	public DBEngine() {
 		
 	}
@@ -32,7 +42,7 @@ public class DBEngine {
 		}
 		try {
 			stmt = connection.prepareStatement(
-					"UPDATE line_user_info SET "+entryName+" = ? WHERE userid = ?");
+					"UPDATE " + LINEUSER + " SET "+ entryName +" = ? WHERE userid = ?");
 			stmt.setString(1, value);
 			stmt.setString(2, userID);
 			stmt.executeUpdate();
