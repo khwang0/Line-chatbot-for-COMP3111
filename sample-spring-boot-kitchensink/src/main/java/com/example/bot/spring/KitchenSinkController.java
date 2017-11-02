@@ -903,6 +903,7 @@ public class KitchenSinkController {
 	private void selfAssessmentHandler(String replyToken, Event event, String text) {
 		String reply = "";
 		if(subStage == 0){
+			suggestion = "";
 			if(!(currentUser instanceof DetailedUser))
 			currentUser = new DetailedUser(currentUser);
 			((DetailedUser)currentUser).setAssessmentScore(0);
@@ -928,7 +929,7 @@ public class KitchenSinkController {
 		
 			subStage = 1;
 		}
-		else if (subStage == 11) {
+		else if (subStage == 10) {
 				reply = reply + "Congratulations that you have finished the quiz!:)\n";
 			int score = ((DetailedUser)currentUser).getAssessmentScore();
 			if(score >= 90) {
@@ -969,10 +970,10 @@ public class KitchenSinkController {
 		else {
 			if(text.equalsIgnoreCase("T")) {
 				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
-				suggestion.concat(feedback[subStage-1][1]);
+				suggestion = suggestion + feedback[subStage-1][1];
 			}
 			else if(text.equalsIgnoreCase("F")){
-				suggestion.concat(feedback[subStage-1][0]);
+				suggestion = suggestion + feedback[subStage-1][0];
 			} 
 			else if(text.equalsIgnoreCase("q")) {
 				currentStage = "Main";
