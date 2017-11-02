@@ -145,13 +145,13 @@ public class TextProcessor {
 				preChar = ' ';
 			}
 		}
-		outputMsg = outputMsg.toLowerCase();		
+		outputMsg = outputMsg.toLowerCase();	
 		return outputMsg;
 	}
 	
 	// helper function for formatMsg()
 	private boolean isChar (char c) {
-		if ((c > 'a' && c < 'z') || (c > 'A' && c < 'Z'))
+		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 			return true;
 		else
 			return false; 
@@ -159,7 +159,7 @@ public class TextProcessor {
 	
 	// helper function for formatMsg()
 	private boolean isDigit (char c) {
-		if ((c > '0' && c < '9') || c == '.')
+		if ((c >= '0' && c <= '9') || c == '.')
 			return true;
 		else
 			return false; 
