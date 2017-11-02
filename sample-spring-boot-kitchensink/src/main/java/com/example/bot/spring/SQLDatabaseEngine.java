@@ -124,8 +124,23 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;	
 	}
-	boolean updateDietRecord(foodInput foodinput) {
-		
+	boolean pushDietRecord(foodInput foodinput) {
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"INSERT INTO dietrecord VALUES(?,?,?,?,?)");
+			stmt.setString(1,foodinput.getKey());
+			stmt.setString(2,getId());
+			stmt.setString(3,getFoodName());
+			stmt.setInt(4,getAmount());
+			stmt.setString(5,getTime());
+			result = stmt.execute();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+			return result;
+		} 
 	}
 	boolean updateUser(Users user) {
 		boolean result = false;
