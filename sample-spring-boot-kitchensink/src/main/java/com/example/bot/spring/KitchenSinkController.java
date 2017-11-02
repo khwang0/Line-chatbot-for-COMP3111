@@ -949,7 +949,7 @@ public class KitchenSinkController {
 						+ "If you're not kidding, you are strongly recommended to change those bad habits right now. "
 						+ "Here comes some of the advice:\n" + suggestion;
 				}
-			reply = replye + "Would you like to customize your personal plan now? "
+			reply = reply + "Would you like to customize your personal plan now? "
 					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
 			this.replyText(replyToken,"reply");
 			subStage += 1;
