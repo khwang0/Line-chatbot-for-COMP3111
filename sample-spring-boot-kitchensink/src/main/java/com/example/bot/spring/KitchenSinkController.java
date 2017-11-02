@@ -901,33 +901,35 @@ public class KitchenSinkController {
 	
 	// this is self assessment Handler function
 	private void selfAssessmentHandler(String replyToken, Event event, String text) {
+		String reply = "";
 		if(subStage == 0){
 			if(!(currentUser instanceof DetailedUser))
 			currentUser = new DetailedUser(currentUser);
 			((DetailedUser)currentUser).setAssessmentScore(0);
-			this.replyText(replyToken, "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
-								+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
-								+ "\n reply anything to start or reply 'q' to reutrn to the main menu...");
+			reply = reply + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
+					+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
+					+ "\n reply anything to start or reply 'q' to reutrn to the main menu...";
 			subStage = -1;
-			return;
 		}
 		else if (subStage == -1){
 			if(text.equals("q")) {
 			currentStage = "Main";
-			this.replyText(replyToken, "back to mainMenu...");//back to main 
+			reply = reply + "back to mainMenu...";
 			subStage = 0;
-			return;
+			reply = reply + "Heading to Main menu...";
+			return; 
 			}
 		//else the quiz start
-			this.replyText(replyToken, "Then let's start the quiz ;) \n Q1. You eat at least five portions of fruits and vegetables a day"
-				+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
-				+ "\n reply 'T' as ture and 'F' as false"
-				+ "\n reply 'q' to reutrn to the main menu");
+			reply = reply +  "Then let's start the quiz ;) \n" 
+					+ question[0] 
+					+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
+					+ "\n reply 'T' as ture and 'F' as false"
+					+ "\n reply 'q' to reutrn to the main menu";
 		
 			subStage = 1;
 		}
 		else if (subStage == 11) {
-			String reply = "Congratulations that you have finished the quiz!:)\n";
+				reply = reply + "Congratulations that you have finished the quiz!:)\n";
 			int score = ((DetailedUser)currentUser).getAssessmentScore();
 			if(score >= 90) {
 				reply = reply + "The healthy level of your eating habit is: A \n Congratulations! "
@@ -951,20 +953,18 @@ public class KitchenSinkController {
 				}
 			reply = reply + "Would you like to customize your personal plan now? "
 					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
-			this.replyText(replyToken,"reply");
 			subStage += 1;
 		}
 		else if(subStage == 12) {
 			if(text.equalsIgnoreCase("Y")) {
 				subStage = 0;
 				currentStage = "DietPlanner";
-				this.replyText(replyToken,"Heading to DietPlanner...");
+				reply = reply + "Heading to DietPlanner...";
 			}else {
 				subStage = 0;
 				currentStage = "Main";
-				this.replyText(replyToken,"Heading to Main menu...");
+				reply = reply + "Heading to Main menu...";
 			}
-			return;
 		}
 		else {
 			if(text.equalsIgnoreCase("T")) {
@@ -988,6 +988,8 @@ public class KitchenSinkController {
 				this.replyText(replyToken, question[subStage]);
 			subStage += 1;
 		}
+		this.replyText(replyToken, reply);
+
 //		switch (subStage){
 //		case 0:{
 //			if(!(currentUser instanceof DetailedUser))
