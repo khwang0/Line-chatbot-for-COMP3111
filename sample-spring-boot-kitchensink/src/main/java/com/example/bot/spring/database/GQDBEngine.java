@@ -43,6 +43,7 @@ public class GQDBEngine extends DBEngine {
 				found=false;
 				if(!found) break;
 			}
+			if(Text.toLowerCase().contains(rs.getString(2).toLowerCase()))found=true;
 			if(found) {
 				TourID=rs.getString(2);
 				break;
