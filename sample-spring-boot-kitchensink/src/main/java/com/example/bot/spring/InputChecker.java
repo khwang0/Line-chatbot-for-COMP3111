@@ -25,6 +25,9 @@ public class InputChecker {
 	public boolean ValidCalories(String text) throws NumberFormatException {
 		return( Integer.parseInt(text) < 15000 && Integer.parseInt(text)> 0 );
 	}
+	public boolean ValidAmount(String text) throws NumberFormatException {
+		return( Integer.parseInt(text) < 15000 && Integer.parseInt(text)> 0 );
+	}	
 	public boolean ValidCarbs(String text) throws NumberFormatException {
 		return( Double.parseDouble(text) < 3000 && Double.parseDouble(text)> 0 ) ;
 	}
@@ -38,14 +41,14 @@ public class InputChecker {
 		return (text.length()<=1000);
 	}
 	
-	private void ModeSwitcher( Users currentUser, SQLDatabaseEngine database, String mode) {
+	private void ModeSwitcher(Users currentUser, SQLDatabaseEngine database, String mode) {
 		switch(mode) {
 		case "set":break;
 		case "update" :database.updateUser(currentUser);break;
 		default:System.out.println("Mode error. Set failed.");
 		}
 	}
-	
+
 	public boolean AgeEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidAge(text)) {
@@ -57,6 +60,8 @@ public class InputChecker {
 				return false;
 		}catch(NumberFormatException ne){return false;}
 	}
+	
+	
 	public boolean GenderEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 		if(ValidGender(text)) {
@@ -182,6 +187,29 @@ public class InputChecker {
 		try {
 		if(ValidOtherinfo(text)) {
     		((DetailedUser)currentUser).setOtherInfo(text);
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+	/* added by ZK*/
+	public boolean foodAdd(String text, foodInput foodinput, SQLDatabaseEngine database) {
+		try {
+		if(ValidOtherinfo(text)) {
+    		foodinput.setFood(text);
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+	
+	public boolean amountAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
+		try {
+		if(ValidAmount(text)) {
+			foodinput.setAmount(Integer.parseInt(text));
+			database.pushDietRecord(foodinput);
     		return true;
     	}
 		else
