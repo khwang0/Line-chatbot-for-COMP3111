@@ -367,7 +367,7 @@ public class KitchenSinkController {
 			}break;
 			case "3":{
 				//move to health pedia
-				msg = "Moving to Diet Planner...Input anything to continue...";
+				msg = "Moving to HealthPedia...Input anything to continue...";
 				currentStage = "HealthPedia";
 				subStage = 0;
 			}break;
@@ -827,7 +827,6 @@ public class KitchenSinkController {
 		}break;
 		case 11:{
 			healthSearcher.setKeyword(text);
-			healthSearcher.setMode(0);
 			if(healthSearcher.search()) {
 				String msg = healthSearcher.getUnit()+":\n"
 						+"Energy: "+healthSearcher.getEnergy()+"kcal\n"
