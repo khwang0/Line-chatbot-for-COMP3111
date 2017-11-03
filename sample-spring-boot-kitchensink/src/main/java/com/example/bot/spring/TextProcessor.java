@@ -33,7 +33,7 @@ public class TextProcessor {
 					&& (label == null || label == "" || label == "default" || label == "none")){
 				//reply = "tag: " + tag + " label: " + label;
 				SQTextSender sqsender = new SQTextSender();
-				reply == sqsender.process(userId, text)+"\n";	
+				reply = sqsender.process(userId, text)+"\n";	
 			}
 			
 			if(tag.equals("book")) {
