@@ -29,10 +29,11 @@ public class TextProcessor {
 			label = DBE.getTextType(text);
 //			reply = "tag: " + tag + " label: " + label;
 			
-			if ((tag == null || tag == "" || tag == "default" ) && (label == null || label == "" || label == "default" )){
+			if ((tag == null || tag == "" || tag == "default" || tag == "none") 
+					&& (label == null || label == "" || label == "default" || tag == "none")){
 				//reply = "tag: " + tag + " label: " + label;
 				SQTextSender sqsender = new SQTextSender();
-				reply += sqsender.process(userId, text)+"\n";	
+				reply == sqsender.process(userId, text)+"\n";	
 			}
 			
 			if(tag.equals("book")) {
