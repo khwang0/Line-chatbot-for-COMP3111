@@ -35,6 +35,7 @@ public class KitchenSinkTester {
 	
 	@Test
 	public void UQTester() throws Exception {
+		System.out.println("-------- inside UQTester --------------");
 		boolean thrown = false;
 		String result = null;
 		UQSender = new UQAutomateSender();
@@ -49,7 +50,8 @@ public class KitchenSinkTester {
 
   // only applicable when textProcessor calling no external function
 	@Ignore("not ready yet") @Test
-	public void ProcessTextTester() throws Exception {
+	public void TextProcessorTester() throws Exception {
+		System.out.println("-------- inside TextProcessorTester --------------");
 		boolean thrown = false;
 		String[] result = new String[5];		
 		String[] message= { 
@@ -82,6 +84,7 @@ public class KitchenSinkTester {
 	
 	@Test
 	public void SQTester() throws Exception {
+		System.out.println("-------- inside SQTester --------------");
 		boolean thrown = false;
 		int testNum = 5; 
 		
@@ -117,6 +120,7 @@ public class KitchenSinkTester {
     
 	@Test
 	public void GQTester() throws Exception {
+		System.out.println("-------- inside GQTester --------------");
 		boolean thrown = false;
 		boolean WA = false;
 		int length=2;
@@ -132,7 +136,8 @@ public class KitchenSinkTester {
 		try {
 			for(int i=0;i<length;i++) {
 				reply=gqsender.process(testerId,inputs[i]);
-				//System.err.println(reply);
+				System.out.println("inputs [" + i + "]: " + inputs[i]);
+				System.out.println("reply [" + i + "]: " + reply);
 				if(!reply.contains(outputs[i])) {
 					WA = true;
 				}
@@ -147,6 +152,7 @@ public class KitchenSinkTester {
 	
 	@Test
 	public void RecommendationTester() throws Exception {
+		System.out.println("-------- inside RecommendationTester --------------");
 		boolean thrown = false;
 		String result = null;
 		//ArrayList<String> temp = new ArrayList<String>();
@@ -190,6 +196,8 @@ public class KitchenSinkTester {
 	
 	@Test
 	public void bookingTester() throws Exception {
+		System.out.println("-------- inside bookingTester --------------");
+		
 		BookingTextSender bookingTS = new BookingTextSender();
 		String reply = null;
 		reply = bookingTS.process(testerId, "I would like to book tour 2D001");
