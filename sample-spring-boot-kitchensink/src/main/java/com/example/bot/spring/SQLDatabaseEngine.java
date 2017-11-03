@@ -369,7 +369,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"UPDATE users SET name = ?, gender = ?, height = ?, weight =?, age =?, stage =?, substage =? WHERE id = ?;");
+					"UPDATE users SET name = ?, gender = ?, height = ?, weight =?, age =?, stage =?, substage =? WHERE id = ?");
 			stmt.setString(6, user.getID());
 			stmt.setString(1, user.getName());
 			String temp = ""+user.getGender();
