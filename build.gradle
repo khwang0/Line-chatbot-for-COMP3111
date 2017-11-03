@@ -109,6 +109,11 @@ subprojects {
         testCompile 'org.hibernate:hibernate-validator'
         testCompile 'org.springframework.boot:spring-boot-starter-test' // MockHttpServletRequest
         testCompile 'org.springframework.boot:spring-boot-starter-logging'
+        
+        compileOnly "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    	compileOnly "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    	compileOnly "org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion"
+    	compileOnly "org.springframework.boot:spring-boot-devtools:$springBootVersion"
     }
 
     compileJava.dependsOn(processResources) // http://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor
