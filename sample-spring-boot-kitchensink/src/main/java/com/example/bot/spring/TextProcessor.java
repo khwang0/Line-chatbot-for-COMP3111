@@ -21,17 +21,18 @@ public class TextProcessor {
 	private String classifyText(String userId, String text){
 		String reply="";		
 		
-		try {
-			SQTextSender sqsender = new SQTextSender();
-			reply = sqsender.process(userId, text)+"\n";					
-		}catch(Exception e) {
-			// no action; 
-		}
 		try {			
 			String tag = null;
 			String label = null;
-
-			tag=DBE.getLineUserInfo(userId,"categorization");		
+			
+			tag = DBE.getLineUserInfo(userId,"categorization");		
+			label = DBE.getTextType(text);
+			
+			if ((tag == null || tag == "") && (label == null || label == "" || label == "default" )){
+				SQTextSender sqsender = new SQTextSender();
+				reply = sqsender.process(userId, text)+"\n";	
+			}
+			
 			if(tag.equals("book")) {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);	
@@ -39,10 +40,9 @@ public class TextProcessor {
 			}
 			// after decide the label:
 			// - update user tag;
-			// - pass the info to corresponding text processor;
+			// - pass the info to corresponding text processor;		
 			
-			
-			label = DBE.getTextType(text);
+
 			switch (label) {
 			case "reco": 
 				RecommendationTextSender rsender = new RecommendationTextSender();
