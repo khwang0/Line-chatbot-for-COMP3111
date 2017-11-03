@@ -342,14 +342,14 @@ public class StageHandler {
 				// Instantiate a Date object
 				Date dNow = new Date();
 				SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd");
+				ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 				String date = ft.format(dNow);//20171102
 
 				ArrayList<Integer> plan_info = database.search_plan(user_id);
-				ArrayList<Integer> current_info = new ArrayList<Integer>();
-				//ArrayList<Integer> current_info = database.search_current(user_id, date); // diet current status
+				//ArrayList<Integer> current_info = new ArrayList<Integer>();
+				ArrayList<Integer> current_info = database.search_current(user_id, date); // diet current status
 				for (int i = 0; i < plan_info.size(); i++) {
-					//int diff = Integer.parseInt(plan_info[i]) - Integer.parseInt(current_info[i]);
-					current_info.add(50);
+					//current_info.add(50);
 					int diff = plan_info.get(i) - current_info.get(i);
 					//protein
 					if (i==0) {

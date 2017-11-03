@@ -192,7 +192,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	ArrayList<Integer> search_plan(String user_id) throws Exception {
 		ArrayList<Integer> plan_info = new ArrayList<Integer>(); // store the query result from plan table
 		try {
-			//connect to the database with two tables: current & plan
+			//connect to the database with table: diet_plan
 			Connection connection = this.getConnection();
 			//prepare a SQL statement while leaving some parameters
 			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_plan where id = ? ");
@@ -219,10 +219,29 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	//Query the current diet status info from "diet_conclusion" table and return
 	ArrayList<Integer> search_current(String user_id, String date) throws Exception {
 		ArrayList<Integer> current_info = new ArrayList<Integer>(); // store the query result from current table
-		return current_info;
+		try {
+			//connect
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_conclusion where id = ? AND date = ?");
+			stmt.setString(1, user_id);
+			stmt.setString(2, date);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				current_info.add(rs.getInt(1));//protein
+				current_info.add(rs.getInt(2));//fat
+				current_info.add(rs.getInt(3));//sugar
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			log.info("query error for search_current: {}", e.toString());
+		}
+		if (current_info.size() != 0)
+			return current_info;
+
+		throw new Exception("NOT FOUND");
 	}
-
-
 
 	/*  Function added by ZK*/
 
