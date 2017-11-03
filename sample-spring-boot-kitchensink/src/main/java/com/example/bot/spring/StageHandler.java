@@ -727,9 +727,7 @@ public class StageHandler {
 			replymsg ="Welcome to HealthPedia! You are welcome to query any thing about food!\n"
 					+ "Please type the function choice you wish to use as below.\n\n"
 					+ "1 Food Searcher\n"
-					+ "2\n"
-					+ "3\n"
-					+ "4\n\n"
+					+ "Others May be open later...\n"
 					+ "Type other things to go back to main menu.";
 			currentUser.setSubStage(currentUser.getSubStage()-1);
 		}break;
@@ -760,6 +758,7 @@ public class StageHandler {
 			healthSearcher.setKeyword(text);
 			if(healthSearcher.search()) {
 				replymsg = healthSearcher.getUnit()+":\n"
+						+"Name of the searched food:"+healthSearcher.getFoodName()+"\n"
 						+"Energy: "+healthSearcher.getEnergy()+"kcal\n"
 						+"Carbohydragate: "+healthSearcher.getCarbohydrate()+"g\n"
 						+"Protein:"+healthSearcher.getProtein()+"g\n"

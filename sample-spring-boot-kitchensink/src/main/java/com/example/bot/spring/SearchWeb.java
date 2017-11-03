@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class SearchWeb {
 	private String keyword;
 	public SearchWeb(){
-		
+
 	}
 	public void setKeyword(String keyword) {
 		keyword = keyword.replace(" ","+");
@@ -63,7 +63,7 @@ public class SearchWeb {
 		if(fi) {
 			return "N/A";
 		}
-		
+
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(targetStr);
 		fi = matcher.find();
@@ -71,9 +71,27 @@ public class SearchWeb {
   		return result;
 	}
 
+	public String RegexStringName(String targetStr, String patternStr){
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(targetStr);
+		boolean fi = matcher.find();
+		String[] propertyList;
+		if (!fi) {
+			return "N/A";
+		}
+		propertyList= new String[matcher.groupCount()];
+		for(int i=0;i<matcher.groupCount();i++){
+         	propertyList[i]=matcher.group(i+1);
+         	//System.out.println((i+1)+"th:  "+ matcher.group(i+1));
+        }
+        String result = propertyList[2];
+		result = result.replace("\t","");
+  		return result;
+	}
+
 	public String RegexStringUnit(String targetStr, String patternStr)
 	{
-		
+
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(targetStr);
 		boolean fi = matcher.find();
@@ -96,14 +114,14 @@ public class SearchWeb {
 			return "N/A";
 		}
 		propertyList= new String[matcher.groupCount()];
-		for(int i=0;i<matcher.groupCount();i++){ 
-         	propertyList[i]=matcher.group(i+1); 
+		for(int i=0;i<matcher.groupCount();i++){
+         	propertyList[i]=matcher.group(i+1);
          	//System.out.println((i+1)+"th:  "+ matcher.group(i+1));
         }
         String result = propertyList[1];
   		return result;
 	}
-	
+
 
 
 }
