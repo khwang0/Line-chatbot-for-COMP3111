@@ -119,7 +119,7 @@ public class StageHandler {
 		case 5:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-				database.pushUser(currentUser);
+				database.updateUser(currentUser);
        			currentUser.setStage("Main");
        			currentUser.setSubStage(0);
 			}
