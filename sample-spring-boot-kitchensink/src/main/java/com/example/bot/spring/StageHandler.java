@@ -764,6 +764,8 @@ public class StageHandler {
 						+"Fat: "+healthSearcher.getFat()+"g\n"
 						+"Suger: "+healthSearcher.getSugar()+"g\n"
 						+"Water:"+healthSearcher.getWater()+"g\n"
+						+"Sodium:"+healthSearcher.getSodium()+"mg\n"
+						+"Calcium"+healthSearcher.getCalcium()+"mg\n"
 						+"\nType 1 to search for other food.\nType other thing to go back to Healthpedia.";
 				currentUser.setSubStage(currentUser.getSubStage()+10);
 			}
