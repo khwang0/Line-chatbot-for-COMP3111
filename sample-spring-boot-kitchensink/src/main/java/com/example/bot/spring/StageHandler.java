@@ -814,18 +814,17 @@ public class StageHandler {
 				((DetailedUser)currentUser).setAssessmentScore(0);
 				replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 						+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
-						+ "\n reply anything to start or reply 'q' to reutrn to the main menu...";
+						+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
 				currentUser.setSubStage(-1);
 			}break;
-			case 1:{
+			case -1:{
 					if(text.equals("q")) {
 					currentUser.setStage("Main");
-					replymsg = replymsg + "back to mainMenu...";
 					currentUser.setSubStage(0);
 					replymsg = replymsg + "Heading to Main menu...";
 					return replymsg;
 					}
-				//else the quiz start
+					//else the quiz start
 					replymsg = replymsg +  "Then let's start the quiz ;) \n"
 							+ question[0]
 							+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
@@ -833,7 +832,7 @@ public class StageHandler {
 							+ "\n reply 'q' to reutrn to the main menu";
 					currentUser.setSubStage(1);
 			}break;
-			case 10:{
+			case 11:{
 					replymsg = replymsg + "Congratulations that you have finished the quiz!:)\n";
 				int score = ((DetailedUser)currentUser).getAssessmentScore();
 				if(score >= 90) {
@@ -853,7 +852,7 @@ public class StageHandler {
 				}
 				else {
 					replymsg = replymsg + "Oops The healthy level of your eating habit is: D \n "
-							+ "If you're not kidding, you are strongly recommended to change those bad habits right now. "
+							+ "You are strongly recommended to change those bad habits right now. "
 							+ "Here comes some of the advice:\n" + suggestion;
 					}
 				replymsg = replymsg + "Would you like to customize your personal plan now? "
@@ -882,15 +881,20 @@ public class StageHandler {
 				else if(text.equalsIgnoreCase("q")) {
 					currentUser.setStage("Main");
 					currentUser.setSubStage(0);
-					replymsg= "back to mainMenu...";
+					replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
 					return replymsg;
 				}
 				else {
 					replymsg= "Please reply a valid answer(T/F)";
 					return replymsg;
 				}
-				if(currentUser.getSubStage() < 10)
-					replymsg= question[currentUser.getSubStage()];
+				if(currentUser.getSubStage() == 10) {
+					replymsg = "Congratulations that you have finished the quiz!:)\n"
+							+ "reply anything to get the feedback";
+					currentUser.setSubStage(currentUser.getSubStage()+1);
+					return replymsg;
+				}
+				replymsg= question[currentUser.getSubStage()];
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 
