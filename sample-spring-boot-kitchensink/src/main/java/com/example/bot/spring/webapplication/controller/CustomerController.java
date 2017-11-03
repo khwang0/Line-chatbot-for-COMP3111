@@ -22,7 +22,7 @@ class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    @RequestMapping(value = "customer", method = RequestMethod.GET)
+    //@RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     ModelAndView home() {
     	ModelAndView modelAndView = new ModelAndView("customer");
