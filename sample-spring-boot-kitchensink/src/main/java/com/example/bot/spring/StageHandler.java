@@ -67,23 +67,23 @@ public class StageHandler {
 	private foodInput foodinput = null;
 	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n", 
 								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n", 
-								"Q3: You believe in eating what you want but in moderation", 
+								"Q3: You believe in eating what you want but in moderation\n", 
 								"Q4: You eat at least five portions of fruits and vegetables a day(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves)\n", 
 								"Q5: When you snack you generally stick to nuts, fruits or vegetables snacks\n" , 
 								"Q6: You never skip main meals (breakfast, lunch and dinner)\n", 
 								"Q7: Your daily diet is varied and full of colours (green, yellow, red etc.)\n", 
 								"Q8: You eat fish at least twice a week\n", 
-								"Q9: I rarely eat processed foods\n", 
+								"Q9: You rarely eat processed foods\n", 
 								"Q10: You include all 5 food groups in your daily meals (cereals, vegetables, fruits, milk or milk products, pulses /fish / meat / eggs or soya)\n"};
 	private String[][] feedback = {{"You 'd should pay high attention the fat intake of food everyday or You might get trouble with obesity.\n",""}, 
 			{"Diferent types of fat may cause different consequences, which should not be ignored.\n",""},
 			{"Never eat anything too much even if you love it desperately./n",""},
 			{"Keeping balance of nutrients is important. It's time to add some fruits or vegatable in your daily menu.\n",""},
 			{"Try to make your snacks not that harmful to your health or stop it.\n","Even if nuts are generally healthy, never eat them too much or the intake of fat would be amazingly huge.\n"},
-			{"Eating three meals a day prevents overeating in a single meal and secures more energy throughout the day. Its importance is beyond your imagination",""},
+			{"Eating three meals a day prevents overeating in a single meal and secures more energy throughout the day. Its importance is beyond your imagination\n",""},
 			{"Other nutrients like vitamins and minerals are also necessary to your body's process of metabolism, please make your diet varied.\n",""},
-			{"Seafood contains lowfat and plenty of trace element that is good to our body. It's not a bad idea to eat some seafood.",""},
-			{"Processed foods may contain high levels of salt, sugar and fat. Therefore, you're recommended to have some fresh food instead.",""},
+			{"Seafood contains lowfat and plenty of trace element that is good to our body. It's not a bad idea to eat some seafood.\n",""},
+			{"Processed foods may contain high levels of salt, sugar and fat. Therefore, you're recommended to have some fresh food instead.\n",""},
 			{"Based on the fact that your daily menu could be improved, our diet planner can help you improve it.\n",""}};
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
@@ -844,10 +844,7 @@ public class StageHandler {
 					}
 					//else the quiz start
 					replymsg = replymsg +  "Then let's start the quiz ;) \n"
-							+ question[0]
-							+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
-							+ "\n reply 'T' as ture and 'F' as false"
-							+ "\n reply 'q' to reutrn to the main menu";
+							+ question[0];
 					currentUser.setSubStage(1);
 			}break;
 			case 11:{
