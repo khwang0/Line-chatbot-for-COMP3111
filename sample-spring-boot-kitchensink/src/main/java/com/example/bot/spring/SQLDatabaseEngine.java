@@ -266,33 +266,28 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				}
 				else {
 					current_sugar = previous_sugar;
-				}
-
-				
-				
-				
-				
-				
-				
-				stmt = connection.prepareStatement(
+				}	
+				PreparedStatement stmt2 = connection.prepareStatement(
 						"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");
 
-				stmt.setDouble(1, current_protein);
-				stmt.setDouble(2, current_fat);
-				stmt.setDouble(3, current_sugar);
-				stmt.setString(4, id);
-				stmt.setString(5, time.substring(0,8));
-				stmt.execute();
+				stmt2.setDouble(1, current_protein);
+				stmt2.setDouble(2, current_fat);
+				stmt2.setDouble(3, current_sugar);
+				stmt2.setString(4, id);
+				stmt2.setString(5, time.substring(0,8));
+				stmt2.execute();
+				stmt2.close();
 			}
 			else {
-				stmt = connection.prepareStatement(
+				PreparedStatement stmt1 = connection.prepareStatement(
 						"INSERT diet_conclusion VALUES(?,?,?,?,?)");
-				stmt.setString(1,id);
-				stmt.setString(2, time.substring(0,8));
-				stmt.setDouble(3, Double.parseDouble(healthSearcher.getProtein())*amount/100.0);
-				stmt.setDouble(4, Double.parseDouble(healthSearcher.getFat())*amount/100.0);
-				stmt.setDouble(5, Double.parseDouble(healthSearcher.getSugar())*amount/100.0);
-				stmt.execute();
+				stmt1.setString(1,id);
+				stmt1.setString(2, time.substring(0,8));
+				stmt1.setDouble(3, Double.parseDouble(healthSearcher.getProtein())*amount/100.0);
+				stmt1.setDouble(4, Double.parseDouble(healthSearcher.getFat())*amount/100.0);
+				stmt1.setDouble(5, Double.parseDouble(healthSearcher.getSugar())*amount/100.0);
+				stmt1.execute();
+				stmt1.close();
 			}
 			stmt.close();
 			rs.close();
