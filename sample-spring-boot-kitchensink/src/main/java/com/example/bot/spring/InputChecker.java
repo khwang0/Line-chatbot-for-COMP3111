@@ -234,4 +234,8 @@ public class InputChecker {
 	public String dietsearch(String text, SQLDatabaseEngine database, String id ) {
 		return database.reportDiet(text,id);
 	}
+	public void consumptionUpdate(HealthSearch healthSearcher,SQLDatabaseEngine database,int amount,String id,String time) {
+		database.updateconsumption(healthSearcher,amount,id,time);
+		
+	}
 }
