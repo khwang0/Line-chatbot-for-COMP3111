@@ -27,10 +27,10 @@ public class TextProcessor {
 			
 			tag = DBE.getLineUserInfo(userId,"categorization");		
 			label = DBE.getTextType(text);
-			reply = "tag: " + tag + " label: " + label;
+//			reply = "tag: " + tag + " label: " + label;
 			
-			if ((tag == null || tag == "") && (label == null || label == "" || label == "default" )){
-				reply = "tag: " + tag + " label: " + label;
+			if ((tag == null || tag == "" || tag == "default" ) && (label == null || label == "" || label == "default" )){
+				//reply = "tag: " + tag + " label: " + label;
 				SQTextSender sqsender = new SQTextSender();
 				reply += sqsender.process(userId, text)+"\n";	
 			}
