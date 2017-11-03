@@ -171,9 +171,7 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
-		currentUser.setStage("Init");
-		currentUser.setSubStage(0);
-		//database.updateUser(currentUser);
+		stageHandler.unfollowHandler(currentUser);
 		currentUser = null;
 	}
 
@@ -190,9 +188,7 @@ public class KitchenSinkController {
 			}catch(Exception e) {
 				log.info(e.getMessage());
 			}finally {
-				currentUser.setStage("Main");
-				currentUser.setSubStage(0);
-				msgbuffer = "User data reloaded. Type anything to continue...";
+				msgbuffer = stageHandler.followHandler(currentUser);
 			}
 		}catch(Exception e){
 			msgbuffer = "Welcome!!\nTo start using our services, please follow the instructions below.\n\n"
@@ -284,7 +280,6 @@ public class KitchenSinkController {
         	case "LivingHabitCollector":{
 				if(!(currentUser instanceof DetailedUser)){
 					currentUser = new DetailedUser(currentUser);
-					//database.pushUser(currentUser);
 				}
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         	}	break;
@@ -306,7 +301,6 @@ public class KitchenSinkController {
         	case "SelfAssessment":{
 				if(!(currentUser instanceof DetailedUser)){
 					currentUser = new DetailedUser(currentUser);
-					//database.pushUser(currentUser);
 				}
         		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
         	}break;

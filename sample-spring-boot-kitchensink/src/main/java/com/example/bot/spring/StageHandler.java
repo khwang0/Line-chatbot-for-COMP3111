@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.google.common.io.ByteStreams;
-
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
@@ -33,28 +32,7 @@ import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.event.Event;
-import com.linecorp.bot.model.event.source.GroupSource;
-import com.linecorp.bot.model.event.source.RoomSource;
-import com.linecorp.bot.model.event.source.Source;
-import com.linecorp.bot.model.message.AudioMessage;
-import com.linecorp.bot.model.message.ImageMessage;
-import com.linecorp.bot.model.message.ImagemapMessage;
-import com.linecorp.bot.model.message.LocationMessage;
-import com.linecorp.bot.model.message.Message;
-import com.linecorp.bot.model.message.StickerMessage;
-import com.linecorp.bot.model.message.TemplateMessage;
-import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.message.imagemap.ImagemapArea;
-import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
-import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
-import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
-import com.linecorp.bot.model.message.template.ButtonsTemplate;
-import com.linecorp.bot.model.message.template.CarouselColumn;
-import com.linecorp.bot.model.message.template.CarouselTemplate;
-import com.linecorp.bot.model.message.template.ConfirmTemplate;
-import com.linecorp.bot.model.response.BotApiResponse;
-import com.linecorp.bot.spring.boot.annotation.EventMapping;
-import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+
 
 import lombok.NonNull;
 import lombok.Value;
@@ -65,17 +43,17 @@ public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
 	private foodInput foodinput = null;
-	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n", 
-								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n", 
-								"Q3: You believe in eating what you want but in moderation\n", 
-								"Q4: You eat at least five portions of fruits and vegetables a day(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves)\n", 
-								"Q5: When you snack you generally stick to nuts, fruits or vegetables snacks\n" , 
-								"Q6: You never skip main meals (breakfast, lunch and dinner)\n", 
-								"Q7: Your daily diet is varied and full of colours (green, yellow, red etc.)\n", 
-								"Q8: You eat fish at least twice a week\n", 
-								"Q9: You rarely eat processed foods\n", 
+	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n",
+								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n",
+								"Q3: You believe in eating what you want but in moderation\n",
+								"Q4: You eat at least five portions of fruits and vegetables a day(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves)\n",
+								"Q5: When you snack you generally stick to nuts, fruits or vegetables snacks\n" ,
+								"Q6: You never skip main meals (breakfast, lunch and dinner)\n",
+								"Q7: Your daily diet is varied and full of colours (green, yellow, red etc.)\n",
+								"Q8: You eat fish at least twice a week\n",
+								"Q9: You rarely eat processed foods\n",
 								"Q10: You include all 5 food groups in your daily meals (cereals, vegetables, fruits, milk or milk products, pulses /fish / meat / eggs or soya)\n"};
-	private String[][] feedback = {{"You 'd should pay high attention the fat intake of food everyday or You might get trouble with obesity.\n",""}, 
+	private String[][] feedback = {{"You 'd should pay high attention the fat intake of food everyday or You might get trouble with obesity.\n",""},
 			{"Diferent types of fat may cause different consequences, which should not be ignored.\n",""},
 			{"Never eat anything too much even if you love it desperately./n",""},
 			{"Keeping balance of nutrients is important. It's time to add some fruits or vegatable in your daily menu.\n",""},
@@ -749,9 +727,7 @@ public class StageHandler {
 			replymsg ="Welcome to HealthPedia! You are welcome to query any thing about food!\n"
 					+ "Please type the function choice you wish to use as below.\n\n"
 					+ "1 Food Searcher\n"
-					+ "2\n"
-					+ "3\n"
-					+ "4\n\n"
+					+ "Others May be open later...\n"
 					+ "Type other things to go back to main menu.";
 			currentUser.setSubStage(currentUser.getSubStage()-1);
 		}break;
@@ -782,6 +758,7 @@ public class StageHandler {
 			healthSearcher.setKeyword(text);
 			if(healthSearcher.search()) {
 				replymsg = healthSearcher.getUnit()+":\n"
+						+"Name of the searched food:"+healthSearcher.getFoodName()+"\n"
 						+"Energy: "+healthSearcher.getEnergy()+"kcal\n"
 						+"Carbohydragate: "+healthSearcher.getCarbohydrate()+"g\n"
 						+"Protein:"+healthSearcher.getProtein()+"g\n"
@@ -918,6 +895,16 @@ public class StageHandler {
 		}
 		return replymsg;
 	}
+	public void unfollowHandler(Users currentUser){
+		currentUser.setStage("Init");
+		currentUser.setSubStage(0);
+	}
 
+	public String followHandler(Users currentUser){
+		String msg = "User data reloaded. Type anything to continue...";
+		currentUser.setStage("Main");
+		currentUser.setSubStage(0);
+		return msg;
+	}
 
 }
