@@ -3,7 +3,6 @@ package com.example.bot.spring.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 
 import com.example.bot.spring.webapplication.domain.*;
@@ -16,7 +15,6 @@ public class WebAppDBEngine extends DBEngine {
 		connection = this.getConnection();
 		LinkedList<Customer> allCus = new LinkedList<Customer>();
 		PreparedStatement nstmt;
-		try {
 			nstmt = connection.prepareStatement(
 					"SELECT * "
 					+ " FROM customer_info");
@@ -45,9 +43,6 @@ public class WebAppDBEngine extends DBEngine {
 			}
 			nstmt.close();
 			rs.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return allCus;
 	}
 }
