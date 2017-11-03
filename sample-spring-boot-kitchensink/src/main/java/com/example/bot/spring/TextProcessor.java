@@ -30,7 +30,7 @@ public class TextProcessor {
 //			reply = "tag: " + tag + " label: " + label;
 			
 			if ((tag == null || tag == "" || tag == "default" || tag == "none") 
-					&& (label == null || label == "" || label == "default" || tag == "none")){
+					&& (label == null || label == "" || label == "default" || label == "none")){
 				//reply = "tag: " + tag + " label: " + label;
 				SQTextSender sqsender = new SQTextSender();
 				reply == sqsender.process(userId, text)+"\n";	
