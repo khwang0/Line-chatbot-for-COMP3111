@@ -27,6 +27,7 @@ public class TextProcessor {
 			
 			tag = DBE.getLineUserInfo(userId,"categorization");		
 			label = DBE.getTextType(text);
+			reply = "tag: " + tag + " label: " + label;
 			
 			if ((tag == null || tag == "") && (label == null || label == "" || label == "default" )){
 				reply = "tag: " + tag + " label: " + label;
