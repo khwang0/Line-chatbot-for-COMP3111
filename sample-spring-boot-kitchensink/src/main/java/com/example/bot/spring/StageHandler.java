@@ -84,7 +84,7 @@ public class StageHandler {
         	}
 		}break;
 		case 1:{
-			if(inputChecker.NameEditting(text,currentUser,database,"update")) {
+			if(inputChecker.NameEditting(text,currentUser,database,"set")) {
 				replymsg = "Please enter your gender: (M for male F for female)";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 				}
@@ -93,7 +93,7 @@ public class StageHandler {
 			}
 		}break;
 		case 2:{
-			if(inputChecker.GenderEditting(text,currentUser,database,"update")) {
+			if(inputChecker.GenderEditting(text,currentUser,database,"set")) {
 				replymsg="Please enter your height in cm:";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -101,7 +101,7 @@ public class StageHandler {
 				replymsg="Please enter your gender: (M for male F for female):";
 		}break;
 		case 3:{
-			if( inputChecker.HeightEditting(text,currentUser,database,"update") ) {
+			if( inputChecker.HeightEditting(text,currentUser,database,"set") ) {
 				replymsg="Please enter your weight in kg:";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -109,7 +109,7 @@ public class StageHandler {
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 4:{
-			if( inputChecker.WeightEditting(text,currentUser,database,"update") ) {
+			if( inputChecker.WeightEditting(text,currentUser,database,"set") ) {
 				replymsg="Please enter your age in years old:";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -117,7 +117,7 @@ public class StageHandler {
 				replymsg="Please enter reasonable numbers!";
 		}break;
 		case 5:{
-			if(inputChecker.AgeEditting(text, currentUser, database, "update")) {
+			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
 				database.updateUser(currentUser);
        			currentUser.setStage("Main");
