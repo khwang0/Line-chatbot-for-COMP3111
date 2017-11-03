@@ -225,7 +225,84 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 
 	/*  Function added by ZK*/
+	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time) {
 
+		try {
+			Connection connection = this.getConnection();
+			
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_conclusion where id = ? AND date = ?");
+			stmt.setString(1,id);
+			stmt.setString(2,time.substring(0,8));
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				double previous_fat =0;
+				double previous_sugar =0;
+				double previous_protein =0;
+				double current_protein = 0;
+				double current_fat =0;
+				double current_sugar = 0;
+				previous_protein = rs.getDouble(1);
+				previous_fat = rs.getDouble(2);
+				previous_sugar = rs.getDouble(3);
+				
+				
+				
+				if( !healthSearcher.getProtein().equals("N/A")) {
+					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
+
+				}
+				else {
+					current_protein = previous_protein;
+					
+				}
+				if( !healthSearcher.getFat().equals("N/A")) {
+					current_fat = previous_fat + Double.parseDouble(healthSearcher.getFat())*amount/100.0;
+				}
+				else {
+					current_fat = previous_fat;
+				}				
+				if( !healthSearcher.getSugar().equals("N/A")) {
+					current_sugar = previous_sugar + Double.parseDouble(healthSearcher.getSugar())*amount/100.0;
+				}
+				else {
+					current_sugar = previous_sugar;
+				}
+
+				
+				
+				
+				
+				
+				
+				stmt = connection.prepareStatement(
+						"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");
+
+				stmt.setDouble(1, current_protein);
+				stmt.setDouble(2, current_fat);
+				stmt.setDouble(3, current_sugar);
+				stmt.setString(4, id);
+				stmt.setString(5, time.substring(0,8));
+				stmt.execute();
+			}
+			else {
+				stmt = connection.prepareStatement(
+						"INSERT diet_conclusion VALUES(?,?,?,?,?)");
+				stmt.setString(1,id);
+				stmt.setString(2, time.substring(0,8));
+				stmt.setDouble(3, Double.parseDouble(healthSearcher.getProtein())*amount/100.0);
+				stmt.setDouble(4, Double.parseDouble(healthSearcher.getFat())*amount/100.0);
+				stmt.setDouble(5, Double.parseDouble(healthSearcher.getSugar())*amount/100.0);
+				stmt.execute();
+			}
+			stmt.close();
+			rs.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	} 
+	
+	
 	String reportDiet(String text, String id) {
 		String answer =" ";
 		try {
