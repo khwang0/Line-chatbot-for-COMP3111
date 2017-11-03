@@ -68,9 +68,9 @@ public class HealthSearch {
 
 			this.water = searchweb.RegexStringProperty(result, "Water");
 
-			this.calcium = searchweb.RegexStringProperty(result,"Na");
+			this.calcium = searchweb.RegexStringProperty(result,"Sodium, Na");
 
-			this.sodium = searchweb.RegexStringProperty(result,"Ca");
+			this.sodium = searchweb.RegexStringProperty(result,"Calcium, Ca");
 		}
 		else {
 			this.isFound=false;
