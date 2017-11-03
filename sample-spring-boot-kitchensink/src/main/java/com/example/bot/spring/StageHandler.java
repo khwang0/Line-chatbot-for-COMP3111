@@ -340,7 +340,6 @@ public class StageHandler {
 		case 4:{
 			replymsg = "Reminder List:\n";
 			try {
-				/*TODO: compare plan and current status*/
 				String user_id = currentUser.getID();
 				// Instantiate a Date object
 				Date dNow = new Date();
@@ -348,17 +347,17 @@ public class StageHandler {
 				ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 				String date = ft.format(dNow);//20171102
 
-				ArrayList<Integer> plan_info = database.search_plan(user_id);
+				ArrayList<Double> plan_info = database.search_plan(user_id);
 				//ArrayList<Integer> current_info = new ArrayList<Integer>();
-				ArrayList<Integer> current_info = database.search_current(user_id, date); // diet current status
+				ArrayList<Double> current_info = database.search_current(user_id, date); // diet current status
 				for (int i = 0; i < plan_info.size(); i++) {
 					//current_info.add(50);
-					int diff = plan_info.get(i) - current_info.get(i);
+					double diff = plan_info.get(i) - current_info.get(i);
 					//protein
 					if (i==0) {
 						replymsg += "Protein: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %d g\n", diff);
+							replymsg += String.format("You still need to consume %.2f g\n", diff);
 						}
 						else
 							replymsg += "Finish!\n";
@@ -367,7 +366,7 @@ public class StageHandler {
 					else if (i== 1){
 						replymsg += "Fat: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %d g\n", diff);
+							replymsg += String.format("You still need to consume %.2f g\n", diff);
 						}
 						else
 							replymsg += "Finish!\n";
@@ -376,7 +375,7 @@ public class StageHandler {
 					else if (i== 2){
 						replymsg += "Sugar: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %d g\n", diff);
+							replymsg += String.format("You still need to consume %.2f g\n", diff);
 						}
 						else
 							replymsg += "Finish!\n";
