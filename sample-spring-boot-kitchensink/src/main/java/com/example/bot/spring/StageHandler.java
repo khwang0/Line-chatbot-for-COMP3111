@@ -138,7 +138,7 @@ public class StageHandler {
 		switch(currentUser.getSubStage()) {
 		case 0:{
 			if(! (currentUser instanceof DetailedUser)) {
-				replymsg = "Welcome to ZK's Diet Planner!\n\n"
+				replymsg = "Welcome to G8's Diet Planner!\n\n"
 				+ "We provide serveral functions for you to keep your fitness."
 				+ "Please type the number of function you wish to use. :)\n\n"
 				+ "1 Living Habit Collector (INSERT YOUR DATA HERE)\n"
@@ -149,7 +149,7 @@ public class StageHandler {
 				+ "6 Self Assessment(recommened for first-time users)\n\n"
 				+ "Please enter your choice:(1-6)";
 			}else {
-				replymsg = "Welcome to ZK's Diet Planner!\n\n"
+				replymsg = "Welcome to G8's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
 						+ "Please type the number of function you wish to use. :)\n\n"
 						+ "1 Living Habot Editor\n"

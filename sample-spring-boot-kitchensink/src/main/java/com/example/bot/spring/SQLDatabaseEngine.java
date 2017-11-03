@@ -200,7 +200,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				plan_info.add(rs.getDouble(1));//protein
-				plan_info.add(rs.getDouble(2));//fat
+				plan_info.add(rs.getDouble(2));//fat 
 				plan_info.add(rs.getDouble(3));//sugar
 			}
 			rs.close();
