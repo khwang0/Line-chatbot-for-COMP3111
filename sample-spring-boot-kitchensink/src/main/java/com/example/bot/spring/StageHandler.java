@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.google.common.io.ByteStreams;
-
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
@@ -33,12 +32,7 @@ import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.event.Event;
-import com.linecorp.bot.model.event.source.GroupSource;
-import com.linecorp.bot.model.event.source.RoomSource;
-import com.linecorp.bot.model.event.source.Source;
-import com.linecorp.bot.model.response.BotApiResponse;
-import com.linecorp.bot.spring.boot.annotation.EventMapping;
-import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+
 
 import lombok.NonNull;
 import lombok.Value;
@@ -908,7 +902,7 @@ public class StageHandler {
 		String msg = "User data reloaded. Type anything to continue...";
 		currentUser.setStage("Main");
 		currentUser.setSubStage(0);
-		reply msg;
+		return msg;
 	}
 
 }

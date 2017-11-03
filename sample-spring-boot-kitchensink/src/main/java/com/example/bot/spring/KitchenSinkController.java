@@ -171,7 +171,7 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
-		stageHandler.unfollowHandler(currentUser)
+		stageHandler.unfollowHandler(currentUser);
 		currentUser = null;
 	}
 
