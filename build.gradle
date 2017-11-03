@@ -59,7 +59,6 @@ subprojects {
     apply plugin: 'propdeps-maven'
     apply plugin: 'propdeps-idea'
     apply plugin: 'propdeps-eclipse'
-    apply plugin: 'war'
     
 //  disable this to speed up deploying a test      
 //    apply plugin: 'findbugs'
@@ -102,7 +101,6 @@ subprojects {
         compileOnly 'org.projectlombok:lombok'
         testCompileOnly 'org.projectlombok:lombok'
 
-		providedCompile 'javax.servlet:javax.servlet-api:3.1.0' 
         compileOnly "org.springframework.boot:spring-boot-configuration-processor" // http://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html#configuration-metadata-annotation-processor
 
         testCompile 'com.google.guava:guava'
