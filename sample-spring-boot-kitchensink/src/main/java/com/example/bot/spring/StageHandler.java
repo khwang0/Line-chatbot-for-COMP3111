@@ -65,8 +65,26 @@ public class StageHandler {
 
 	private InputChecker inputChecker = new InputChecker();
 	private foodInput foodinput = null;
-	private	String[] question = {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"};
-	private String[][] feedback = {{"F1","T1"},{"F2","T2"},{"F3","T3"},{"F4","T4"},{"F5","T5"},{"F6","T6"},{"F7","T7"},{"F8","T8"},{"F9","T9"},{"F10","T10"}};
+	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n", 
+								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n", 
+								"Q3: You believe in eating what you want but in moderation\n", 
+								"Q4: You eat at least five portions of fruits and vegetables a day(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves)\n", 
+								"Q5: When you snack you generally stick to nuts, fruits or vegetables snacks\n" , 
+								"Q6: You never skip main meals (breakfast, lunch and dinner)\n", 
+								"Q7: Your daily diet is varied and full of colours (green, yellow, red etc.)\n", 
+								"Q8: You eat fish at least twice a week\n", 
+								"Q9: You rarely eat processed foods\n", 
+								"Q10: You include all 5 food groups in your daily meals (cereals, vegetables, fruits, milk or milk products, pulses /fish / meat / eggs or soya)\n"};
+	private String[][] feedback = {{"You 'd should pay high attention the fat intake of food everyday or You might get trouble with obesity.\n",""}, 
+			{"Diferent types of fat may cause different consequences, which should not be ignored.\n",""},
+			{"Never eat anything too much even if you love it desperately./n",""},
+			{"Keeping balance of nutrients is important. It's time to add some fruits or vegatable in your daily menu.\n",""},
+			{"Try to make your snacks not that harmful to your health or stop it.\n","Even if nuts are generally healthy, never eat them too much or the intake of fat would be amazingly huge.\n"},
+			{"Eating three meals a day prevents overeating in a single meal and secures more energy throughout the day. Its importance is beyond your imagination\n",""},
+			{"Other nutrients like vitamins and minerals are also necessary to your body's process of metabolism, please make your diet varied.\n",""},
+			{"Seafood contains lowfat and plenty of trace element that is good to our body. It's not a bad idea to eat some seafood.\n",""},
+			{"Processed foods may contain high levels of salt, sugar and fat. Therefore, you're recommended to have some fresh food instead.\n",""},
+			{"Based on the fact that your daily menu could be improved, our diet planner can help you improve it.\n",""}};
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
@@ -814,27 +832,22 @@ public class StageHandler {
 				((DetailedUser)currentUser).setAssessmentScore(0);
 				replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 						+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
-						+ "\n reply anything to start or reply 'q' to reutrn to the main menu...";
+						+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
 				currentUser.setSubStage(-1);
 			}break;
-			case 1:{
+			case -1:{
 					if(text.equals("q")) {
 					currentUser.setStage("Main");
-					replymsg = replymsg + "back to mainMenu...";
 					currentUser.setSubStage(0);
 					replymsg = replymsg + "Heading to Main menu...";
 					return replymsg;
 					}
-				//else the quiz start
+					//else the quiz start
 					replymsg = replymsg +  "Then let's start the quiz ;) \n"
-							+ question[0]
-							+ "(One portion should be around 80g or 3 tablespoons full cooked vegetables or green leaves) "
-							+ "\n reply 'T' as ture and 'F' as false"
-							+ "\n reply 'q' to reutrn to the main menu";
+							+ question[0];
 					currentUser.setSubStage(1);
 			}break;
-			case 10:{
-					replymsg = replymsg + "Congratulations that you have finished the quiz!:)\n";
+			case 11:{
 				int score = ((DetailedUser)currentUser).getAssessmentScore();
 				if(score >= 90) {
 					replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
@@ -853,7 +866,7 @@ public class StageHandler {
 				}
 				else {
 					replymsg = replymsg + "Oops The healthy level of your eating habit is: D \n "
-							+ "If you're not kidding, you are strongly recommended to change those bad habits right now. "
+							+ "You are strongly recommended to change those bad habits right now. "
 							+ "Here comes some of the advice:\n" + suggestion;
 					}
 				replymsg = replymsg + "Would you like to customize your personal plan now? "
@@ -882,15 +895,20 @@ public class StageHandler {
 				else if(text.equalsIgnoreCase("q")) {
 					currentUser.setStage("Main");
 					currentUser.setSubStage(0);
-					replymsg= "back to mainMenu...";
+					replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
 					return replymsg;
 				}
 				else {
 					replymsg= "Please reply a valid answer(T/F)";
 					return replymsg;
 				}
-				if(currentUser.getSubStage() < 10)
-					replymsg= question[currentUser.getSubStage()];
+				if(currentUser.getSubStage() == 10) {
+					replymsg = "Congratulations that you have finished the quiz!:)\n"
+							+ "reply anything to get the feedback";
+					currentUser.setSubStage(currentUser.getSubStage()+1);
+					return replymsg;
+				}
+				replymsg= question[currentUser.getSubStage()];
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 
