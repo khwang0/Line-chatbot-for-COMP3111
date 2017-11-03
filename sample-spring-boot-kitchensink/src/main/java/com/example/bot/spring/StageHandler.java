@@ -62,7 +62,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 public class StageHandler {
-
+	private String time;
 	private InputChecker inputChecker = new InputChecker();
 	private foodInput foodinput = null;
 	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n", 
@@ -274,13 +274,15 @@ public class StageHandler {
 			Date date = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
 			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-			String time = ft.format(date);
+			time = ft.format(date);
 			foodinput = new foodInput(event.getSource().getUserId(),time);
 			replymsg= "Please enter the food name: ";
 			currentUser.setSubStage(currentUser.getSubStage()+10);
 		}break;
 		case 11:{
-			if(inputChecker.foodAdd(text, foodinput, database)) {
+			healthSearcher.setKeyword(text);
+			if(healthSearcher.search()) {
+				inputChecker.foodAdd(text, foodinput, database);
 				replymsg= "Please enter the amount you intake(in g):";
 				currentUser.setSubStage(currentUser.getSubStage()+1) ;
 				}
@@ -289,6 +291,7 @@ public class StageHandler {
 		}break;
 		case 12:{
 			if(inputChecker.amountAdd(text, foodinput, database)) {
+				inputChecker.consumptionUpdate(healthSearcher,database,Integer.parseInt(text),event.getSource().getUserId(),time);
 				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0) ;
 				}
