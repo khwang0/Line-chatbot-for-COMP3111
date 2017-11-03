@@ -376,7 +376,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setString(2, temp) ;
 			stmt.setDouble(3, user.getHeight());
 			stmt.setDouble(4, user.getWeight());
-			stmt.setInt(5, user.getAge());
+			stmt.setInt(5, user.getAge()); 
 			stmt.setString(6,user.getStage());
 			stmt.setInt(7,user.getSubStage());
 		    result = stmt.execute();
