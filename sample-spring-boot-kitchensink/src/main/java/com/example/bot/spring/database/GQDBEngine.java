@@ -20,13 +20,16 @@ public class GQDBEngine extends DBEngine {
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
+		String TourID = "";
 		
 		stmt = connection.prepareStatement(
 			"SELECT TourIDs FROM line_user_info WHERE userid = ?");
 		stmt.setString(1, userID);
 		rs = stmt.executeQuery();
-		rs.next();
-		String TourID = rs.getString(1);
+		if(rs.next()) {
+			TourID = rs.getString(1);
+		}
+
 		
 		rs.close();
 		stmt.close();

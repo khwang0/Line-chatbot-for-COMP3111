@@ -1,6 +1,5 @@
 package com.example.bot.spring;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.example.bot.spring.database.RecommendationDBEngine;
 import com.example.bot.spring.database.UQDBEngine;
 import com.example.bot.spring.textsender.*;
+import com.example.bot.spring.database.*;
 
 @RunWith(SpringRunner.class)
 
@@ -33,12 +33,9 @@ public class KitchenSinkTester {
 	
 	private String testerId="123456";
 	
-//	@Test
-//	public void simpleReply() throws Exception {
-//	}
-	
 	@Test
-	public void testUQ() throws Exception {
+	public void UQTester() throws Exception {
+		System.out.println("-------- inside UQTester --------------");
 		boolean thrown = false;
 		String result = null;
 		UQSender = new UQAutomateSender();
@@ -51,10 +48,10 @@ public class KitchenSinkTester {
 		assertThat(result).isEqualTo("Sorry, I cannot answer your question.");
 	}
 
-  
   // only applicable when textProcessor calling no external function
 	@Ignore("not ready yet") @Test
-	public void testProcessText() throws Exception {
+	public void TextProcessorTester() throws Exception {
+		System.out.println("-------- inside TextProcessorTester --------------");
 		boolean thrown = false;
 		String[] result = new String[5];		
 		String[] message= { 
@@ -86,7 +83,8 @@ public class KitchenSinkTester {
 	}
 	
 	@Test
-	public void testSQsender() throws Exception {
+	public void SQTester() throws Exception {
+		System.out.println("-------- inside SQTester --------------");
 		boolean thrown = false;
 		int testNum = 5; 
 		
@@ -122,6 +120,7 @@ public class KitchenSinkTester {
     
 	@Test
 	public void GQTester() throws Exception {
+		System.out.println("-------- inside GQTester --------------");
 		boolean thrown = false;
 		boolean WA = false;
 		int length=2;
@@ -137,7 +136,8 @@ public class KitchenSinkTester {
 		try {
 			for(int i=0;i<length;i++) {
 				reply=gqsender.process(testerId,inputs[i]);
-				//System.err.println(reply);
+				System.out.println("inputs [" + i + "]: " + inputs[i]);
+				System.out.println("reply [" + i + "]: " + reply);
 				if(!reply.contains(outputs[i])) {
 					WA = true;
 				}
@@ -151,7 +151,8 @@ public class KitchenSinkTester {
 	}
 	
 	@Test
-	public void testRecommendation() throws Exception {
+	public void RecommendationTester() throws Exception {
+		System.out.println("-------- inside RecommendationTester --------------");
 		boolean thrown = false;
 		String result = null;
 		//ArrayList<String> temp = new ArrayList<String>();
@@ -194,7 +195,9 @@ public class KitchenSinkTester {
 	}
 	
 	@Test
-	public void bookingTest() throws Exception {
+	public void bookingTester() throws Exception {
+		System.out.println("-------- inside bookingTester --------------");
+		
 		BookingTextSender bookingTS = new BookingTextSender();
 		String reply = null;
 		reply = bookingTS.process(testerId, "I would like to book tour 2D001");
@@ -217,4 +220,7 @@ public class KitchenSinkTester {
 							+ "When you complete the ATM payment, please send the bank "
 							+ "in slip to us. Our staff will validate it.");
 	}
+
 }
+
+
