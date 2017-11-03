@@ -280,7 +280,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			}
 			else {
 				PreparedStatement stmt1 = connection.prepareStatement(
-						"INSERT diet_conclusion VALUES(?,?,?,?,?)");
+						"INSERT INTO diet_conclusion VALUES(?,?,?,?,?)");
 				stmt1.setString(1,id);
 				stmt1.setString(2, time.substring(0,8));
 				stmt1.setDouble(3, Double.parseDouble(healthSearcher.getProtein())*amount/100.0);
