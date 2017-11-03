@@ -29,8 +29,9 @@ public class TextProcessor {
 			label = DBE.getTextType(text);
 			
 			if ((tag == null || tag == "") && (label == null || label == "" || label == "default" )){
+				reply = "tag: " + tag + " label: " + label;
 				SQTextSender sqsender = new SQTextSender();
-				reply = sqsender.process(userId, text)+"\n";	
+				reply += sqsender.process(userId, text)+"\n";	
 			}
 			
 			if(tag.equals("book")) {
