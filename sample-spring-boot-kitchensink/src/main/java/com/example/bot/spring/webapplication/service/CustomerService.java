@@ -11,8 +11,7 @@ import com.example.bot.spring.webapplication.repos.CustomerRepo;
 @Service
 public class CustomerService {
 	
-	@Autowired
-	CustomerRepo customerRepo;
+	CustomerRepo customerRepo = new CustomerRepo();
 
 	public Customer addCustomer(Customer customer) {
 		// TODO Auto-generated method stub
