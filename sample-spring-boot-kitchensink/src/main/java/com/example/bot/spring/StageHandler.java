@@ -229,7 +229,7 @@ public class StageHandler {
 									  +"1 Input daily diet\n"
 									  +"2 Visualize your diet consumption in a specific day\n"
 									  +"3 Design My Diet Plan\n"
-									  +"4 Reminder(ON/OFF)\n"
+									  +"4 Reminder\n"
 									  +"(type other things to back to menu)";
 			currentUser.setSubStage(-1);
 		}break;
