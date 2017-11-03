@@ -16,6 +16,7 @@ public class GQDBEngine extends DBEngine {
 	}
 	
 	public String getTourID (String userID, String Text) throws Exception {
+		System.err.println("getting tid");
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -39,16 +40,10 @@ public class GQDBEngine extends DBEngine {
 			for(String info:tourname.split("\\s|-")) {
 				if(Text.toLowerCase().contains(info.toLowerCase()))
 					continue;
-				switch(info.toLowerCase()) {
-				case "tour":
-				case "trip":
-				case "city":
-					break;
-				default:
-					found=false;
-				}
+				found=false;
 				if(!found) break;
 			}
+			if(Text.toLowerCase().contains(rs.getString(2).toLowerCase()))found=true;
 			if(found) {
 				TourID=rs.getString(2);
 				break;
@@ -66,17 +61,25 @@ public class GQDBEngine extends DBEngine {
 			String statement = null;
 			ResultSet rs = null;
 			String answer="";
-			
+			String tag="";
+			System.err.println(TourID);
 		try {
 			connection = getConnection();
-			// dynamic question
-			if(Text.toLowerCase().contains("how long") || 
-			   Text.toLowerCase().contains("how much time") ||
-			   Text.toLowerCase().contains("duration") ) 
-			{
-
-				if(TourID.length()<5)return ("Could you please specify which tour you what you ask?");
-				//System.err.println("ask time");
+			stmt=connection.prepareStatement("SELECT * FROM gqtag");
+			rs=stmt.executeQuery();
+			while(rs.next()&&tag.equals("")) {
+				if(Text.toLowerCase().contains(rs.getString(1)))
+					tag=rs.getString(2);
+			}
+			System.err.printf("tag=%s\n", tag);
+			rs.close();
+			stmt.close();
+			switch (tag) {
+			case "time":
+				if(TourID.length()<5) {
+					answer+=("Could you please specify which tour you what you ask?");
+					break;
+				}
 				stmt = connection.prepareStatement(
 					"SELECT tour_name,duration FROM tour_info WHERE tourid = ?");				
 				stmt.setString(1, TourID);
@@ -85,15 +88,12 @@ public class GQDBEngine extends DBEngine {
 				if(rs.next()) {
 					answer+= rs.getString(1) + " takes " + rs.getInt(2) + " days.\n";
 				}
-			}
-			
-			else if(Text.toLowerCase().contains("feature") ||
-			   Text.toLowerCase().contains("descri") ||
-			   Text.toLowerCase().contains("introdu"))
-			{
-				//System.err.println("description tourid = "+TourID);
-				//System.err.println("SELECT description from tour_description WHERE tourid = ?");
-				if(TourID.length()<5)return ("Could you please specify which tour you what you ask?");
+				break;
+			case "feat":
+				if(TourID.length()<5) {
+					answer+=("Could you please specify which tour you what you ask?");
+					break;
+				}
 				stmt = connection.prepareStatement(
 						"SELECT description from tour_description WHERE tourid = ?");
 				stmt.setString(1, TourID);
@@ -105,10 +105,8 @@ public class GQDBEngine extends DBEngine {
 					answer+="\n   "+rs.getString(1);
 					answer+=".\n";
 				}
-				
-			}
-			
-			else {
+				break;
+			default:
 				// static answer question
 				statement = "SELECT " + column1_2 + " FROM " + tname1 + " WHERE \'" + Text + "\' SIMILAR TO " + column1_1;
 				//System.out.print(statement);
@@ -119,8 +117,10 @@ public class GQDBEngine extends DBEngine {
 					answer+="\n   "+rs.getString(1);
 					answer+=".\n"; 
 				}
+				break;
 			}
 		}catch(Exception e) {
+			e.printStackTrace();
 			System.err.println(e.getMessage());
 		}finally {
 			//rs.close();
@@ -130,12 +130,13 @@ public class GQDBEngine extends DBEngine {
 				if (stmt != null) stmt.close();
 				if (connection != null) connection.close();
 			} catch (Exception e) {
-				System.err.println(e.getMessage());
+				//System.err.println(e.getMessage());
 			}
 		}
 		return answer;
 	}
 	public void update(String UserID,String TourID) throws Exception{
+		System.err.println("updating tid");
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		stmt = connection.prepareStatement(

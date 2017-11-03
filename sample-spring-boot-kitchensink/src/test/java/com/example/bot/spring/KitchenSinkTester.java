@@ -44,7 +44,7 @@ public class KitchenSinkTester {
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Sorry, I can't answer your question. My colleague will follow up with you.");
+		assertThat(result).isEqualTo("Sorry, I cannot answer your question.");
 	}
 
   // only applicable when textProcessor calling no external function
@@ -138,7 +138,7 @@ public class KitchenSinkTester {
 				}
 			}
 		}catch(Exception e) {
-			//System.err.println("exception");
+			System.err.println(e.getMessage());
 			thrown = true;
 		}
 		assertThat(WA).isEqualTo(false);
@@ -164,7 +164,7 @@ public class KitchenSinkTester {
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Tours with good spring : 2D001, 2D002, 2D003\nNo tours with good food\n");
+		assertThat(result).isEqualTo("Tours with good spring : 2D001: Shimen National Forest Tour\n2D002: Yangshan Hot Spring Tour\n2D003: Heyuan Hotspring Tour\n\nNo tours with good food.");
 		try {
 			//System.err.println("it is good here");
 			result = this.Rsender.process(testerId,"I want nothing");
@@ -184,7 +184,8 @@ public class KitchenSinkTester {
 			thrown = true;
 		}
 		//assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("Tours with good hotel : 2D001, 2D004\nTours with good view : 2D001, 2D002, 2D003, 2D004, 2D005\n");
+		assertThat(result).isEqualTo("Tours with good hotel : 2D001: Shimen National Forest Tour\n2D004: National Park Tour\n\n"
+				+ "Tours with good view : 2D001: Shimen National Forest Tour\n2D002: Yangshan Hot Spring Tour\n2D003: Heyuan Hotspring Tour\n2D004: National Park Tour\n2D005: Yummy Sight seeing Tour..");
 	}
 	
 	@Test
