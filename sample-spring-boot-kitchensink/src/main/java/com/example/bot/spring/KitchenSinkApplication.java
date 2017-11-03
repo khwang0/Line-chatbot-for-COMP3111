@@ -22,8 +22,10 @@ import java.nio.file.Path;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.example.bot.spring.webapplication", "com.example.bot.spring"})
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
 
