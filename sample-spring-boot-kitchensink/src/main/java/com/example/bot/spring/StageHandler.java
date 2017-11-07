@@ -146,8 +146,8 @@ public class StageHandler {
 				+ "3 Healthpedia \n"
 				+ "4 Feedback \n"
 				+ "5 User Guide(recommended for first-time users)\n"
-				+ "6 Self Assessment(recommened for first-time users)\n\n"
-				+ "Please enter your choice:(1-6)";
+//				+ "6 Self Assessment(recommened for first-time users)\n\n"
+				+ "Please enter your choice:(1-5)";
 			}else {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
@@ -157,7 +157,7 @@ public class StageHandler {
 						+ "3 Healthpedia \n"
 						+ "4 Feedback \n"
 						+ "5 User Guide(recommended for first-time users)\n"
-						+ "6 Self Assessment(recommened for first-time users)\n\n"
+//						+ "6 Self Assessment(recommened for first-time users)\n\n"
 						+ "Please enter your choice:(1-5)";
 			}
 			//replymsg= msg);
@@ -203,12 +203,12 @@ public class StageHandler {
 				currentUser.setSubStage(0);
 				//move to user guide
 			}break;
-			case "6":{
-				replymsg ="Moving to Self Assessment...Input anything to continue...";
-				currentUser.setStage("SelfAssessment");
-				currentUser.setSubStage(0);
-				//move to self assessment
-			}break;
+//			case "6":{
+//				replymsg ="Moving to Self Assessment...Input anything to continue...";
+//				currentUser.setStage("SelfAssessment");
+//				currentUser.setSubStage(0);
+//				//move to self assessment
+//			}break;
 			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
 			}
 			//replymsg= msg);
@@ -226,13 +226,14 @@ public class StageHandler {
 									  +"2 Visualize your diet consumption in a specific day\n"
 									  +"3 Design My Diet Plan\n"
 									  +"4 Reminder\n"
+									  +"5 Self-Assessment\n"
 									  +"(type other things to back to menu)";
 			currentUser.setSubStage(-1);
 		}break;
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 4) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 5) {
 					replymsg= REDIRECT;
 				}
 				else {
@@ -381,8 +382,93 @@ public class StageHandler {
 				currentUser.setSubStage(0);
 			}finally { replymsg= REDIRECT;}
 		}break;
+		
+		//subStage5: self Assessment;
+		case 5:{
+			suggestion = "";
+			((DetailedUser)currentUser).setAssessmentScore(0);
+			replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
+					+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
+					+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
+			currentUser.setSubStage(-2);
+		}break;
+		case -2:{
+			if(text.equalsIgnoreCase("q")) {
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+				replymsg = replymsg + "Heading to Main menu...";
+				return replymsg;
+				}
+				//else the quiz start
+				replymsg = replymsg +  "Then let's start the quiz ;) \n"
+						+ question[0];
+				currentUser.setSubStage(501);
+		}break;
+		case 511:{
+			int score = ((DetailedUser)currentUser).getAssessmentScore();
+			if(score >= 90) {
+				replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
+						+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
 
-		default:{}break;
+			}
+			else if(score >= 70) {
+				replymsg = replymsg + "The healthy level of your eating habit is: B \n That's not bad. "
+						+ "Your eating habit is cool, but it can still be improve to a better level."
+						+ "Here comes some of the advice:\n" + suggestion;
+			}
+			else if(score >= 40) {
+				replymsg = replymsg + "The healthy level of your eating habit is: C \n You'd better pay attention. "
+						+ "Your eating habit is OK if you are always very fit, although some of those habit might be harmful to youre body.\n"
+						+ "Here comes some of the advice:\n" + suggestion;
+			}
+			else {
+				replymsg = replymsg + "Oops The healthy level of your eating habit is: D \n "
+						+ "You are strongly recommended to change those bad habits right now. "
+						+ "Here comes some of the advice:\n" + suggestion;
+				}
+			replymsg = replymsg + "Would you like to customize your personal plan now? "
+					+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
+			currentUser.setSubStage(currentUser.getSubStage()+1);
+		}break;
+		case 512:{
+			if(text.equalsIgnoreCase("Y")) {
+				currentUser.setSubStage(0);
+				currentUser.setStage("DietPlanner");
+				replymsg = replymsg + "Heading to DietPlanner...";
+			}else {
+				currentUser.setSubStage(0);
+				currentUser.setStage("Main");
+				replymsg = replymsg + "Heading to Main menu...";
+			}
+		}break;
+
+		default:{
+			if(text.equalsIgnoreCase("T")) {
+				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+				suggestion = suggestion + feedback[currentUser.getSubStage()-501][1];
+			}
+			else if(text.equalsIgnoreCase("F")){
+				suggestion = suggestion + feedback[currentUser.getSubStage()-501][0];
+			}
+			else if(text.equalsIgnoreCase("q")) {
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+				replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
+				return replymsg;
+			}
+			else {
+				replymsg= "Please reply a valid answer(T/F)";
+				return replymsg;
+			}
+			if(currentUser.getSubStage() == 510) {
+				replymsg = "Congratulations that you have finished the quiz!:)\n"
+						+ "reply anything to get the feedback";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+				return replymsg;
+			}
+			replymsg= question[currentUser.getSubStage()-500];
+			currentUser.setSubStage(currentUser.getSubStage()+1);
+		}break;
 		}
 
 		return replymsg;
@@ -805,97 +891,97 @@ public class StageHandler {
 	}
 
 	// this is self assessment Handler function
-	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
-		String replymsg = "";
-		switch (currentUser.getSubStage()) {
-			case 0:{
-				suggestion = "";
-				((DetailedUser)currentUser).setAssessmentScore(0);
-				replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
-						+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
-						+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
-				currentUser.setSubStage(-1);
-			}break;
-			case -1:{
-					if(text.equals("q")) {
-					currentUser.setStage("Main");
-					currentUser.setSubStage(0);
-					replymsg = replymsg + "Heading to Main menu...";
-					return replymsg;
-					}
-					//else the quiz start
-					replymsg = replymsg +  "Then let's start the quiz ;) \n"
-							+ question[0];
-					currentUser.setSubStage(1);
-			}break;
-			case 11:{
-				int score = ((DetailedUser)currentUser).getAssessmentScore();
-				if(score >= 90) {
-					replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
-							+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
-
-				}
-				else if(score >= 70) {
-					replymsg = replymsg + "The healthy level of your eating habit is: B \n That's not bad. "
-							+ "Your eating habit is cool, but it can still be improve to a better level."
-							+ "Here comes some of the advice:\n" + suggestion;
-				}
-				else if(score >= 40) {
-					replymsg = replymsg + "The healthy level of your eating habit is: C \n You'd better pay attention. "
-							+ "Your eating habit is OK if you are always very fit, although some of those habit might be harmful to youre body.\n"
-							+ "Here comes some of the advice:\n" + suggestion;
-				}
-				else {
-					replymsg = replymsg + "Oops The healthy level of your eating habit is: D \n "
-							+ "You are strongly recommended to change those bad habits right now. "
-							+ "Here comes some of the advice:\n" + suggestion;
-					}
-				replymsg = replymsg + "Would you like to customize your personal plan now? "
-						+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
-				currentUser.setSubStage(currentUser.getSubStage()+1);
-			}break;
-			case 12:{
-				if(text.equalsIgnoreCase("Y")) {
-					currentUser.setSubStage(0);
-					currentUser.setStage("DietPlanner");
-					replymsg = replymsg + "Heading to DietPlanner...";
-				}else {
-					currentUser.setSubStage(0);
-					currentUser.setStage("Main");
-					replymsg = replymsg + "Heading to Main menu...";
-				}
-			}break;
-			default:{
-				if(text.equalsIgnoreCase("T")) {
-					((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
-					suggestion = suggestion + feedback[currentUser.getSubStage()-1][1];
-				}
-				else if(text.equalsIgnoreCase("F")){
-					suggestion = suggestion + feedback[currentUser.getSubStage()-1][0];
-				}
-				else if(text.equalsIgnoreCase("q")) {
-					currentUser.setStage("Main");
-					currentUser.setSubStage(0);
-					replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
-					return replymsg;
-				}
-				else {
-					replymsg= "Please reply a valid answer(T/F)";
-					return replymsg;
-				}
-				if(currentUser.getSubStage() == 10) {
-					replymsg = "Congratulations that you have finished the quiz!:)\n"
-							+ "reply anything to get the feedback";
-					currentUser.setSubStage(currentUser.getSubStage()+1);
-					return replymsg;
-				}
-				replymsg= question[currentUser.getSubStage()];
-				currentUser.setSubStage(currentUser.getSubStage()+1);
-			}
-
-		}
-		return replymsg;
-	}
+//	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+//		String replymsg = "";
+//		switch (currentUser.getSubStage()) {
+//			case 0:{
+//				suggestion = "";
+//				((DetailedUser)currentUser).setAssessmentScore(0);
+//				replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
+//						+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
+//						+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
+//				currentUser.setSubStage(-1);
+//			}break;
+//			case -1:{
+//					if(text.equals("q")) {
+//					currentUser.setStage("Main");
+//					currentUser.setSubStage(0);
+//					replymsg = replymsg + "Heading to Main menu...";
+//					return replymsg;
+//					}
+//					//else the quiz start
+//					replymsg = replymsg +  "Then let's start the quiz ;) \n"
+//							+ question[0];
+//					currentUser.setSubStage(1);
+//			}break;
+//			case 11:{
+//				int score = ((DetailedUser)currentUser).getAssessmentScore();
+//				if(score >= 90) {
+//					replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
+//							+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
+//
+//				}
+//				else if(score >= 70) {
+//					replymsg = replymsg + "The healthy level of your eating habit is: B \n That's not bad. "
+//							+ "Your eating habit is cool, but it can still be improve to a better level."
+//							+ "Here comes some of the advice:\n" + suggestion;
+//				}
+//				else if(score >= 40) {
+//					replymsg = replymsg + "The healthy level of your eating habit is: C \n You'd better pay attention. "
+//							+ "Your eating habit is OK if you are always very fit, although some of those habit might be harmful to youre body.\n"
+//							+ "Here comes some of the advice:\n" + suggestion;
+//				}
+//				else {
+//					replymsg = replymsg + "Oops The healthy level of your eating habit is: D \n "
+//							+ "You are strongly recommended to change those bad habits right now. "
+//							+ "Here comes some of the advice:\n" + suggestion;
+//					}
+//				replymsg = replymsg + "Would you like to customize your personal plan now? "
+//						+ "\n reply 'Y' to customize or \n reply anything to return to the main menu";
+//				currentUser.setSubStage(currentUser.getSubStage()+1);
+//			}break;
+//			case 12:{
+//				if(text.equalsIgnoreCase("Y")) {
+//					currentUser.setSubStage(0);
+//					currentUser.setStage("DietPlanner");
+//					replymsg = replymsg + "Heading to DietPlanner...";
+//				}else {
+//					currentUser.setSubStage(0);
+//					currentUser.setStage("Main");
+//					replymsg = replymsg + "Heading to Main menu...";
+//				}
+//			}break;
+//			default:{
+//				if(text.equalsIgnoreCase("T")) {
+//					((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+//					suggestion = suggestion + feedback[currentUser.getSubStage()-1][1];
+//				}
+//				else if(text.equalsIgnoreCase("F")){
+//					suggestion = suggestion + feedback[currentUser.getSubStage()-1][0];
+//				}
+//				else if(text.equalsIgnoreCase("q")) {
+//					currentUser.setStage("Main");
+//					currentUser.setSubStage(0);
+//					replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
+//					return replymsg;
+//				}
+//				else {
+//					replymsg= "Please reply a valid answer(T/F)";
+//					return replymsg;
+//				}
+//				if(currentUser.getSubStage() == 10) {
+//					replymsg = "Congratulations that you have finished the quiz!:)\n"
+//							+ "reply anything to get the feedback";
+//					currentUser.setSubStage(currentUser.getSubStage()+1);
+//					return replymsg;
+//				}
+//				replymsg= question[currentUser.getSubStage()];
+//				currentUser.setSubStage(currentUser.getSubStage()+1);
+//			}
+//
+//		}
+//		return replymsg;
+//	}
 	public void unfollowHandler(Users currentUser){
 		currentUser.setStage("Init");
 		currentUser.setSubStage(0);
