@@ -298,12 +298,12 @@ public class KitchenSinkController {
         	case "UserGuide":
         		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
         		break;
-        	case "SelfAssessment":{
-				if(!(currentUser instanceof DetailedUser)){
-					currentUser = new DetailedUser(currentUser);
-				}
-        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-        	}break;
+//        	case "SelfAssessment":{
+//				if(!(currentUser instanceof DetailedUser)){
+//					currentUser = new DetailedUser(currentUser);
+//				}
+//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
+//        	}break;
         	default:
         		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
         		break;
