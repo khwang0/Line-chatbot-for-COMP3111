@@ -146,8 +146,8 @@ public class StageHandler {
 				+ "3 Healthpedia \n"
 				+ "4 Feedback \n"
 				+ "5 User Guide(recommended for first-time users)\n"
-				+ "6 Self Assessment(recommened for first-time users)\n\n"
-				+ "Please enter your choice:(1-6)";
+//				+ "6 Self Assessment(recommened for first-time users)\n\n"
+				+ "Please enter your choice:(1-5)";
 			}else {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
@@ -157,7 +157,7 @@ public class StageHandler {
 						+ "3 Healthpedia \n"
 						+ "4 Feedback \n"
 						+ "5 User Guide(recommended for first-time users)\n"
-						+ "6 Self Assessment(recommened for first-time users)\n\n"
+//						+ "6 Self Assessment(recommened for first-time users)\n\n"
 						+ "Please enter your choice:(1-5)";
 			}
 			//replymsg= msg);
