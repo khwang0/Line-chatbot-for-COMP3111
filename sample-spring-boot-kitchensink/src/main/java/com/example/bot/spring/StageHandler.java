@@ -445,10 +445,10 @@ public class StageHandler {
 		default:{
 			if(text.equalsIgnoreCase("T")) {
 				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
-				suggestion = suggestion + feedback[currentUser.getSubStage()-1][1];
+				suggestion = suggestion + feedback[currentUser.getSubStage()-501][1];
 			}
 			else if(text.equalsIgnoreCase("F")){
-				suggestion = suggestion + feedback[currentUser.getSubStage()-1][0];
+				suggestion = suggestion + feedback[currentUser.getSubStage()-501][0];
 			}
 			else if(text.equalsIgnoreCase("q")) {
 				currentUser.setStage("Main");
