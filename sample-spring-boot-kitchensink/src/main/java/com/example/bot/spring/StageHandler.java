@@ -466,7 +466,7 @@ public class StageHandler {
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 				return replymsg;
 			}
-			replymsg= question[currentUser.getSubStage()];
+			replymsg= question[currentUser.getSubStage()-500];
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		}
