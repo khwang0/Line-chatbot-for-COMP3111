@@ -125,7 +125,6 @@ public class KitchenSinkController {
 		}
 		DownloadedContent jpg = saveContent("jpg", response);
 		reply(((MessageEvent) event).getReplyToken(), new ImageMessage(jpg.getUri(), jpg.getUri()));
-
 	}
 
 	@EventMapping
