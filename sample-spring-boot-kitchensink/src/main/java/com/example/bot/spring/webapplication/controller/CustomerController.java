@@ -29,6 +29,7 @@ class CustomerController {
     	try {
 			modelAndView.addObject("customers", customerService.getCustomers());
 		} catch (Exception e) {
+			e.printStackTrace();
 			modelAndView.addObject("message", "Failed to get customer infos");
 		}
         return modelAndView;
