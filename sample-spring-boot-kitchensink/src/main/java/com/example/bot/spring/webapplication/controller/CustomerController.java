@@ -22,7 +22,7 @@ class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    @RequestMapping(value = "refresh", method = RequestMethod.GET)
+    @RequestMapping(value = "customer", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     String home() {
         return "customer";
