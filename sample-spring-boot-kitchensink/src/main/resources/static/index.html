@@ -1,57 +1,10 @@
 <!DOCTYPE HTML>
-<html layout:decorator="layout/layout" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 <body>
-<th:block layout:fragment="content">
-    <div class="row">
-        <div class="col-md-4 col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Add new Student</div>
-                <div class="panel-body">
-                    <form method="get" class="form-group" action="/refresh">
-
-                        <input class="btn btn-primary" type="submit" value="Refresh"/>
-
-                    </form>
-                </div>
-                <div class="panel-footer"><span th:text="${message}">Status</span></div>
-            </div>
-        </div>
-        <div class="col-md-8 col-sm-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">Student List</div>
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Phone Number</th>
-                                <th>Tour ID</th>
-                                <th>Number of Adults</th>
-                                <th>Number of Children</th>
-                                <th>Number of Toddlers</th>
-                                <th>Total Price</th>
-                                <th>Price Paid</th>
-                                <th>Special Requests</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="customer : ${customers}">
-                                <td th:text="${customer.getName()}">Name</td>
-                                <td th:text="${customer.getPhone()}">Phone Number</td>
-                                <td th:text="${customer.getBootableId()}">Tour ID</td>
-                                <td th:text="${customer.getAdults()}">Number of Adults</td>
-                                <td th:text="${customer.getChildren()}">Number of Children</td>
-                                <td th:text="${customer.getToddler()}">Number of Toddlers</td>
-                                <td th:text="${customer.getTotalPrice()}">Total Price</td>
-                                <td th:text="${customer.getPricePaid()}">Price Paid</td>
-                                <td th:text="${customer.getSpecial()}">Special Requests</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</th:block>
+    <p>Get all customer information <a href="/customer">here</a></p>
 </body>
 </html>
