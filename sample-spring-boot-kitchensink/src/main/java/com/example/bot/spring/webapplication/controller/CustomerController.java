@@ -24,8 +24,14 @@ class CustomerController {
 
     @RequestMapping(value = "customer", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    String home() {
-        return "customer";
+    ModelAndView home() {
+    	ModelAndView modelAndView = new ModelAndView("customer");
+    	try {
+			modelAndView.addObject("customers", customerService.getCustomers());
+		} catch (Exception e) {
+			modelAndView.addObject("message", "Failed to get customer infos");
+		}
+        return modelAndView;
     }
 
     @RequestMapping(value = "addcustomer", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE)
