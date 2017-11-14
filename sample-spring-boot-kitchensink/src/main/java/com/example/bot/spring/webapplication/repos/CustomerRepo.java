@@ -9,7 +9,8 @@ public class CustomerRepo {
 
 	public void addCustomer(Customer customer) {
 		// TODO Auto-generated method stub
-		
+		WebAppDBEngine webDB = new WebAppDBEngine();
+		webDB.addNewCustomer(customer);
 	}
 
 	public LinkedList<Customer> getAllCustomers() throws Exception {

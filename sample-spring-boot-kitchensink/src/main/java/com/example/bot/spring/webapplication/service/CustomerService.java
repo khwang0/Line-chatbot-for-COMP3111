@@ -13,7 +13,7 @@ public class CustomerService {
 	
 	CustomerRepo customerRepo = new CustomerRepo();
 
-	public Customer addCustomer(Customer customer) {
+	public Customer addCustomer(Customer customer) throws Exception {
 		// TODO Auto-generated method stub
 		customerRepo.addCustomer(customer);
 		return customer;
