@@ -973,8 +973,8 @@ public class BookingDBEngine extends DBEngine {
 			while(rs.next()) {
 				idSet.add(rs.getString(1));
 			}
-			stmt.close();
 			rs.close();
+			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
