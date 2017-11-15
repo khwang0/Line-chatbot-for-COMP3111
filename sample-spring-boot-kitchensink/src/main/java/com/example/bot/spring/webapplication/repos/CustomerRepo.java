@@ -7,7 +7,7 @@ import com.example.bot.spring.webapplication.domain.Customer;
 
 public class CustomerRepo {
 
-	public void addCustomer(Customer customer) {
+	public void addCustomer(Customer customer) throws Exception {
 		// TODO Auto-generated method stub
 		WebAppDBEngine webDB = new WebAppDBEngine();
 		webDB.addNewCustomer(customer);

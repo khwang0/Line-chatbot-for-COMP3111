@@ -10,19 +10,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.bot.spring.webapplication.domain.Customer;
 import com.example.bot.spring.webapplication.service.CustomerService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 
 @Controller
-@RequestMapping("/")
 class CustomerController {
-    final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
     @Autowired
     CustomerService customerService;
 
-    @RequestMapping(value = "customer", method = RequestMethod.GET)
+    @RequestMapping(value = "/customer", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     ModelAndView home() {
     	ModelAndView modelAndView = new ModelAndView("customer");
@@ -35,7 +29,7 @@ class CustomerController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "addcustomer", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE)
+    @RequestMapping(value = "/addcustomer", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     ModelAndView addCustomer(@RequestParam String name,
     						@RequestParam String bootableid,
