@@ -960,7 +960,7 @@ public class BookingDBEngine extends DBEngine {
 		}
 	}
 	
-	public Set<String> FeePayCheck() {
+	public Set<String> ReminderChecker() {
 		openConnection();
 		PreparedStatement stmt;
 		try {
