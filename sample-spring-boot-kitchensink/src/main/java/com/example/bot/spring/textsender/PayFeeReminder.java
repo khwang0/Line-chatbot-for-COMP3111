@@ -18,7 +18,7 @@ public class PayFeeReminder {
 		id=reminder.ReminderChecker();
 		
 		if(id.isEmpty()) {
-			return null
+			return null;
 		}
 		
 		Message reply = new TextMessage ("You have yet to pay the fee. Please pay as soon as possible.")
