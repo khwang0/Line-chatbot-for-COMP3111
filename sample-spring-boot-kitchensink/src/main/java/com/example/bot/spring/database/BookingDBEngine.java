@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+//import java.util.Calendar;
+//import java.util.GregorianCalendar;
+//import java.util.LinkedList;
+import java.util.*;
 
 public class BookingDBEngine extends DBEngine {
 	
@@ -734,7 +738,7 @@ public class BookingDBEngine extends DBEngine {
 			while(rs.next()) {
 				String offerId = rs.getString(1);
 				String date = offerId.substring(9); // parse date from the last 4 digit of offerID?
-				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ???? 
+	
 				if(!allDates.equals(""))
 					allDates = allDates + "," + date;
 				else
@@ -958,6 +962,28 @@ public class BookingDBEngine extends DBEngine {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Set<String> ReminderChecker() {
+		openConnection();
+		PreparedStatement stmt;
+		try {
+			stmt = connection.prepareStatement(
+					"select line_user_info.userid from line_user_info join customer_info on "
+					+ "customer_info.customername=line_user_info.name "
+					+ "where customer_info.tourfee<>customer_info.paidamount");
+			ResultSet rs = stmt.executeQuery();
+			Set<String> idSet=new Set<String>();
+			while(rs.next()) {
+				idSet.add(rs.getString(1));
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		close();
+		return idSet;
 	}
 	
 	private ResultSet query(PreparedStatement nstmt) {
