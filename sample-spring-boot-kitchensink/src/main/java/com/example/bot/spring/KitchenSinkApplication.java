@@ -22,7 +22,7 @@ import java.nio.file.Path;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.example.bot.spring.Listener;
+import com.example.bot.spring.LineListener;
 
 @SpringBootApplication
 public class KitchenSinkApplication {
