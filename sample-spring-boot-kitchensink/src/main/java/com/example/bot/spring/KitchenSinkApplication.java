@@ -22,12 +22,15 @@ import java.nio.file.Path;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.example.bot.spring.LineListener;
 
 @SpringBootApplication
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
 
     public static void main(String[] args) throws IOException {
+    	LineListener thread=new LineListener();
+    	thread.start();
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
     }
