@@ -1,15 +1,12 @@
 package com.example.bot.spring;
 
-import java.util.concurrent.*;
-import java.util.*;
-
 public class LineListener extends Thread{
 	public LineListener() {
 		
 	}
 	
 	@Override
-	protected void run() {
+	public void run() {
 		while(true) {
 			//TODO: Add what ever function need to run
 			//execute 1 time per hour
