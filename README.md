@@ -1,4 +1,4 @@
-# 2017F COMP3111/3111H Software Engineering Project github 
+# 2017F COMP3111/3111H Software Engineering Project github ![](https://travis-ci.org/khwang0/Line-chatbot-for-COMP3111.svg?branch=travis)
 
 This is actually part of the course website of Hong Kong University of Science and Technology (HKUST) software enginnering course. The ultimate goal for this cohort students is to develop a chatbot (chatting robot) running on the instance messager LINE. 
 

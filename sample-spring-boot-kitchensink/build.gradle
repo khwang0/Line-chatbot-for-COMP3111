@@ -24,3 +24,13 @@ dependencies {
 test {
     environment "DATABASE_URL", "PUT YOUR URI HERE" 
 }
+
+apply plugin: "jacoco"
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}

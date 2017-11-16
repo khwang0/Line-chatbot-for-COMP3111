@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KitchenSinkController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-spring-boot-kitchensink</a> &gt; <a href="index.source.html" class="el_package">com.example.bot.spring</a> &gt; <span class="el_source">KitchenSinkController.java</span></div><h1>KitchenSinkController.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2016 LINE Corporation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the &quot;License&quot;); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+package com.example.bot.spring;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import com.linecorp.bot.model.profile.UserProfileResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.google.common.io.ByteStreams;
+
+import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.client.MessageContentResponse;
+import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.action.MessageAction;
+import com.linecorp.bot.model.action.PostbackAction;
+import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.event.BeaconEvent;
+import com.linecorp.bot.model.event.Event;
+import com.linecorp.bot.model.event.FollowEvent;
+import com.linecorp.bot.model.event.JoinEvent;
+import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
+import com.linecorp.bot.model.event.message.AudioMessageContent;
+import com.linecorp.bot.model.event.message.ImageMessageContent;
+import com.linecorp.bot.model.event.message.LocationMessageContent;
+import com.linecorp.bot.model.event.message.StickerMessageContent;
+import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.event.source.GroupSource;
+import com.linecorp.bot.model.event.source.RoomSource;
+import com.linecorp.bot.model.event.source.Source;
+import com.linecorp.bot.model.message.AudioMessage;
+import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.ImagemapMessage;
+import com.linecorp.bot.model.message.LocationMessage;
+import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.StickerMessage;
+import com.linecorp.bot.model.message.TemplateMessage;
+import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.imagemap.ImagemapArea;
+import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
+import com.linecorp.bot.model.message.imagemap.MessageImagemapAction;
+import com.linecorp.bot.model.message.imagemap.URIImagemapAction;
+import com.linecorp.bot.model.message.template.ButtonsTemplate;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
+import com.linecorp.bot.model.message.template.ConfirmTemplate;
+import com.linecorp.bot.model.response.BotApiResponse;
+import com.linecorp.bot.spring.boot.annotation.EventMapping;
+import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+
+import lombok.NonNull;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+
+import java.net.URI;
+
+<span class="nc" id="L87">@Slf4j</span>
+@LineMessageHandler
+public class KitchenSinkController {
+	
+
+
+	@Autowired
+	private LineMessagingClient lineMessagingClient;
+
+	@EventMapping
+	public void handleTextMessageEvent(MessageEvent&lt;TextMessageContent&gt; event) throws Exception {
+<span class="nc" id="L98">		log.info(&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;);</span>
+<span class="nc" id="L99">		log.info(&quot;This is your entry point:&quot;);</span>
+<span class="nc" id="L100">		log.info(&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;);</span>
+<span class="nc" id="L101">		TextMessageContent message = event.getMessage();</span>
+<span class="nc" id="L102">		handleTextContent(event.getReplyToken(), event, message);</span>
+<span class="nc" id="L103">	}</span>
+
+	@EventMapping
+	public void handleStickerMessageEvent(MessageEvent&lt;StickerMessageContent&gt; event) {
+<span class="nc" id="L107">		handleSticker(event.getReplyToken(), event.getMessage());</span>
+<span class="nc" id="L108">	}</span>
+
+	@EventMapping
+	public void handleLocationMessageEvent(MessageEvent&lt;LocationMessageContent&gt; event) {
+<span class="nc" id="L112">		LocationMessageContent locationMessage = event.getMessage();</span>
+<span class="nc" id="L113">		reply(event.getReplyToken(), new LocationMessage(locationMessage.getTitle(), locationMessage.getAddress(),</span>
+<span class="nc" id="L114">				locationMessage.getLatitude(), locationMessage.getLongitude()));</span>
+<span class="nc" id="L115">	}</span>
+
+	@EventMapping
+	public void handleImageMessageEvent(MessageEvent&lt;ImageMessageContent&gt; event) throws IOException {
+		final MessageContentResponse response;
+<span class="nc" id="L120">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L121">		String messageId = event.getMessage().getId();</span>
+		try {
+<span class="nc" id="L123">			response = lineMessagingClient.getMessageContent(messageId).get();</span>
+<span class="nc" id="L124">		} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L125">			reply(replyToken, new TextMessage(&quot;Cannot get image: &quot; + e.getMessage()));</span>
+<span class="nc" id="L126">			throw new RuntimeException(e);</span>
+<span class="nc" id="L127">		}</span>
+<span class="nc" id="L128">		DownloadedContent jpg = saveContent(&quot;jpg&quot;, response);</span>
+<span class="nc" id="L129">		reply(((MessageEvent) event).getReplyToken(), new ImageMessage(jpg.getUri(), jpg.getUri()));</span>
+
+<span class="nc" id="L131">	}</span>
+
+	@EventMapping
+	public void handleAudioMessageEvent(MessageEvent&lt;AudioMessageContent&gt; event) throws IOException {
+		final MessageContentResponse response;
+<span class="nc" id="L136">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L137">		String messageId = event.getMessage().getId();</span>
+		try {
+<span class="nc" id="L139">			response = lineMessagingClient.getMessageContent(messageId).get();</span>
+<span class="nc" id="L140">		} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L141">			reply(replyToken, new TextMessage(&quot;Cannot get image: &quot; + e.getMessage()));</span>
+<span class="nc" id="L142">			throw new RuntimeException(e);</span>
+<span class="nc" id="L143">		}</span>
+<span class="nc" id="L144">		DownloadedContent mp4 = saveContent(&quot;mp4&quot;, response);</span>
+<span class="nc" id="L145">		reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));</span>
+<span class="nc" id="L146">	}</span>
+
+	@EventMapping
+	public void handleUnfollowEvent(UnfollowEvent event) {
+<span class="nc" id="L150">		log.info(&quot;unfollowed this bot: {}&quot;, event);</span>
+<span class="nc" id="L151">	}</span>
+
+	@EventMapping
+	public void handleFollowEvent(FollowEvent event) {
+<span class="nc" id="L155">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L156">		this.replyText(replyToken, &quot;Got followed event&quot;);</span>
+<span class="nc" id="L157">	}</span>
+
+	@EventMapping
+	public void handleJoinEvent(JoinEvent event) {
+<span class="nc" id="L161">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L162">		this.replyText(replyToken, &quot;Joined &quot; + event.getSource());</span>
+<span class="nc" id="L163">	}</span>
+
+	@EventMapping
+	public void handlePostbackEvent(PostbackEvent event) {
+<span class="nc" id="L167">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L168">		this.replyText(replyToken, &quot;Got postback &quot; + event.getPostbackContent().getData());</span>
+<span class="nc" id="L169">	}</span>
+
+	@EventMapping
+	public void handleBeaconEvent(BeaconEvent event) {
+<span class="nc" id="L173">		String replyToken = event.getReplyToken();</span>
+<span class="nc" id="L174">		this.replyText(replyToken, &quot;Got beacon message &quot; + event.getBeacon().getHwid());</span>
+<span class="nc" id="L175">	}</span>
+
+	@EventMapping
+	public void handleOtherEvent(Event event) {
+<span class="nc" id="L179">		log.info(&quot;Received message(Ignored): {}&quot;, event);</span>
+<span class="nc" id="L180">	}</span>
+
+<span class="nc bnc" id="L182" title="All 4 branches missed.">	private void reply(@NonNull String replyToken, @NonNull Message message) {</span>
+<span class="nc" id="L183">		reply(replyToken, Collections.singletonList(message));</span>
+<span class="nc" id="L184">	}</span>
+
+<span class="nc bnc" id="L186" title="All 4 branches missed.">	private void reply(@NonNull String replyToken, @NonNull List&lt;Message&gt; messages) {</span>
+		try {
+<span class="nc" id="L188">			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();</span>
+<span class="nc" id="L189">			log.info(&quot;Sent messages: {}&quot;, apiResponse);</span>
+<span class="nc" id="L190">		} catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L191">			throw new RuntimeException(e);</span>
+<span class="nc" id="L192">		}</span>
+<span class="nc" id="L193">	}</span>
+
+<span class="nc bnc" id="L195" title="All 4 branches missed.">	private void replyText(@NonNull String replyToken, @NonNull String message) {</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">		if (replyToken.isEmpty()) {</span>
+<span class="nc" id="L197">			throw new IllegalArgumentException(&quot;replyToken must not be empty&quot;);</span>
+		}
+<span class="nc bnc" id="L199" title="All 2 branches missed.">		if (message.length() &gt; 1000) {</span>
+<span class="nc" id="L200">			message = message.substring(0, 1000 - 2) + &quot;..&quot;;</span>
+		}
+<span class="nc" id="L202">		this.reply(replyToken, new TextMessage(message));</span>
+<span class="nc" id="L203">	}</span>
+
+
+	private void handleSticker(String replyToken, StickerMessageContent content) {
+<span class="nc" id="L207">		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));</span>
+<span class="nc" id="L208">	}</span>
+
+	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
+            throws Exception {
+<span class="nc" id="L212">        String text = content.getText();</span>
+
+<span class="nc" id="L214">        log.info(&quot;Got text message from {}: {}&quot;, replyToken, text);</span>
+<span class="nc bnc" id="L215" title="All 14 branches missed.">        switch (text) {</span>
+            case &quot;profile&quot;: {
+<span class="nc" id="L217">                String userId = event.getSource().getUserId();</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                if (userId != null) {</span>
+<span class="nc" id="L219">                    lineMessagingClient</span>
+<span class="nc" id="L220">                            .getProfile(userId)</span>
+<span class="nc" id="L221">                            .whenComplete(new ProfileGetter (this, replyToken));</span>
+                } else {
+<span class="nc" id="L223">                    this.replyText(replyToken, &quot;Bot can't use profile API without user ID&quot;);</span>
+                }
+<span class="nc" id="L225">                break;</span>
+            }
+            case &quot;confirm&quot;: {
+<span class="nc" id="L228">                ConfirmTemplate confirmTemplate = new ConfirmTemplate(</span>
+                        &quot;Do it?&quot;,
+                        new MessageAction(&quot;Yes&quot;, &quot;Yes!&quot;),
+                        new MessageAction(&quot;No&quot;, &quot;No!&quot;)
+                );
+<span class="nc" id="L233">                TemplateMessage templateMessage = new TemplateMessage(&quot;Confirm alt text&quot;, confirmTemplate);</span>
+<span class="nc" id="L234">                this.reply(replyToken, templateMessage);</span>
+<span class="nc" id="L235">                break;</span>
+            }
+            case &quot;carousel&quot;: {
+<span class="nc" id="L238">                String imageUrl = createUri(&quot;/static/buttons/1040.jpg&quot;);</span>
+<span class="nc" id="L239">                CarouselTemplate carouselTemplate = new CarouselTemplate(</span>
+<span class="nc" id="L240">                        Arrays.asList(</span>
+<span class="nc" id="L241">                                new CarouselColumn(imageUrl, &quot;hoge&quot;, &quot;fuga&quot;, Arrays.asList(</span>
+                                        new URIAction(&quot;Go to line.me&quot;,
+                                                      &quot;https://line.me&quot;),
+                                        new PostbackAction(&quot;Say hello1&quot;,
+                                                           &quot;hello Ã£ï¿½â€œÃ£â€šâ€œÃ£ï¿½Â«Ã£ï¿½Â¡Ã£ï¿½Â¯&quot;)
+                                )),
+<span class="nc" id="L247">                                new CarouselColumn(imageUrl, &quot;hoge&quot;, &quot;fuga&quot;, Arrays.asList(</span>
+                                        new PostbackAction(&quot;Ã¨Â¨â‚¬ hello2&quot;,
+                                                           &quot;hello Ã£ï¿½â€œÃ£â€šâ€œÃ£ï¿½Â«Ã£ï¿½Â¡Ã£ï¿½Â¯&quot;,
+                                                           &quot;hello Ã£ï¿½â€œÃ£â€šâ€œÃ£ï¿½Â«Ã£ï¿½Â¡Ã£ï¿½Â¯&quot;),
+                                        new MessageAction(&quot;Say message&quot;,
+                                                          &quot;Rice=Ã§Â±Â³&quot;)
+                                ))
+                        ));
+<span class="nc" id="L255">                TemplateMessage templateMessage = new TemplateMessage(&quot;Carousel alt text&quot;, carouselTemplate);</span>
+<span class="nc" id="L256">                this.reply(replyToken, templateMessage);</span>
+<span class="nc" id="L257">                break;</span>
+            }
+
+            default:
+<span class="nc" id="L261">            	String reply = null;</span>
+            	try {
+<span class="nc" id="L263">            		reply = database.search(text);</span>
+<span class="nc" id="L264">            	} catch (Exception e) {</span>
+<span class="nc" id="L265">            		reply = text;</span>
+<span class="nc" id="L266">            	}</span>
+<span class="nc" id="L267">                log.info(&quot;Returns echo message {}: {}&quot;, replyToken, reply);</span>
+<span class="nc" id="L268">                this.replyText(</span>
+                        replyToken,
+                        itscLOGIN + &quot; says &quot; + reply
+                );
+                break;
+        }
+<span class="nc" id="L274">    }</span>
+
+	static String createUri(String path) {
+<span class="nc" id="L277">		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();</span>
+	}
+
+	private void system(String... args) {
+<span class="nc" id="L281">		ProcessBuilder processBuilder = new ProcessBuilder(args);</span>
+		try {
+<span class="nc" id="L283">			Process start = processBuilder.start();</span>
+<span class="nc" id="L284">			int i = start.waitFor();</span>
+<span class="nc" id="L285">			log.info(&quot;result: {} =&gt;  {}&quot;, Arrays.toString(args), i);</span>
+<span class="nc" id="L286">		} catch (IOException e) {</span>
+<span class="nc" id="L287">			throw new UncheckedIOException(e);</span>
+<span class="nc" id="L288">		} catch (InterruptedException e) {</span>
+<span class="nc" id="L289">			log.info(&quot;Interrupted&quot;, e);</span>
+<span class="nc" id="L290">			Thread.currentThread().interrupt();</span>
+<span class="nc" id="L291">		}</span>
+<span class="nc" id="L292">	}</span>
+
+	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
+<span class="nc" id="L295">		log.info(&quot;Got content-type: {}&quot;, responseBody);</span>
+
+<span class="nc" id="L297">		DownloadedContent tempFile = createTempFile(ext);</span>
+<span class="nc" id="L298">		try (OutputStream outputStream = Files.newOutputStream(tempFile.path)) {</span>
+<span class="nc" id="L299">			ByteStreams.copy(responseBody.getStream(), outputStream);</span>
+<span class="nc" id="L300">			log.info(&quot;Saved {}: {}&quot;, ext, tempFile);</span>
+<span class="nc" id="L301">			return tempFile;</span>
+<span class="nc bnc" id="L302" title="All 8 branches missed.">		} catch (IOException e) {</span>
+<span class="nc" id="L303">			throw new UncheckedIOException(e);</span>
+		}
+	}
+
+	private static DownloadedContent createTempFile(String ext) {
+<span class="nc" id="L308">		String fileName = LocalDateTime.now().toString() + '-' + UUID.randomUUID().toString() + '.' + ext;</span>
+<span class="nc" id="L309">		Path tempFile = KitchenSinkApplication.downloadedContentDir.resolve(fileName);</span>
+<span class="nc" id="L310">		tempFile.toFile().deleteOnExit();</span>
+<span class="nc" id="L311">		return new DownloadedContent(tempFile, createUri(&quot;/downloaded/&quot; + tempFile.getFileName()));</span>
+	}
+
+
+	
+
+
+<span class="nc" id="L318">	public KitchenSinkController() {</span>
+<span class="nc" id="L319">		database = new DatabaseEngine();</span>
+<span class="nc" id="L320">		itscLOGIN = System.getenv(&quot;ITSC_LOGIN&quot;);</span>
+<span class="nc" id="L321">	}</span>
+
+	private DatabaseEngine database;
+	private String itscLOGIN;
+	
+
+	//The annontation @Value is from the package lombok.Value
+	//Basically what it does is to generate constructor and getter for the class below
+	//See https://projectlombok.org/features/Value
+<span class="nc bnc" id="L330" title="All 20 branches missed.">	@Value</span>
+	public static class DownloadedContent {
+<span class="nc" id="L332">		Path path;</span>
+<span class="nc" id="L333">		String uri;</span>
+	}
+
+
+	//an inner class that gets the user profile and status message
+	class ProfileGetter implements BiConsumer&lt;UserProfileResponse, Throwable&gt; {
+		private KitchenSinkController ksc;
+		private String replyToken;
+		
+<span class="nc" id="L342">		public ProfileGetter(KitchenSinkController ksc, String replyToken) {</span>
+<span class="nc" id="L343">			this.ksc = ksc;</span>
+<span class="nc" id="L344">			this.replyToken = replyToken;</span>
+<span class="nc" id="L345">		}</span>
+		@Override
+    	public void accept(UserProfileResponse profile, Throwable throwable) {
+<span class="nc bnc" id="L348" title="All 2 branches missed.">    		if (throwable != null) {</span>
+<span class="nc" id="L349">            	ksc.replyText(replyToken, throwable.getMessage());</span>
+<span class="nc" id="L350">            	return;</span>
+        	}
+<span class="nc" id="L352">        	ksc.reply(</span>
+                	replyToken,
+<span class="nc" id="L354">                	Arrays.asList(new TextMessage(</span>
+<span class="nc" id="L355">                		&quot;Display name: &quot; + profile.getDisplayName()),</span>
+                              	new TextMessage(&quot;Status message: &quot;
+<span class="nc" id="L357">                            		  + profile.getStatusMessage()))</span>
+        	);
+<span class="nc" id="L359">    	}</span>
+    }
+	
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
