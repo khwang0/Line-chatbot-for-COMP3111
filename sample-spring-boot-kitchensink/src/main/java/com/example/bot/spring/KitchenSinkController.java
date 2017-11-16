@@ -199,8 +199,8 @@ public class KitchenSinkController {
 			database.pushUser(currentUser);
 
 		}finally {
-			//this.replyText(replyToken, msgbuffer);
-			this.pushText(currentUser.getID(),msgbuffer);
+			this.replyText(replyToken, msgbuffer);
+			this.pushText(currentUser.getID(),"FUCK");
 		//database.updateUser(currentUser);
 		}
 	}
