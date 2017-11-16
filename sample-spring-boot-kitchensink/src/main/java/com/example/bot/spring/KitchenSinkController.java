@@ -255,7 +255,7 @@ public class KitchenSinkController {
 		this.reply(replyToken, new TextMessage(message));
 	}
 	
-	private void pushText(@NonNull String to @NonNull String message) {
+	private void pushText(@NonNull String to, @NonNull String message) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("to must not be empty");
 		}
