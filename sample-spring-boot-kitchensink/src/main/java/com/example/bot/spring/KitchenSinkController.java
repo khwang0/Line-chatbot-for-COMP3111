@@ -233,12 +233,20 @@ public class KitchenSinkController {
 	}
 	
 	private void push(@NonNull String to, @NonNull Message message) {
-        push(to, message);
+        push(to,  Collections.singletonList(message));
     }
 
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
+			log.info("Sent messages: {}", apiResponse);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	private void push(@NonNull String to, @NonNull List<Message> messages) {
+		try {
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
 			log.info("Sent messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
