@@ -45,6 +45,7 @@ import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
@@ -246,8 +247,8 @@ public class KitchenSinkController {
 	}
 	private void push(@NonNull String to, @NonNull List<Message> messages) {
 		try {
-			lineMessagingClient.pushMessage(new PushMessage(to, messages));
-			//log.info("Sent messages: {}", apiResponse);
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
+			log.info("Sent messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
