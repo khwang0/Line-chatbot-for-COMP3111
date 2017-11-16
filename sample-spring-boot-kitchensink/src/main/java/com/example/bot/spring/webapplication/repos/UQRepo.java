@@ -12,7 +12,7 @@ public class UQRepo {
 		return webDB.getUQs();
 	}
 
-	public void answerUQ(String question, String id, String answer) {
+	public void answerUQ(String question, String id, String answer) throws Exception {
 		// TODO Auto-generated method stub
 		WebAppDBEngine webDB = new WebAppDBEngine();
 		webDB.answerUQ(question,id,answer);

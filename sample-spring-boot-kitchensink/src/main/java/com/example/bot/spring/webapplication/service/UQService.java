@@ -14,7 +14,7 @@ public class UQService {
 		return uqs;
 	}
 	
-	public void answerUQ(String question, String id, String answer) {
+	public void answerUQ(String question, String id, String answer) throws Exception {
 		uqRepo.answerUQ(question,id,answer);
 	}
 }
