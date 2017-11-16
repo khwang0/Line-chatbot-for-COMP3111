@@ -1,7 +1,5 @@
 package com.example.bot.spring.webapplication.domain;
 
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-
 public class UQ {
 	
 	String id;
