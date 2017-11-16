@@ -198,7 +198,8 @@ public class KitchenSinkController {
 			database.pushUser(currentUser);
 
 		}finally {
-			this.replyText(replyToken, msgbuffer);
+			//this.replyText(replyToken, msgbuffer);
+			this.pushText(currentUser.getID(),msgbuffer);
 		//database.updateUser(currentUser);
 		}
 	}
@@ -225,10 +226,15 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
+	
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
+	
+	public void push(@NonNull String to, @NonNull Message message) {
+        push(to, Collections.singletonList(message));
+    }
 
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
 		try {
@@ -247,6 +253,16 @@ public class KitchenSinkController {
 			message = message.substring(0, 1000 - 2) + "..";
 		}
 		this.reply(replyToken, new TextMessage(message));
+	}
+	
+	private void pushText(@NonNull String to @NonNull String message) {
+		if (to.isEmpty()) {
+			throw new IllegalArgumentException("to must not be empty");
+		}
+		if (message.length() > 1000) {
+			message = message.substring(0, 1000 - 2) + "..";
+		}
+		this.push(to, new TextMessage(message));
 	}
 
 
