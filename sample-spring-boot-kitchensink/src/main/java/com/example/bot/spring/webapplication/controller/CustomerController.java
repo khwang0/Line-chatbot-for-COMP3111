@@ -17,7 +17,6 @@ class CustomerController {
     CustomerService customerService;
 
     @RequestMapping(value = "/customer", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
     ModelAndView home() {
     	ModelAndView modelAndView = new ModelAndView("customer");
     	try {
@@ -29,15 +28,14 @@ class CustomerController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/addcustomer", method = RequestMethod.POST, consumes = MediaType.ALL_VALUE)
-    @ResponseStatus(value = HttpStatus.OK)
-    ModelAndView addCustomer(@RequestParam String name,
-    						@RequestParam String bootableid,
-                            @RequestParam Integer adults,
-                            @RequestParam Integer children,
-                            @RequestParam Integer toddler,
-                            @RequestParam String phone,
-                            @RequestParam String special) throws Exception {
+    @RequestMapping(value = "/addcustomer")
+    ModelAndView addCustomer(@RequestParam(value="name", required=true, defaultValue= "") String name,
+    						@RequestParam(value="bootable", required=true, defaultValue= "") String bootableid,
+                            @RequestParam(value="adults", required=true, defaultValue= "") Integer adults,
+                            @RequestParam(value="children", required=true, defaultValue= "") Integer children,
+                            @RequestParam(value="toddler", required=true, defaultValue= "") Integer toddler,
+                            @RequestParam(value="phone", required=true, defaultValue= "") String phone,
+                            @RequestParam(value="special", required=true, defaultValue= "") String special) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView("customer");
         try {
@@ -57,6 +55,7 @@ class CustomerController {
         try {
         modelAndView.addObject("customers", customerService.getCustomers());
         }catch(Exception e) {
+        	e.printStackTrace();
         	modelAndView.addObject("message", "Failed to get customer infos");
         }
         return modelAndView;

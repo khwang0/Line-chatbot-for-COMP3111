@@ -3,6 +3,7 @@ package com.example.bot.spring.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -54,7 +55,6 @@ public class WebAppDBEngine extends DBEngine {
 	
 	public LinkedList<Tour> getAllTourInfo() throws Exception{
 		connection = this.getConnection();
-		System.out.println(connection.getCatalog());
 		LinkedList<Tour> allTours = new LinkedList<Tour>();
 		PreparedStatement nstmt;
 			nstmt = connection.prepareStatement(
@@ -149,7 +149,6 @@ public class WebAppDBEngine extends DBEngine {
 		LinkedList<UQ> result = new LinkedList<UQ>(); 
 	
 		String statement = "SELECT * FROM unanswered_question ";
-		System.out.println(statement);			
 		stmt = connection.prepareStatement(statement);
 		rs = stmt.executeQuery();			
 		while (rs.next()) {
@@ -169,6 +168,23 @@ public class WebAppDBEngine extends DBEngine {
 		connection.close();
 		connection = null;
 		return result;
+	}
+
+	public void answerUQ(String question, String id, String answer) throws Exception {
+		connection = this.getConnection();
+		PreparedStatement nstmt;
+		nstmt = connection.prepareStatement(
+				"UPDATE unanswered_question"
+				+ " SET answer = ?, answered_or_not = true"
+				+ " WHERE userid = ? AND question = ?");
+	
+		nstmt.setString(1, answer);
+		nstmt.setString(2, id);
+		nstmt.setString(3, question);
+		nstmt.executeUpdate();
+		nstmt.close();
+		connection.close();
+		connection = null;
 	}
 	
 }

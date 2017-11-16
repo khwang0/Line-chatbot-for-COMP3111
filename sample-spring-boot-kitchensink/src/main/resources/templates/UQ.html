@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html layout:decorator="layout/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block layout:fragment="content">
+    <div class="row">
+        <div class="col-md-8 col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Unanswered Question List</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+								<th>Customer Id</th>
+								<th>Question</th>
+								<th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="uq : ${uqs}">
+                                <td th:text="${uq.getId()}">Customer ID</td>
+                                <td th:text="${uq.getQuestion()}">Question</td>
+                                <td><div class="panel-group">
+  										<div class="panel panel-default">
+    										<div class="panel-heading">
+      											<h4 class="panel-title">
+        											<a data-toggle="collapse" href="#collapse1">Answer this</a>
+      											</h4>
+    										</div>
+    										<div id="collapse1" class="panel-collapse collapse">
+      											<div class="panel-body">
+      												<form class="form-group" th:action="/answerUQ">
+      												<div class="form-group">
+      												<input type = "hidden" name = "question" th:value="${uq.getQuestion()}">
+      												<input type = "hidden" name = "id" th:value="${uq.getId()}">
+      												<input class="form-control" type="text" name="answer" id="answer" maxlength="100"/>
+      												<input type="submit" value="Answer" />
+      												</div></form>
+      											</div>
+    										</div>
+  										</div>
+									</div>
+								</td>	
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
