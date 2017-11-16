@@ -233,7 +233,7 @@ public class KitchenSinkController {
 	}
 	
 	private void push(@NonNull String to, @NonNull Message message) {
-        push(to, Collections.singletonList(message));
+        push(to, message);
     }
 
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
