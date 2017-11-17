@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -14,12 +15,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 *  defines which URL paths should be secured and which should not
 	 *  Specifically, the "/" and "/home" paths are configured to not require any authentication. All other paths must be authenticated.
 	 * */
-    
-    @Override
+	
+	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
         .authorizeRequests()
             .antMatchers("/", "/home").permitAll()
+            .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated() 
             .and()
         .formLogin()
@@ -27,8 +29,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
         .logout()
-            .permitAll();
-        http.csrf().disable();
+            .permitAll()
+            .and()
+        .csrf().disable();
     /* .authorizeRequests()
      * 		.anyRequest().authenticated() -- every request requires the user to be authenticated
      * .formLogin()						  -- form based authentication is supported
@@ -41,6 +44,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      *
      * */	
     }
+	
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web
+			.ignoring()
+			.antMatchers("/resources/**"); // #3
+	}
 
     /**
      *  Sets up an in-memory user store with a single user;
@@ -48,12 +58,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    	String username = "user";
+    	String username = "admin";
     	String pw = "pass";
     	
         auth
             .inMemoryAuthentication()
-                .withUser(username).password(pw).roles("USER");
+                .withUser(username).password(pw).roles("ADMIN");
     }
 }
 
