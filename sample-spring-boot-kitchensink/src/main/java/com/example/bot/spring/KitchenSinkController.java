@@ -45,6 +45,7 @@ import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
@@ -199,6 +200,7 @@ public class KitchenSinkController {
 
 		}finally {
 			this.replyText(replyToken, msgbuffer);
+			//this.pushText(currentUser.getID(),"FUCK");
 		//database.updateUser(currentUser);
 		}
 	}
@@ -225,15 +227,28 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
+	
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
+	
+	private void push(@NonNull String to, @NonNull Message message) {
+        push(to,  Collections.singletonList(message));
+    }
 
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
 			log.info("Sent messages: {}", apiResponse);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	private void push(@NonNull String to, @NonNull List<Message> messages) {
+		try {
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
+			log.info("Push messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
@@ -247,6 +262,16 @@ public class KitchenSinkController {
 			message = message.substring(0, 1000 - 2) + "..";
 		}
 		this.reply(replyToken, new TextMessage(message));
+	}
+	
+	private void pushText(@NonNull String to, @NonNull String message) {
+		if (to.isEmpty()) {
+			throw new IllegalArgumentException("to must not be empty");
+		}
+		if (message.length() > 1000) {
+			message = message.substring(0, 1000 - 2) + "..";
+		}
+		this.push(to, new TextMessage(message));
 	}
 
 
