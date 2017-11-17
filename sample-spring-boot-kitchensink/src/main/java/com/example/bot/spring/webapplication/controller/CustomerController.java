@@ -28,7 +28,7 @@ class CustomerController {
 
     @RequestMapping(value = "/addcustomer")
     ModelAndView addCustomer(@RequestParam(value="name", required=true, defaultValue= "") String name,
-    						@RequestParam(value="bootable", required=true, defaultValue= "") String bootableid,
+    						@RequestParam(value="bootableid", required=true, defaultValue= "") String bootableid,
                             @RequestParam(value="adults", required=true, defaultValue= "") Integer adults,
                             @RequestParam(value="children", required=true, defaultValue= "") Integer children,
                             @RequestParam(value="toddler", required=true, defaultValue= "") Integer toddler,
