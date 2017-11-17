@@ -25,14 +25,16 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">Travel Agency Management System</a>
             </div>
-            <ul class="navbar-nav nav">
+            <ul class="navbar-nav nav navbar-left">
                 <li class="nav-item"><a class="nav-link" href="/customer">Customer information</a></li>
                 <li class="nav-item"><a class="nav-link" href="/tour">Tour information</a></li>
                 <li class="nav-item"><a class="nav-link" href="/uq">Unanswered questions</a></li>
-                <li class="nav-item"><form th:action="@{/logout}" method="post">
-            		<input type="submit" value="Sign Out"/>
-        		</form></li>
             </ul>
+            <ul class="navbar-nav nav navbar-left">
+                <li class="nav-item"><form th:action="@{/logout}" method="post">
+            		<input class="btn btn-primary" type="submit" value="Sign Out"/>
+        		</form></li>
+        	</ul>
         </div>
     </nav>
 
