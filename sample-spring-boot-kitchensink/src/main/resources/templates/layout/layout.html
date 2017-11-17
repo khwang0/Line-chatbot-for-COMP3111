@@ -31,12 +31,9 @@
                 <li class="nav-item"><a class="nav-link" href="/uq">Unanswered questions</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-				<li class="nav-item"><form th:action="@{/logout}" method="post">
-    			<a class="nav-link" href="javascript:;" onclick="parentNode.submit();">
-    				<span class="glyphicon glyphicon-log-out"></span>Logout
-    			</a>
-    			<input type="hidden" name="mess" value=""/>
-				</form></li>
+                <li class="nav-item"><form th:action="@{/logout}" method="post">
+            		<input class="btn btn-primary" type="submit" value="Sign Out"/>
+        		</form></li>
         	</ul>
         </div>
     </nav>
