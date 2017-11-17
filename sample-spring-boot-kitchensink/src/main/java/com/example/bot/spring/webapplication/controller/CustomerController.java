@@ -47,8 +47,9 @@ class CustomerController {
             customer = customerService.addCustomer(customer);
             modelAndView.addObject("message", "customer added with name: " + customer.getName());
         }
-        catch (Exception ex){
-            modelAndView.addObject("message", "Failed to add customer: " + ex.getMessage());
+        catch (Exception e){
+        	e.printStackTrace();
+            modelAndView.addObject("message", "Failed to add customer: " + e.getMessage());
         }
         try {
         modelAndView.addObject("customers", customerService.getCustomers());

@@ -17,7 +17,6 @@ public class WebAppDBEngine extends DBEngine {
 	
 	public LinkedList<Customer> getAllCustomerInfo() throws Exception{
 		connection = this.getConnection();
-		System.out.println(connection.getCatalog());
 		LinkedList<Customer> allCus = new LinkedList<Customer>();
 		PreparedStatement nstmt;
 		nstmt = connection.prepareStatement(
