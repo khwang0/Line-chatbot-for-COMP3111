@@ -200,7 +200,7 @@ public class KitchenSinkController {
 
 		}finally {
 			this.replyText(replyToken, msgbuffer);
-			this.pushText(currentUser.getID(),"FUCK");
+			//this.pushText(currentUser.getID(),"FUCK");
 		//database.updateUser(currentUser);
 		}
 	}
