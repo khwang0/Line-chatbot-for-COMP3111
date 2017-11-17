@@ -177,7 +177,7 @@ public class WebAppDBEngine extends DBEngine {
 		nstmt = connection.prepareStatement(
 				"UPDATE unanswered_question"
 				+ " SET answer = ?, answered_or_not = true"
-				+ " WHERE userid = ? AND question = ?");
+				+ " WHERE id = ? AND question = ?");
 	
 		nstmt.setString(1, answer);
 		nstmt.setString(2, id);
