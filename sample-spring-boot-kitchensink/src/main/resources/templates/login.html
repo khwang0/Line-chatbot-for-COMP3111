@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html layout:decorator="layout/layout" 
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
         <title>Spring Security Example </title>
     </head>
@@ -12,9 +13,15 @@
             You have been logged out.
         </div>
         <form th:action="@{/login}" method="post">
-            <div><label> User Name : <input type="text" name="username"/> </label></div>
-            <div><label> Password: <input type="password" name="password"/> </label></div>
-            <div><input type="submit" value="Sign In"/></div>
+            <div>
+            	<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            	<input type="text" class="form-control" name="username" placeholder="User name"/>
+            </div>
+            <div>
+            	<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            	<input type="password" class="form-control" name="password" placeholder="Password"/>
+            </div>
+            <div><button type="submit" class="btn btn-default" value="Sign In"/></div>
         </form>
     </body>
 </html>
