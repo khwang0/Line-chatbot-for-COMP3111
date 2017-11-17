@@ -44,6 +44,7 @@ class CustomerController {
             customer.setToddler(toddler);
             customer.setChildren(children);
             customer.setSpecial(special);
+            customer.setPhone(phone);
             customer = customerService.addCustomer(customer);
             modelAndView.addObject("message", "customer added with name: " + customer.getName());
         }
