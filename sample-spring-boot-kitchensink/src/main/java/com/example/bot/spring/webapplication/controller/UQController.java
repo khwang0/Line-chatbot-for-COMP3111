@@ -17,10 +17,10 @@ class UQController {
 	@Autowired
 	UQService uqService;
 	
-    @RequestMapping(value = "/UQ", method = RequestMethod.GET)
+    @RequestMapping(value = "/uq", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     ModelAndView home() {
-    	ModelAndView modelAndView = new ModelAndView("UQ");
+    	ModelAndView modelAndView = new ModelAndView("uq");
     	try {
 			modelAndView.addObject("uqs", uqService.getAllUQs());
 		} catch (Exception e) {
