@@ -196,7 +196,7 @@ public class KitchenSinkController {
 					+ "Create Personal Diet Tracker: type \'1\'\n\n"
 					+ "Say goodbye to me: type any\n";
 			currentUser = new Users(event.getSource().getUserId());
-			database.pushUser(currentUser);
+			database.pushUser(currentUser)
 
 		}finally {
 			this.replyText(replyToken, msgbuffer);
