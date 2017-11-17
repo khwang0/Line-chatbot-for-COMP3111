@@ -37,13 +37,4 @@ public class KitchenSinkWebMvcConfigurer extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
     }
-    
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("home");
-        registry.addViewController("/customer").setViewName("customer");
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/uq").setViewName("uq");
-        registry.addViewController("/tour").setViewName("tour");
-    }
 }

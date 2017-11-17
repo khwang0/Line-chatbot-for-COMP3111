@@ -20,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
         .authorizeRequests()
-            .antMatchers("/", "/home").permitAll()
+        //    .antMatchers("/", "/home").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated() 
             .and()
@@ -45,13 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * */	
     }
 	
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web
-			.ignoring()
-			.antMatchers("/resources/**"); // #3
-	}
-
     /**
      *  Sets up an in-memory user store with a single user;
      *  The user is given a username of "user", a password of "password", and a role of "USER".
