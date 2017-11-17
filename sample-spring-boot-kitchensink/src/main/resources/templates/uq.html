@@ -30,11 +30,12 @@
       											<div class="panel-body">
       												<form class="form-group" th:action="/answerUQ">
       												<div class="form-group">
-      												<input type = "hidden" name = "question" th:value="${uq.getQuestion()}">
-      												<input type = "hidden" name = "id" th:value="${uq.getId()}">
+      												<input type = "hidden" name = "question" th:value="${uq.getQuestion()}"/>
+      												<input type = "hidden" name = "id" th:value="${uq.getId()}"/>
       												<input class="form-control" type="text" name="answer" id="answer" maxlength="100"/>
       												<input type="submit" value="Answer" />
-      												</div></form>
+      												</div>
+      												</form>
       											</div>
     										</div>
   										</div>
