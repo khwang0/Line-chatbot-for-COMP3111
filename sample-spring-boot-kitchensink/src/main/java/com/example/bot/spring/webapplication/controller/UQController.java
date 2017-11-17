@@ -30,7 +30,7 @@ class UQController {
         return modelAndView;
     }
 	
-    @RequestMapping(value = "/answerUQ", method = RequestMethod.GET)
+    @RequestMapping(value = "/answerUQ", method = RequestMethod.POST)
     ModelAndView answerQuestion(@RequestParam(value="question", required=true, defaultValue= "") String question,
     						@RequestParam(value="id", required=true, defaultValue= "") String id,
     						@RequestParam(value="answer", required=true, defaultValue= "") String answer) throws Exception {

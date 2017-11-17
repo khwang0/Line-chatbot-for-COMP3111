@@ -28,7 +28,7 @@
     										</div>
     										<div id="collapse1" class="panel-collapse collapse">
       											<div class="panel-body">
-      												<form class="form-group" action="/answerUQ">
+      												<form method = "post" class="form-group" action="/answerUQ">
       												<div class="form-group">
       												<input type = "hidden" name = "question" th:value="${uq.getQuestion()}"/>
       												<input type = "hidden" name = "id" th:value="${uq.getId()}"/>

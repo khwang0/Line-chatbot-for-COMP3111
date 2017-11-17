@@ -26,7 +26,7 @@ class CustomerController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/addcustomer")
+    @RequestMapping(value = "/addcustomer", method = RequestMethod.POST)
     ModelAndView addCustomer(@RequestParam(value="name", required=true, defaultValue= "") String name,
     						@RequestParam(value="bootableid", required=true, defaultValue= "") String bootableid,
                             @RequestParam(value="adults", required=true, defaultValue= "") Integer adults,
