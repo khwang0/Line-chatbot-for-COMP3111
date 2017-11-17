@@ -30,11 +30,11 @@ class UQController {
         return modelAndView;
     }
 	
-    @RequestMapping(value = "/answerUQ")
+    @RequestMapping(value = "/answerUQ", method = RequestMethod.GET)
     ModelAndView answerQuestion(@RequestParam(value="question", required=true, defaultValue= "") String question,
     						@RequestParam(value="id", required=true, defaultValue= "") String id,
     						@RequestParam(value="answer", required=true, defaultValue= "") String answer) throws Exception {
-        ModelAndView modelAndView = new ModelAndView("UQ");
+        ModelAndView modelAndView = new ModelAndView("uq");
         try {
         	uqService.answerUQ(question,id,answer);
         	modelAndView.addObject("uqs", uqService.getAllUQs());
