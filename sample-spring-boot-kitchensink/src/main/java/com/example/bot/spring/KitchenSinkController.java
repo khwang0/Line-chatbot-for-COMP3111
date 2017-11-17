@@ -248,7 +248,7 @@ public class KitchenSinkController {
 	private void push(@NonNull String to, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
-			log.info("Sent messages: {}", apiResponse);
+			log.info("Push messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
