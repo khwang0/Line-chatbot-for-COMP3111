@@ -58,7 +58,7 @@ public class WebAppDBEngine extends DBEngine {
 		LinkedList<Tour> allTours = new LinkedList<Tour>();
 		PreparedStatement nstmt;
 			nstmt = connection.prepareStatement(
-					"SELECT  b.bootableid, i.tour_name, b.tourdate, b.tourguideid, b.hotel, b.tourcapacity, b.registerednum"
+					"SELECT  b.bootableid, i.tour_name, b.tourdate, b.tourguideid, b.hotel, b.tourcapcity, b.registerednum"
 					+ " FROM booking_table b, tour_touroffer_relation o, tour_info i "
 					+ " WHERE b.bootableid = o.bootableid"
 					+ " AND i.tourid = o.tourid");
