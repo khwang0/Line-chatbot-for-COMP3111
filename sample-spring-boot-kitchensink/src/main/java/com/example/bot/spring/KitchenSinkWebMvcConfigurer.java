@@ -18,6 +18,7 @@ package com.example.bot.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +36,14 @@ public class KitchenSinkWebMvcConfigurer extends WebMvcConfigurerAdapter {
                 .addResourceLocations(downloadedContentUri);
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
+    }
+    
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("home");
+        registry.addViewController("/customer").setViewName("customer");
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/uq").setViewName("uq");
+        registry.addViewController("/tour").setViewName("tour");
     }
 }
