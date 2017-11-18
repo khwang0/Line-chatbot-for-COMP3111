@@ -5,9 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class DoubleElevDBEngine extends DBEngine {
@@ -47,7 +45,7 @@ public class DoubleElevDBEngine extends DBEngine {
 	// functions for confirmation 
 	// return all tour whose tourist number > min && not yet been confirmed; 
 	public String getDiscountBookid(){ // only one tour is allowed to be discounted at the same time
-		String discount_tours = new ArrayList<String>();
+		String discount_tours =  null;
 		PreparedStatement nstmt = null;
 		
 		openConnection();
@@ -81,7 +79,6 @@ public class DoubleElevDBEngine extends DBEngine {
 
 		try {
 			nstmt = connection.prepareStatement(statement);			
-			nstmt.setString(1,booktableid);			
 			ResultSet rs = this.query(nstmt);
 			
 			while(rs.next()) {

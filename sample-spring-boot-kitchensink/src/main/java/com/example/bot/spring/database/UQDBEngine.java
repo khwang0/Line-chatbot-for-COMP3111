@@ -1,10 +1,8 @@
 package com.example.bot.spring.database;
 
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -14,16 +12,15 @@ public class UQDBEngine extends DBEngine {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void updateTable() {
+	public void updateTable() throws Exception{
 		Connection connection = null;
 		PreparedStatement stmt = null;
-		String reply="";
 
 		connection=getConnection();
 		stmt = connection.prepareStatement(
 				"update unanswered_question set sent_or_not = true where answered_or_not = true"
 		);
-		ResultSet rs=stmt.executeUpdate();
+		stmt.executeUpdate();
 		
 		if (stmt != null) stmt.close();
 		if (connection != null) connection.close();
@@ -79,7 +76,6 @@ public class UQDBEngine extends DBEngine {
 		//System.out.println("Success");
 		Connection connection = null;
 		PreparedStatement stmt = null;
-		String reply="";
 
 		connection = getConnection();
 		//insert into the unanswered question table to store the question

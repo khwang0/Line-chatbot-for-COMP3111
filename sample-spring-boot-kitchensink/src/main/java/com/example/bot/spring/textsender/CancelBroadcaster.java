@@ -5,9 +5,20 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.bot.spring.database.*;
+import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.model.Multicast;
+import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.TextMessage;
 
 public class CancelBroadcaster implements Broadcaster {
+	
+	@Autowired
+	private LineMessagingClient lineMessagingClient;
+	
 	/**
 	 * Get a diff between two dates
 	 * @param date1 the oldest date
@@ -26,7 +37,7 @@ public class CancelBroadcaster implements Broadcaster {
 		m=Integer.parseInt(dateString.substring(4,6));
 		d=Integer.parseInt(dateString.substring(6,8));
 		GregorianCalendar c= new GregorianCalendar(y,m,d);
-		return new Date(c.getTime());
+		return c.getTime();
 	}
 	
 	CancelDBEngine CDB;
@@ -44,10 +55,10 @@ public class CancelBroadcaster implements Broadcaster {
 	public int orderCancel(String bootid) throws Exception{
 		Date td=getDate(bootid.substring(bootid.length()-8));
 		Date now=new Date();
-		int day=this.getDateDiff(td, now, TimeUnit.DAYS);
+		long day=this.getDateDiff(td, now, TimeUnit.DAYS);
 		if (day<=3) {
-			String broadcast_content = "Your tour " + tourid + " has been canceled due to not enough people! Our staff will arrange your refund as soon as possible.";
-			Set<String> tourists = CDB.getAllContactors(tourid);
+			String broadcast_content = "Your tour " + bootid + " has been canceled due to not enough people! Our staff will arrange your refund as soon as possible.";
+			Set<String> tourists = CDB.getAllContactors(bootid);
 
 			Message message = new TextMessage(broadcast_content);			
 			lineMessagingClient.multicast(new Multicast(tourists, message));

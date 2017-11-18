@@ -6,12 +6,10 @@ import java.sql.ResultSet;
 
 public class SQDBEngine extends DBEngine {
 	private String tname1; // name of table in charge; 
-	private String column1_1;
 	private String column1_2;
 	
 	public SQDBEngine() {
 		this.tname1 = "sq_table"; // name of table in charge; 
-		this.column1_1 = "keywords";
 		this.column1_2 = "label";
 	}
 	

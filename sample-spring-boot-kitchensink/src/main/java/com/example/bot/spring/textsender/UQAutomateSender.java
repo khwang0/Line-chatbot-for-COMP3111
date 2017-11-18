@@ -9,7 +9,7 @@ public class UQAutomateSender implements TextSender {
 	}
 
 	@Override
-	public String process(String userId, String msg) {
+	public String process(String userId, String msg) throws Exception {
 		// TODO Auto-generated method stub
 		UQDBEngine searchEngine = new UQDBEngine();
 		return searchEngine.uqQuery(userId, msg);

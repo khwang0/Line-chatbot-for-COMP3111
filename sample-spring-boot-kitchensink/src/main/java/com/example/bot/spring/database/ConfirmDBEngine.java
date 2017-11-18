@@ -54,12 +54,13 @@ public class ConfirmDBEngine extends DBEngine {
 		openConnection();
 		// if fullfillled, retrieve all tour which can be confirmed
 		// else, retrieve all tour which should be cancelled; 
+		String statement = "";
 		if (fullfilled) {
-			String statement = "SELECT bootableid FROM booking_table "
+			statement = "SELECT bootableid FROM booking_table "
 					+ "WHERE paidnum >= mintourist AND confirmed = 'unconfirmed' ";
 			// use paidnum rather than registernum; 			
 		}else {
-			String statement = "SELECT bootableid FROM booking_table "
+			statement = "SELECT bootableid FROM booking_table "
 					+ "WHERE paidnum < mintourist AND confirmed = 'unconfirmed' ";
 		}
 

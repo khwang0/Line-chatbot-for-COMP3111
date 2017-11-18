@@ -1,8 +1,5 @@
 package com.example.bot.spring;
 
-import java.util.concurrent.*;
-import java.util.*;
-
 public class LineListener extends Thread{
 	public LineListener() {
 		

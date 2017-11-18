@@ -1,9 +1,7 @@
 package com.example.bot.spring.textsender;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
 import com.example.bot.spring.database.*;
 import com.linecorp.bot.client.*;
 import com.linecorp.bot.model.*;
