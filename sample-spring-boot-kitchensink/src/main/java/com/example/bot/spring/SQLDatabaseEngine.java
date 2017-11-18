@@ -260,7 +260,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			log.info("query error for search_plan: {}", e.toString());
 			//System.out.println(e);
 		}
-		if (plan_info.size() != 0)
+		//if (plan_info.size() != 0)
 			return plan_info;
 
 		//throw new Exception("NOT FOUND");
@@ -287,7 +287,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} catch (Exception e) {
 			log.info("query error for search_current: {}", e.toString());
 		}
-		if (current_info.size() != 0)
+		//if (current_info.size() != 0)
 			return current_info;
 
 		//throw new Exception("NOT FOUND");
