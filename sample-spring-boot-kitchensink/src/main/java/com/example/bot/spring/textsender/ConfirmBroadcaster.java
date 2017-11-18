@@ -18,10 +18,8 @@ public class ConfirmBroadcaster implements Broadcaster {
 		// TODO Auto-generated constructor stub
 		//this.confirmdb = new ConfirmDBEngine();
 	}
-	
-	public void broadcast() throws Exception{}
-	
-	public void orderConfirm() throws Exception{
+		
+	public void broadcast() throws Exception{
 		try {
 			this.confirmdb = new ConfirmDBEngine();
 			// check each trip available in db
