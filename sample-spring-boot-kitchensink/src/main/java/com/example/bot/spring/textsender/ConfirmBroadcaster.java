@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class ConfirmBroadcaster implements Broadcaster {
 	
-	DBEngine confirmdb; 
+	ConfirmDBEngine confirmdb; 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
 	

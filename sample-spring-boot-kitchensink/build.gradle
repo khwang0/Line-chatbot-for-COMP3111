@@ -25,8 +25,8 @@ apply plugin: "jacoco"
 
 jacocoTestReport{
 	reports{
-		xml.enable false
-		csv.enable false
+		xml.enabled false
+		csv.enabled false
 		html.destination file("${buildDir}/jacocoHtml")
 	}
 }
