@@ -66,6 +66,11 @@ public class StageHandler {
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
+	
+	// used for serve-weight conversion
+	private float VF_weight_per_serve = 75;//75g Vegetable&Fruit
+	private float Grain_weight_per_serve = 500;//500kj Grain
+	private float MM_weight_per_serve = 100; 
 
 
 	public String initStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -299,12 +304,15 @@ public class StageHandler {
 			 * */
 			String user_id = currentUser.getID();
 			if (database.search_diet_plan(user_id)) {
-				replymsg = "You've already generated a diet plan!\n";
+				replymsg = "You've already generated a diet plan:\n\n";
+				replymsg += database.display_diet_plan(user_id);
+				// TODO: allow user to change it
 			}
 			else {
-				boolean result = database.gen_plan(user_id);//tempory
-				if (result) {
-					replymsg = "We have successfully generated a diet plan for you!\n";
+				boolean result = database.gen_plan(user_id);
+				if (result) {					
+					replymsg = "We have successfully generated a diet plan for you:\n\n";
+					replymsg += database.display_diet_plan(user_id);							
 				}
 				else {
 					replymsg  = "Sorry, we fail to generate a diet plan for you now.\n";
@@ -327,34 +335,51 @@ public class StageHandler {
 				String date = ft.format(dNow);//20171102
 
 				ArrayList<Double> plan_info = database.search_plan(user_id);
+				double meat_serve = plan_info.get(5);
+				double milk_serve = plan_info.get(6);
+				
 				//ArrayList<Integer> current_info = new ArrayList<Integer>();
 				ArrayList<Double> current_info = database.search_current(user_id, date); // diet current status
-				for (int i = 0; i < plan_info.size(); i++) {
-					//current_info.add(50);
+				for (int i = 0; i < 3/*plan_info.size()*/; i++) {
+					//fiber|energy|protein
 					double diff = plan_info.get(i) - current_info.get(i);
-					//protein
+					//fiber
 					if (i==0) {
-						replymsg += "Protein: ";
+						replymsg += "Fiber: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff);
+							replymsg += String.format("You still need to consume %.2f g more\n", diff);
+							//generate plan based on budget
+							//if (currentUser.getBudget() < threshold){
+							replymsg = replymsg + "You can try to eat more vegetables & legumes/beans or fruit!"
+									+ "with budget lower than \n\n";
 						}
 						else
 							replymsg += "Finish!\n";
 					}
-					//fat
+					//energy
 					else if (i== 1){
-						replymsg += "Fat: ";
+						replymsg += "Energy: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff);
+							replymsg += String.format("You still need to consume %.2f kcal\n", diff);
+							replymsg += "You can try to eat more Grain (cereal) foods, mostly wholegrain!\n\n";
 						}
 						else
 							replymsg += "Finish!\n";
 					}
-					//sugar
+					//protein: Meat + Milk
 					else if (i== 2){
-						replymsg += "Sugar: ";
+						replymsg += "Meat: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff);
+							replymsg += String.format("You still need to consume %.2f g\n", diff*meat_serve/(meat_serve+milk_serve));
+							replymsg += "You can try to eat more Lean meat and poultry, fish, eggs, nuts and seeds!\n\n";
+						}
+						else
+							replymsg += "Finish!\n";
+						
+						replymsg += "Milk: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							replymsg += String.format("You still need to consume %.2f g\n", diff*milk_serve/(meat_serve+milk_serve));
+							replymsg += "You can try to consume more Milk, yoghurt, cheese and/or alternatives!\n\n";
 						}
 						else
 							replymsg += "Finish!\n";
