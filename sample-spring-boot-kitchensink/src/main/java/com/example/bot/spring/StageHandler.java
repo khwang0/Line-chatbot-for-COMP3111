@@ -386,7 +386,7 @@ public class StageHandler {
 		//subStage5: self Assessment;
 		case 5:{
 			suggestion = "";
-			((DetailedUser)currentUser).setAssessmentScore(0);
+			(currentUser).setAssessmentScore(0);
 			replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 					+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
 					+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
@@ -405,7 +405,7 @@ public class StageHandler {
 				currentUser.setSubStage(501);
 		}break;
 		case 511:{
-			int score = ((DetailedUser)currentUser).getAssessmentScore();
+			int score = (currentUser).getAssessmentScore();
 			if(score >= 90) {
 				replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
 						+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
@@ -444,7 +444,7 @@ public class StageHandler {
 
 		default:{
 			if(text.equalsIgnoreCase("T")) {
-				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+				(currentUser).setAssessmentScore((currentUser).getAssessmentScore()+10);
 				suggestion = suggestion + feedback[currentUser.getSubStage()-501][1];
 			}
 			else if(text.equalsIgnoreCase("F")){
@@ -723,7 +723,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat breakfast?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,0);
+			(currentUser).setEatingHabits(input,0);
 			replymsg = "Do you eat lunch?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -733,7 +733,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='n') input = false;
 			else { replymsg = "Do you eat lunch?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,1);
+			(currentUser).setEatingHabits(input,1);
 			replymsg = "Do you eat afternoon tea?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -743,7 +743,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat afternoon tea?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,2);
+			(currentUser).setEatingHabits(input,2);
 			replymsg = "Do you eat dinner?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -753,7 +753,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat dinner?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,3);
+			(currentUser).setEatingHabits(input,3);
 			replymsg = "Do you eat midnight snacks?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -763,7 +763,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat midnight snacks?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,4);
+			(currentUser).setEatingHabits(input,4);
 			replymsg = "Do you eat any extra meals?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -773,7 +773,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat any extra meals?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,5);
+			(currentUser).setEatingHabits(input,5);
 			replymsg = "How many hours per day do you exercise in a weekly average?";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -896,7 +896,7 @@ public class StageHandler {
 //		switch (currentUser.getSubStage()) {
 //			case 0:{
 //				suggestion = "";
-//				((DetailedUser)currentUser).setAssessmentScore(0);
+//				(currentUser).setAssessmentScore(0);
 //				replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 //						+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
 //						+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
@@ -915,7 +915,7 @@ public class StageHandler {
 //					currentUser.setSubStage(1);
 //			}break;
 //			case 11:{
-//				int score = ((DetailedUser)currentUser).getAssessmentScore();
+//				int score = (currentUser).getAssessmentScore();
 //				if(score >= 90) {
 //					replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
 //							+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
@@ -953,7 +953,7 @@ public class StageHandler {
 //			}break;
 //			default:{
 //				if(text.equalsIgnoreCase("T")) {
-//					((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+//					(currentUser).setAssessmentScore((currentUser).getAssessmentScore()+10);
 //					suggestion = suggestion + feedback[currentUser.getSubStage()-1][1];
 //				}
 //				else if(text.equalsIgnoreCase("F")){
