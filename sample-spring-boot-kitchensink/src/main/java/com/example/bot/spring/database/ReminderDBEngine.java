@@ -5,8 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -47,7 +45,7 @@ public class ReminderDBEngine extends DBEngine {
 	public Set<String> ReminderChecker() {
 		openConnection();
 		PreparedStatement stmt;
-		Set<String> idSet=new Set<String>();
+		Set<String> idSet=new HashSet<String>();
 		try {
 			stmt = connection.prepareStatement(
 					"select line_user_info.userid from line_user_info join customer_info on "

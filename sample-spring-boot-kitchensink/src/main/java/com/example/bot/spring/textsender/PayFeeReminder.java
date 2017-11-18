@@ -1,8 +1,12 @@
 package com.example.bot.spring.textsender;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import com.example.bot.spring.database.BookingDBEngine;
+import com.example.bot.spring.database.ReminderDBEngine;
+import com.linecorp.bot.model.Multicast;
+import com.linecorp.bot.model.message.Message;
+import com.linecorp.bot.model.message.TextMessage;
 
 public class PayFeeReminder {
 
@@ -11,9 +15,9 @@ public class PayFeeReminder {
 	}
 	
 	public Multicast feePayReminder(String[] ids) throws Exception{
-		BookingDBEngine reminder = new BookingDBEngine();
+		ReminderDBEngine reminder = new ReminderDBEngine();
 		
-		Set<String> id = new Set<String>();
+		Set<String> id = new HashSet<String>();
 		
 		id=reminder.ReminderChecker();
 		
@@ -21,9 +25,9 @@ public class PayFeeReminder {
 			return null;
 		}
 		
-		Message reply = new TextMessage ("You have yet to pay the fee. Please pay as soon as possible.")
+		Message reply = new TextMessage ("You have yet to pay the fee. Please pay as soon as possible.");
 		
-		return Multicast(id, reply);
+		return new Multicast(id, reply);
 	}
 
 }
