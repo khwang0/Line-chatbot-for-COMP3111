@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import java.util.concurrent.TimeUnit;
 import com.example.bot.spring.database.*;
 import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.client.LineMessagingClientImpl;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
@@ -17,14 +18,16 @@ import com.linecorp.bot.model.message.TextMessage;
 public class UQAnswerReplier implements Broadcaster{
 	
 	@Autowired
-	LineMessagingClient lineMessagingClient;
+	LineMessagingClientImpl lineMessagingClient;
 
 	public UQAnswerReplier() {
 		// TODO Auto-generated constructor stub
+		lineMessagingClient = new LineMessagingClientImpl();
 	}
 
 	@Override
 	public void broadcast() throws Exception {
+		System.out.println("You are here in the UQAnswerReplier");
 		UQDBEngine searchEngine = new UQDBEngine();
 		ArrayList<String> reply=searchEngine.answer();
 		for(int i=0; i<reply.size(); i++) {
