@@ -22,6 +22,7 @@ class TourController {
     ModelAndView home() {
     	ModelAndView modelAndView = new ModelAndView("tour");
     	try {
+    		modelAndView.addObject("generalTours", tourService.getGeneralTours());
 			modelAndView.addObject("tours", tourService.getTours());
 		} catch (Exception e) {
 			e.printStackTrace();

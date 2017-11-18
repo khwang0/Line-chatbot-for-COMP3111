@@ -49,7 +49,7 @@
                         <tbody>
                             <tr th:each="activity : ${activities}">
                                 <td th:text="${activity.getBootableId()}">Tour ID</td>
-                                <td th:text="${tour.getQuota()}">Quota left</td>
+                                <td th:text="${activity.getQuota()}">Quota left</td>
                             </tr>
                         </tbody>
                     </table>
