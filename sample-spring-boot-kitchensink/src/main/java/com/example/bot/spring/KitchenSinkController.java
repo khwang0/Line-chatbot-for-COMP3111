@@ -196,6 +196,7 @@ public class KitchenSinkController {
 		return ;
         }
         try {
+        	System.err.println("XXXXXXXXXXXXXXXXXXXXXXXX");
         	reply = processor.processText(userId, text);
         }catch(Exception e) {
         	System.err.println("XXXXXXXXXXXXXXXXXXXXXXXX");
