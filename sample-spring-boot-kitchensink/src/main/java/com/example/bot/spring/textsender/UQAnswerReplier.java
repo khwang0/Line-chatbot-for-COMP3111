@@ -17,7 +17,6 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
-@LineMessageHandler
 public class UQAnswerReplier implements Broadcaster{
 	
 	@Autowired
@@ -41,8 +40,7 @@ public class UQAnswerReplier implements Broadcaster{
 			question=temp[1];
 			answer=temp[2];
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
-			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(userID, Collections.singletonList(message))).get();
-			System.out.println(apiResponse);
+			lineMessagingClient.pushMessage(new PushMessage(userID, message));
 		}
 	}
 }
