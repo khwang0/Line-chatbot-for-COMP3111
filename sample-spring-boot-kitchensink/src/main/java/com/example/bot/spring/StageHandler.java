@@ -789,9 +789,9 @@ public class StageHandler {
 		case 13:{
 			if(inputChecker.OtherinfoEditting(text, currentUser, database, "set")) {
 				replymsg = "All set and recorded. Type anything to return to main menu.";
-				database.pushUser(currentUser);
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
+				database.updateUser(currentUser);
 			}
 			else
 				replymsg = "Please enter something in 1000 characters!!";
