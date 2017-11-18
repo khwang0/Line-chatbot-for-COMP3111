@@ -207,8 +207,13 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
+        String gathering="https://raw.githubusercontent.com/khwang0/2017F-COMP3111/master/Project/topic%201/gather.jpg";
         String userId = event.getSource().getUserId();
         String reply = null;
+        if (text.toLowerCase().contains("gather")) {
+        	this.reply(replyToken, new ImageMessage(gathering,gathering));
+		return ;
+        }
         try {
         	reply = processor.processText(userId, text);
         }catch(Exception e) {

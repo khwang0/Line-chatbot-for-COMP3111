@@ -13,7 +13,7 @@ public class LineListener extends Thread{
 			
 			
 			try {
-				Thread.currentThread().sleep(3600000);
+				Thread.sleep(3600000);
 			}catch (InterruptedException e) {
 				System.err.println("<><><><>Sleep Error<><><><>");
 			}

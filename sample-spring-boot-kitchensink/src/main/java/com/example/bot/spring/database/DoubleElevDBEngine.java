@@ -5,16 +5,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
-
-public class ConfirmDBEngine extends DBEngine {
+public class DoubleElevDBEngine extends DBEngine {
 	private Connection connection;
-	
-	public ConfirmDBEngine() {
+
+	public DoubleElevDBEngine() {
 		connection = null;
 	}
 	
@@ -47,56 +44,45 @@ public class ConfirmDBEngine extends DBEngine {
 	
 	// functions for confirmation 
 	// return all tour whose tourist number > min && not yet been confirmed; 
-	public List<String> getAllUnconfirmedTours(boolean fullfilled){
-		List<String> unconfirmed_tours = new ArrayList<String>();
+	public String getDiscountBookid(){ // only one tour is allowed to be discounted at the same time
+		String discount_tours =  null;
 		PreparedStatement nstmt = null;
 		
 		openConnection();
-		// if fullfillled, retrieve all tour which can be confirmed
-		// else, retrieve all tour which should be cancelled; 
-		String statement = "";
-		if (fullfilled) {
-			statement = "SELECT bootableid FROM booking_table "
-					+ "WHERE paidnum >= mintourist AND confirmed = 'unconfirmed' ";
-			// use paidnum rather than registernum; 			
-		}else {
-			statement = "SELECT bootableid FROM booking_table "
-					+ "WHERE paidnum < mintourist AND confirmed = 'unconfirmed' ";
-		}
-
+		String statement = "SELECT bootableid FROM double11 "
+				+ "WHERE status = 'released' ";
+		// choose the tours that haven't been broadcasted;  
 		try {
 			nstmt = connection.prepareStatement(statement);
 			ResultSet rs = this.query(nstmt);
 			
-			while(rs.next()) {
-				unconfirmed_tours.add(rs.getString(1));
+			if(rs.next()) {
+				discount_tours = rs.getString(1);
 			}
 			nstmt.close();
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
-		close();	
+		close();
 		
-		return unconfirmed_tours;
+		return discount_tours;
 	}
 
-	public Set<String> getAllContactors(String booktableid){
-		Set<String> customers = new HashSet<String>();
+	public Set<String> getAllClient(){
+		Set<String> clients = new HashSet<String>();
 		PreparedStatement nstmt = null;	
 		openConnection();
 		
-		String statement = "SELECT L.userid "
-				+ "FROM customer_info as C, line_user_info as L "
-				+ "WHERE C.paidamount >= C.tourfee AND C.customername = L.name AND C.bootableid = ?";
-		// only announce the tourist who paid the full tour fee; 
+		String statement = "SELECT userid FROM line_user_info"
+						 + " WHERE categorization = 'book'";
+
 		try {
 			nstmt = connection.prepareStatement(statement);			
-			nstmt.setString(1,booktableid);			
-			ResultSet rs = this.query(nstmt);	
+			ResultSet rs = this.query(nstmt);
 			
 			while(rs.next()) {
-				customers.add(rs.getString(1));
+				clients.add(rs.getString(1));
 			}
 			nstmt.close();
 			rs.close();
@@ -105,28 +91,27 @@ public class ConfirmDBEngine extends DBEngine {
 		}
 		close();	
 		
-		return customers;
+		return clients;
 	}
 	
-	public void updateConfirmedTours(String booktableid){	
+	public void updateBroadcastedTours(String booktableid){	
 		PreparedStatement nstmt = null;	
 		openConnection();		
-		String statement = "UPDATE TABLE booking_table "
-				+ "SET confirmed = 'confirmed' "
+		String statement = "UPDATE TABLE double11 "
+				+ "SET status = 'sent' "
 				+ "WHERE bootableid = ?";
 		try {
 			nstmt = connection.prepareStatement(statement);			
-			nstmt.setString(1,booktableid);			
+			nstmt.setString(1,booktableid);		
 			
-			ResultSet rs = this.query(nstmt);	
+			ResultSet rs = this.query(nstmt);
 			
 			nstmt.close();
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		close();	
 		
+		close();
 	}
-
 }
