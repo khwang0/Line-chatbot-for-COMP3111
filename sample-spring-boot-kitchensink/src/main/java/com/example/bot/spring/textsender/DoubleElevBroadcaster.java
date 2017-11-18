@@ -19,13 +19,13 @@ public class DoubleElevBroadcaster implements Broadcaster {
 			doubledb = new ConfirmBroadcaster();
 			// check each trip available in db
 			// if there are any trip get to min tourist yet haven't been confirmed, confirm order; 
-			List<String> tourids = doubledb.getAllDiscountBookid();
+			List<String> tourids = doubledb.getDiscountBookid();
 			
 			// extract all contactor info into a Set<String> to;
 			// extract tourid into String tourid;
 			for (String tourid: tourids) {
-				String broadcast_content = "START COMPETE FOR TOUR " + tourid + "!! \n Wanna Grab one? "; // later if reply yes, then jump to booking, else, do nothing
-				
+				String broadcast_content = "START COMPETE FOR TOUR " + tourid + " AT 50% DISCOUNT!! \n Wanna Grab one? "; // later if reply yes, then jump to booking, else, do nothing
+
 				Set<String> tourists = doubledb.getAllClient();				
 				Message message = new TextMessage(broadcast_content);
 				
@@ -36,6 +36,4 @@ public class DoubleElevBroadcaster implements Broadcaster {
 			System.err.println(e);
 		}
 	}
-	
-
 }

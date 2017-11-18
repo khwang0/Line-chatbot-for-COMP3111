@@ -46,20 +46,20 @@ public class DoubleElevDBEngine extends DBEngine {
 	
 	// functions for confirmation 
 	// return all tour whose tourist number > min && not yet been confirmed; 
-	public List<String> getAllDiscountBookid(){
-		List<String> discount_tours = new ArrayList<String>();
+	public String getDiscountBookid(){ // only one tour is allowed to be discounted at the same time
+		String discount_tours = new ArrayList<String>();
 		PreparedStatement nstmt = null;
 		
 		openConnection();
 		String statement = "SELECT bootableid FROM double11 "
-				+ "WHERE broadcasted = false ";
+				+ "WHERE status = 'released' ";
 		// choose the tours that haven't been broadcasted;  
 		try {
 			nstmt = connection.prepareStatement(statement);
 			ResultSet rs = this.query(nstmt);
 			
-			while(rs.next()) {
-				unconfirmed_tours.add(rs.getString(1));
+			if(rs.next()) {
+				discount_tours = rs.getString(1);
 			}
 			nstmt.close();
 			rs.close();
@@ -68,7 +68,7 @@ public class DoubleElevDBEngine extends DBEngine {
 		}		
 		close();
 		
-		return unconfirmed_tours;
+		return discount_tours;
 	}
 
 	public Set<String> getAllClient(){
@@ -76,7 +76,8 @@ public class DoubleElevDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;	
 		openConnection();
 		
-		String statement = "SELECT userid FROM line_user_info";
+		String statement = "SELECT userid FROM line_user_info"
+						 + " WHERE categorization = 'book'";
 
 		try {
 			nstmt = connection.prepareStatement(statement);			
@@ -100,7 +101,7 @@ public class DoubleElevDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;	
 		openConnection();		
 		String statement = "UPDATE TABLE double11 "
-				+ "SET broadcasted = true "
+				+ "SET status = 'sent' "
 				+ "WHERE bootableid = ?";
 		try {
 			nstmt = connection.prepareStatement(statement);			
@@ -113,8 +114,7 @@ public class DoubleElevDBEngine extends DBEngine {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		close();	
 		
+		close();
 	}
-
 }
