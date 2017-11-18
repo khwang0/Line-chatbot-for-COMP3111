@@ -335,7 +335,7 @@ public class StageHandler {
 				String date = ft.format(dNow);//20171102
 
 				ArrayList<Double> plan_info = database.search_plan(user_id);
-				if(!plan_info.size())
+				if(plan_info.size()==0)
 					replymsg += "spshit!!!!!!!";
 				
 				double meat_serve = plan_info.get(5);
@@ -343,7 +343,7 @@ public class StageHandler {
 				
 				//ArrayList<Integer> current_info = new ArrayList<Integer>();
 				ArrayList<Double> current_info = database.search_current(user_id, date); // diet current status
-				if(!current_info.size())
+				if(current_info.size()==0)
 					replymsg += "curshit!!!!!!!";
 				
 				for (int i = 0; i < 3/*plan_info.size()*/; i++) {
