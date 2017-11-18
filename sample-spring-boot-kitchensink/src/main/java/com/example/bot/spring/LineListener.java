@@ -21,7 +21,7 @@ public class LineListener extends Thread{
 		while(true) {
 			//TODO: Add what ever function need to run
 			//execute 1 time per hour
-			try {
+			try { 
 				//confirmBroadcaster.broadcast();
 				//cancelBroadcaster.broadcast();
 				uqAnswerReplier.broadcast();
