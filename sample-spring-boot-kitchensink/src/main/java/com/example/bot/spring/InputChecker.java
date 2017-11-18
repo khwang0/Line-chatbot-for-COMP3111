@@ -200,6 +200,66 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	/* added by ZK*/
+	public boolean foodAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+		if(ValidOtherinfo(text)) {
+    		food.setFood(text);
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+
+	
+	public boolean energyAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+		if(ValidCarbs(text)) {
+    		food.setEnergy(Float.valueOf(text));
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}		
+	}
+	
+	public boolean proteinAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+			if(ValidCarbs(text)) {
+	    		food.setProtein(Float.valueOf(text));
+	    		return true;
+	    	}
+			else
+				return false;
+		}catch(NumberFormatException ne){return false;}	
+	}
+	
+	public boolean fiberAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+			if(ValidCarbs(text)) {
+	    		food.setFiber(Float.valueOf(text));
+	    		return true;
+	    	}
+			else
+				return false;
+		}catch(NumberFormatException ne){return false;}	
+	}
+	
+	public boolean priceAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+			if(ValidCarbs(text)) {
+	    		food.setPrice(Integer.valueOf(text));
+	    		database.pushfoodinfo(food);
+	    		return true;
+	    	}
+			else
+				return false;
+		}catch(NumberFormatException ne){return false;}	
+	}
+	
+	
+	
+	
 	public boolean foodAdd(String text, foodInput foodinput, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
@@ -210,6 +270,11 @@ public class InputChecker {
 			return false;
 		}catch(NumberFormatException ne){return false;}
 	}
+	
+
+	
+	
+	
 	
 	public boolean amountAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
 		try {
@@ -235,7 +300,6 @@ public class InputChecker {
 		return database.reportDiet(text,id);
 	}
 	public void consumptionUpdate(HealthSearch healthSearcher,SQLDatabaseEngine database,int amount,String id,String time) {
-		database.updateconsumption(healthSearcher,amount,id,time);
-		
+		database.updateconsumption(healthSearcher,amount,id,time);	
 	}
 }

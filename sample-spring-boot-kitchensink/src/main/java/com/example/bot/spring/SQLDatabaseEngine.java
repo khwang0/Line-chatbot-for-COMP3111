@@ -364,6 +364,31 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;
 	}
+	boolean pushfoodinfo(foodinfo food) {
+		boolean result = false;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"INSERT INTO foodinfo VALUES(?,?,?,?,?)");
+			stmt.setString(1,food.getFood());
+			stmt.setDouble(2,food.getEnergy());
+			stmt.setDouble(3,food.getProtein());
+			stmt.setDouble(4,food.getFiber());
+			stmt.setInt(5,food.getPrice());
+			result = stmt.execute();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+			return result;
+		}
+		return result;
+	}
+	
+	
+	
+	
+	
 	boolean updateUser(Users user) {
 		boolean result = false;
 
