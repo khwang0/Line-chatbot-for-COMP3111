@@ -45,40 +45,40 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		throw new Exception("NOT FOUND");
 	}
 
-	DetailedUser searchDetailedUser(Users user) throws Exception { //this contains bug
-		DetailedUser newuser = null;
-		try {
-			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT * FROM detailedusers WHERE id=(?)");
-			stmt.setString(1,user.getID());
-			ResultSet rs = stmt.executeQuery();
+	// DetailedUser searchDetailedUser(Users user) throws Exception { //this contains bug
+	// 	DetailedUser newuser = null;
+	// 	try {
+	// 		Connection connection = this.getConnection();
+	// 		PreparedStatement stmt = connection.prepareStatement(
+	// 				"SELECT * FROM detailedusers WHERE id=(?)");
+	// 		stmt.setString(1,user.getID());
+	// 		ResultSet rs = stmt.executeQuery();
 
-			while(rs.next()) {
-				newuser = new DetailedUser(user);
-				newuser.setExercise(rs.getInt(2)) ;
-				newuser.setBodyFat(rs.getDouble(3));
-				newuser.setCalories(rs.getInt(4));
-				newuser.setCarbs(rs.getDouble(5)) ;
-				newuser.setProtein(rs.getDouble(6));
-				newuser.setVegfruit(rs.getDouble(7));
-				newuser.setOtherInfo(rs.getString(9));
-				newuser.setAssessmentScore(rs.getInt(10));
-				Array sqlArray = rs.getArray(8);
-				newuser.setEatingHabits((Boolean[])sqlArray.getArray());
+	// 		while(rs.next()) {
+	// 			newuser = new DetailedUser(user);
+	// 			newuser.setExercise(rs.getInt(2)) ;
+	// 			newuser.setBodyFat(rs.getDouble(3));
+	// 			newuser.setCalories(rs.getInt(4));
+	// 			newuser.setCarbs(rs.getDouble(5)) ;
+	// 			newuser.setProtein(rs.getDouble(6));
+	// 			newuser.setVegfruit(rs.getDouble(7));
+	// 			newuser.setOtherInfo(rs.getString(9));
+	// 			newuser.setAssessmentScore(rs.getInt(10));
+	// 			Array sqlArray = rs.getArray(8);
+	// 			newuser.setEatingHabits((Boolean[])sqlArray.getArray());
 
-			}
-			rs.close();
-			stmt.close();
-			connection.close();
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
-		if(newuser != null)	{
-			return newuser;
-		}
-		throw new Exception("NOT FOUND");
-	}
+	// 		}
+	// 		rs.close();
+	// 		stmt.close();
+	// 		connection.close();
+	// 	} catch (Exception e) {
+	// 		log.info(e.getMessage());
+	// 	}
+	// 	if(newuser != null)	{
+	// 		return newuser;
+	// 	}
+	// 	throw new Exception("NOT FOUND");
+	// }
 
 	boolean pushUser(Users user) {
 		boolean result = false;
