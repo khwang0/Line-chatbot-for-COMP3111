@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html layout:decorator="layout/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block layout:fragment="content">
+    <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Create new activity</div>
+                <div class="panel-body">
+                    <form method = "post" class="form-group" action="/addDouble11Activity">
+                                            
+                        <div class="form-group">
+  							<label for="sel1">Tour ID:</label>
+  							<select class="form-control" id="bootableid" name = "bootableid">
+    							<option th:each="tour : ${tours}" 
+    									th:text="${tour.getTourId()}"
+    									th:value="${tour.getTourId()}"></option>
+  							</select>
+						</div>
+                        
+                        <div class="form-group">
+                            <label for="adults">Quota:&nbsp;</label>
+                            <input class="form-control" type="number" name="quota" id="quota" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+      						<label for="time">Sending time:</label>
+      						<input class="form-control" type="datetime-local" id="time" name = "time"/>
+    					</div>
+
+                        <input class="btn btn-primary" type="submit" value="Save"/>
+
+                    </form>
+                </div>
+                <div class="panel-footer"><span th:text="${message}">Status</span></div>
+            </div>
+        </div>
+    	        <div class="col-md-8 col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Tour List</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Activity Tour ID</th>
+                                <th>Quota left</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="activity : ${activities}">
+                                <td th:text="${activity.getBootableId()}">Tour ID</td>
+                                <td th:text="${activity.getQuota()}">Quota left</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
