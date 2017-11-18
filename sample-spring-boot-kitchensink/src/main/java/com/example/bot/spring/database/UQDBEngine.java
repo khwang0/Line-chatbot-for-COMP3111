@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class UQDBEngine extends DBEngine {
@@ -13,68 +14,83 @@ public class UQDBEngine extends DBEngine {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String retrieveReply(){
+	public void updateTable() {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		String reply="";
-		try {
-			connection=getConnection();
-			stmt = connection.prepareStatement("select * from unanswered_default_reply");
-			ResultSet rs=stmt.executeQuery();
-			while (rs.next()) {
-				reply=rs.getString(1);
-			}
-		}catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			try {
-				if (stmt != null) stmt.close();
-				if (connection != null) connection.close();
-			} catch (Exception e2) {
-				System.err.println(e2.getMessage());
-			}
-		}
-		if (reply.equals("")) {
-			return "Database fatal error";
-		}
-		else {
-			return reply;
-		}
+
+		connection=getConnection();
+		stmt = connection.prepareStatement(
+				"update unanswered_question set sent_or_not = true where answered_or_not = true"
+		);
+		ResultSet rs=stmt.executeUpdate();
+		
+		if (stmt != null) stmt.close();
+		if (connection != null) connection.close();
 	}
 	
-	public String uqQuery(String userId, String text) {
+	public String retrieveReply() throws Exception {
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		String reply="";
+
+		connection=getConnection();
+		stmt = connection.prepareStatement("select * from unanswered_default_reply");
+		ResultSet rs=stmt.executeQuery();
+		while (rs.next()) {
+			reply=rs.getString(1);
+		}
+		
+		if (stmt != null) stmt.close();
+		if (connection != null) connection.close();
+
+		return reply;
+	}
+	
+	public ArrayList<String> answer() throws Exception{
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		ArrayList<String> reply= new ArrayList<String>();
+
+		connection=getConnection();
+		stmt = connection.prepareStatement(
+				"select * from unanswered_question where answered_or_not = true and sent_or_not= false"
+		);
+		ResultSet rs=stmt.executeQuery();
+		while (rs.next()) {
+			String temp="";
+			temp+=rs.getString(1);
+			temp+=",";
+			temp+=rs.getString(2);
+			temp+=",";
+			temp+=rs.getString(4);
+			reply.add(temp);
+		}
+		
+		if (stmt != null) stmt.close();
+		if (connection != null) connection.close();
+		
+		updateTable();
+
+		return reply;
+	}
+	
+	public String uqQuery(String userId, String text) throws Exception{
 		//System.out.println("Success");
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		String reply="";
-		try {
-			connection = getConnection();
-			//insert into the unanswered question table to store the question
-			stmt = connection.prepareStatement(
-					"insert into unanswered_question values( '"+userId+"', '"+text+"', false, , false)"
-			);
-			stmt.executeUpdate();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			//
-			//stmt.close();
-			//connection.close();
-			try {
-				if (stmt != null) stmt.close();
-				if (connection != null) connection.close();
-			} catch (Exception e2) {
-				System.err.println(e2.getMessage());
-			}
-		}
+
+		connection = getConnection();
+		//insert into the unanswered question table to store the question
+		stmt = connection.prepareStatement(
+				"insert into unanswered_question values( '"+userId+"', '"+text+"', false, , false)"
+		);
+		stmt.executeUpdate();
+
+		if (stmt != null) stmt.close();
+		if (connection != null) connection.close();
+
 
 		return retrieveReply();
 	}
