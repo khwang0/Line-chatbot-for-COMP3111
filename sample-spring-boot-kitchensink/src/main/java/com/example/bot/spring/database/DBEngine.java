@@ -184,8 +184,8 @@ public class DBEngine {
 		String password = dbUri.getUserInfo().split(":")[1];
 		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() +  "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 
-		//log.info("Username: {} Password: {}", username, password);
-		//log.info ("dbUrl: {}", dbUrl);
+		log.info("Username: {} Password: {}", username, password);
+		log.info ("dbUrl: {}", dbUrl);
 		
 		connection = DriverManager.getConnection(dbUrl, username, password);
 
