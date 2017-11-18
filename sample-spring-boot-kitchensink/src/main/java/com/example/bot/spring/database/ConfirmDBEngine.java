@@ -47,14 +47,22 @@ public class ConfirmDBEngine extends DBEngine {
 	
 	// functions for confirmation 
 	// return all tour whose tourist number > min && not yet been confirmed; 
-	public List<String> getAllUnconfirmedTours(){
+	public List<String> getAllUnconfirmedTours(boolean fullfilled){
 		List<String> unconfirmed_tours = new ArrayList<String>();
 		PreparedStatement nstmt = null;
 		
 		openConnection();
-		String statement = "SELECT bootableid FROM booking_table "
-				+ "WHERE paidnum >= mintourist AND confirmed = 'unconfirmed' ";
-		// use paidnum rather than registernum; 
+		// if fullfillled, retrieve all tour which can be confirmed
+		// else, retrieve all tour which should be cancelled; 
+		if (fullfilled) {
+			String statement = "SELECT bootableid FROM booking_table "
+					+ "WHERE paidnum >= mintourist AND confirmed = 'unconfirmed' ";
+			// use paidnum rather than registernum; 			
+		}else {
+			String statement = "SELECT bootableid FROM booking_table "
+					+ "WHERE paidnum < mintourist AND confirmed = 'unconfirmed' ";
+		}
+
 		try {
 			nstmt = connection.prepareStatement(statement);
 			ResultSet rs = this.query(nstmt);

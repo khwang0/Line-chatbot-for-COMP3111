@@ -28,7 +28,7 @@ public class ConfirmBroadcaster implements Broadcaster {
 			this.confirmdb = new ConfirmDBEngine();
 			// check each trip available in db
 			// if there are any trip get to min tourist yet haven't been confirmed, confirm order; 
-			List<String> tourids = confirmdb.getAllUnconfirmedTours();
+			List<String> tourids = confirmdb.getAllUnconfirmedTours(true);
 			
 			// extract all contactor info into a Set<String> to;
 			// extract tourid into String tourid;
