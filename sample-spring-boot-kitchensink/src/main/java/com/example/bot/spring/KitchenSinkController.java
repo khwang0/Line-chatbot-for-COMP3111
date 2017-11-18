@@ -36,6 +36,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.BeaconEvent;
 import com.linecorp.bot.model.event.Event;
@@ -66,7 +67,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @LineMessageHandler
-@Controller
 public class KitchenSinkController {
 
 	@Autowired
@@ -201,6 +201,7 @@ public class KitchenSinkController {
         }catch(Exception e) {
         	System.err.println("XXXXXXXXXXXXXXXXXXXXXXXX");
         	System.err.println(e.getMessage());
+        	e.printStackTrace();
         	reply = "I'm stupid";
         }
         log.info("Returns echo message {}: {}", replyToken, reply);

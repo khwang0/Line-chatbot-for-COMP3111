@@ -49,15 +49,15 @@ public class Customer {
 		return adults;
 	}
 
-	public void setAdults(Integer adults) {
+	public void setAdults(int adults) {
 		this.adults = adults;
 	}
 	
 	public int getChildren() {
-		return adults;
+		return children;
 	}
 
-	public void setChildren(Integer children) {
+	public void setChildren(int children) {
 		this.children = children;
 	}
 	
@@ -65,7 +65,7 @@ public class Customer {
 		return toddler;
 	}
 	
-	public void setToddler(Integer toddler) {
+	public void setToddler(int toddler) {
 		this.toddler = toddler;
 	}
 	
