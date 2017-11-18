@@ -157,7 +157,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Connection connection = this.getConnection();
 			String gender = ""+currentUser.getGender();
 			PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age < ? AND max_age > ?" );
-			ref.setString(1, ""+currentUser.getGender());
+			ref.setString(1, gender);
 			ref.setInt(2, currentUser.getAge());
 			ref.setInt(3, currentUser.getAge());
 			ResultSet rs = ref.executeQuery();
