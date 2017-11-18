@@ -17,8 +17,7 @@ import com.linecorp.bot.model.message.TextMessage;
 
 public class UQAnswerReplier implements Broadcaster{
 	
-	@Autowired
-	LineMessagingClientImpl lineMessagingClient;
+	LineMessagingClient lineMessagingClient;
 
 	public UQAnswerReplier() {
 		// TODO Auto-generated constructor stub
