@@ -90,7 +90,7 @@
         											<a data-toggle="collapse" th:href="'#collapse_'+${customer.getName()}+${customer.getBootableId()}">Update payment</a>
       											</h4>
     										</div>
-    										<div th:id="'#collapse_'+${customer.getName()}+${customer.getBootableId()}" class="panel-collapse collapse">
+    										<div th:id="'collapse_'+${customer.getName()}+${customer.getBootableId()}" class="panel-collapse collapse">
       											<div class="panel-body">
       												<form method = "post" class="form-group" action="/updatePayment">
       												<div class="form-group">

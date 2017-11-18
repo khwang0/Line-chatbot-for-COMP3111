@@ -234,7 +234,7 @@ public class WebAppDBEngine extends DBEngine {
 		int tourCapacity = tour.getTourCapacity();
 		int minTourist = tour.getMinTourist();
 		nstmt.setString(1, bootableid);
-		nstmt.setDate(2, (Date)df.parse(date));
+		nstmt.setDate(2, new java.sql.Date(df.parse(date).getTime()));
 		nstmt.setInt(3,tourGuideId);
 		nstmt.setString(4,nameOfHotel);
 		nstmt.setInt(5, tourCapacity);
