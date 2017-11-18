@@ -21,7 +21,7 @@ public class PayFeeReminder {
 			return null;
 		}
 		
-		Message reply = new TextMessage ("You have yet to pay the fee. Please pay as soon as possible.")
+		Message reply = new TextMessage ("You have yet to pay the fee. Please pay as soon as possible.");
 		
 		return Multicast(id, reply);
 	}
