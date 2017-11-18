@@ -186,5 +186,59 @@ public class WebAppDBEngine extends DBEngine {
 		connection.close();
 		connection = null;
 	}
+
+	public LinkedList<Tour> getGeneralTourInfo() throws Exception {
+		connection = this.getConnection();
+		PreparedStatement stmt;
+		ResultSet rs;
+		LinkedList<Tour> result = new LinkedList<Tour>(); 
+	
+		String statement = "SELECT DISTINCT tourid, tour_name FROM tour_info";
+		stmt = connection.prepareStatement(statement);
+		rs = stmt.executeQuery();			
+		while (rs.next()) {
+			String tourId = rs.getString(1); 
+			String name = rs.getString(2);
+			Tour tour = new Tour();
+			tour.setTourId(tourId);
+			tour.setTourName(name);
+			result.add(tour);
+		}
+		
+		rs.close();
+		stmt.close();
+		connection.close();
+		connection = null;
+		return result;
+	}
+
+	public void addNewTour(Tour tour) throws Exception{
+		connection = this.getConnection();
+		PreparedStatement nstmt = connection.prepareStatement(
+				"SELECT");
+		nstmt = connection.prepareStatement(
+				"INSERT INTO customer_info"
+				+ " VALUES (0,?,?,0,?,?,?,?,?,0,?) ");
+		String tourId = tour.getTourId();
+		String date = tour.getTourDate();
+		String mm = date.substring(5,7);
+		String dd = date.substring(8);
+		int tourGuideId = tour.getTourGuideId();
+		String nameOfHotel = tour.getNameOfHotel();
+		int tourCapacity = tour.getTourCapacity();
+		
+		nstmt.setString(1, name);
+		nstmt.setString(2, phone);
+		nstmt.setString(3,bootableid);
+		nstmt.setInt(4, adults);
+		nstmt.setInt(5, children);
+		nstmt.setInt(6, toddler);
+		nstmt.setDouble(7, totalPrice);
+		nstmt.setString(8, special);
+		nstmt.execute();
+		nstmt.close();
+		connection.close();
+		connection = null;
+	}
 	
 }

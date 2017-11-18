@@ -14,5 +14,15 @@ public class TourRepo {
 		WebAppDBEngine webDB = new WebAppDBEngine();
 		return webDB.getAllTourInfo();
 	}
+
+	public LinkedList<Tour> getGeneralTours() throws Exception {
+		WebAppDBEngine webDB = new WebAppDBEngine();
+		return webDB.getGeneralTourInfo();
+	}
+
+	public void addTour(Tour tour) throws Exception{
+		WebAppDBEngine webDB = new WebAppDBEngine();
+		webDB.addNewTour(tour);
+	}
 	
 }

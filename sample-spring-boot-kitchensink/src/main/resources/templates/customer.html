@@ -14,9 +14,13 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="bootableid">Tour ID:&nbsp;</label>
-                            <input class="form-control" type="text" name="bootableid" id="bootableid" maxlength="20"/>
-                        </div>
+  							<label for="sel1">Tour ID:</label>
+  							<select class="form-control" id="bootableid" name = "bootableid">
+    							<option th:each="tour : ${tours}" 
+    									th:text="${tour.getTourId()}"
+    									th:value="${tour.getTourId()}"></option>
+  							</select>
+						</div>
                         
                         <div class="form-group">
                             <label for="adults">Number of adults:&nbsp;</label>

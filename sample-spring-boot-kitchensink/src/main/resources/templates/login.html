@@ -11,15 +11,15 @@
             You have been logged out.
         </div>
         <form th:action="@{/login}" method="post">
-            <div>
+            <div class="input-group">
             	<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
             	<input type="text" class="form-control" name="username" placeholder="User name"/>
             </div>
-            <div>
+            <div class="input-group">
             	<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
             	<input type="password" class="form-control" name="password" placeholder="Password"/>
             </div>
-            <div><button type="submit" class="btn btn-default" value="Sign In"/></div>
+            <div><button type="submit" class="btn btn-default" value="Sign In"></button></div>
         </form>
     </th:block>
     </body>

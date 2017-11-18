@@ -19,4 +19,13 @@ public class TourService {
 		return tours;
 	}
 
+	public LinkedList<Tour> getGeneralTours() throws Exception {
+		LinkedList<Tour> tours = tourRepo.getGeneralTours();
+		return tours;
+	}
+
+	public void addTour(Tour tour) {
+		tourRepo.addTour(tour);
+	}
+
 }

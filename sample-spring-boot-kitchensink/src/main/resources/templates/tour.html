@@ -3,6 +3,42 @@
 <body>
 <th:block layout:fragment="content">
     <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Add new customer</div>
+                <div class="panel-body">
+                    <form method = "post" class="form-group" action="/addtour">
+                        <div class="form-group">
+  							<label for="tourId">Tour ID:</label>
+  							<select class="form-control" id="tourId" name = "tourId">
+    							<option th:each="tour : ${generalTours}" 
+    									th:text="${tour.getTourId()}"
+    									th:value="${tour.getTourId()}"></option>
+  							</select>
+						</div>
+                        
+                        <div class="form-group">
+                            <label for="date">Date:&nbsp;</label>
+                            <input class="form-control" type="date" name="date" id="date" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="capcity">Tour capacity:&nbsp;</label>
+                            <input class="form-control" type="number" name="capcity" id="capcity" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nameOfHotel">Hotel name:&nbsp;</label>
+                            <input class="form-control" type="text" name="nameOfHotel" id="nameOfHotel" maxlength="50"/>
+                        </div>
+
+                        <input class="btn btn-primary" type="submit" value="Save"/>
+
+                    </form>
+                </div>
+                <div class="panel-footer"><span th:text="${message}">Status</span></div>
+            </div>
+        </div>
         <div class="col-md-8 col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading">Tour List</div>

@@ -13,12 +13,14 @@ import com.example.bot.spring.webapplication.service.CustomerService;
 class CustomerController {
     @Autowired
     CustomerService customerService;
+    
 
     @RequestMapping(value = "/customer", method = RequestMethod.GET)
     ModelAndView home() {
     	ModelAndView modelAndView = new ModelAndView("customer");
     	try {
 			modelAndView.addObject("customers", customerService.getCustomers());
+        	modelAndView.addObject("tours",customerService.getAllTours());
 		} catch (Exception e) {
 			e.printStackTrace();
 			modelAndView.addObject("message", "Failed to get customer infos");
@@ -53,7 +55,8 @@ class CustomerController {
             modelAndView.addObject("message", "Failed to add customer: " + e.getMessage());
         }
         try {
-        modelAndView.addObject("customers", customerService.getCustomers());
+        	modelAndView.addObject("customers", customerService.getCustomers());
+        	modelAndView.addObject("tours",customerService.getAllTours());
         }catch(Exception e) {
         	e.printStackTrace();
         	modelAndView.addObject("message", "Failed to get customer infos");
