@@ -1,6 +1,6 @@
 package com.example.bot.spring.textsender;
 
-import java.util.*
+import java.util.*;
 //import java.util.GregorianCalendar;
 //import java.util.List;
 //import java.util.Set;
@@ -20,7 +20,7 @@ public class UQAnswerReplier implements Broadcaster{
 			String userID;
 			String question;
 			String answer;
-			String[3] temp = reply.split(",");
+			String[] temp = reply.split(",");
 			userID=temp[0];
 			question=temp[1];
 			answer=temp[2];
