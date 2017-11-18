@@ -137,7 +137,7 @@ public class StageHandler {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
-			if(! (currentUser instanceof DetailedUser)) {
+			if(currentUser.getBodyFat()==0) {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 				+ "We provide serveral functions for you to keep your fitness."
 				+ "Please type the number of function you wish to use. :)\n\n"
@@ -171,7 +171,7 @@ public class StageHandler {
 				replymsg = "Wellcome to Living Habit Collector! You can edit or input more detailed information"
 						+ "about yourself. This can help us make a more precise suggestion for you!\n"
 						+ "please follow the instructions below (type any to continue)";
-				if(!(currentUser instanceof DetailedUser)) {
+				if(currentUser.getBodyFat()==0) {
 					currentUser.setStage("LivingHabitCollector");
 					currentUser.setSubStage(0);
 				}else {
