@@ -967,7 +967,7 @@ public class BookingDBEngine extends DBEngine {
 			stmt = connection.prepareStatement(
 					"select line_user_info.userid from line_user_info join customer_info on "
 					+ "customer_info.customername=line_user_info.name "
-					+ "where customer_info.tourfee<>customer_info.paidamount");
+					+ "where customer_info.tourfee>customer_info.paidamount");
 			ResultSet rs = stmt.executeQuery();
 			Set<String> idSet=new Set<String>();
 			while(rs.next()) {

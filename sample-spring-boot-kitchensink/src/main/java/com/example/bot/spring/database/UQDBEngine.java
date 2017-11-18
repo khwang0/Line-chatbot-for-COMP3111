@@ -55,7 +55,7 @@ public class UQDBEngine extends DBEngine {
 			connection = getConnection();
 			//insert into the unanswered question table to store the question
 			stmt = connection.prepareStatement(
-					"insert into unanswered_question values( '"+userId+"', '"+text+"', false, "", false)"
+					"insert into unanswered_question values( '"+userId+"', '"+text+"', false, , false)"
 			);
 			stmt.executeUpdate();
 		} catch (URISyntaxException e) {
