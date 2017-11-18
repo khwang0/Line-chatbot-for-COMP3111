@@ -31,7 +31,7 @@ public class KitchenSinkTester {
 	@Autowired
 	private SQTextSender sqsender;
 	
-	private String testerId="123456";
+	private String testerId="234567";
 	
 	@Test
 	public void UQTester() throws Exception {
@@ -205,7 +205,7 @@ public class KitchenSinkTester {
 		assertThat(reply).isEqualTo("On which date you are going? (in DD/MM format)");
 		reply = bookingTS.process(testerId, "18/11");
 		assertThat(reply).isEqualTo("Your name please (Firstname LASTNAME)");
-		reply = bookingTS.process(testerId, "Abc DEF");
+		reply = bookingTS.process(testerId, "233 HHH");
 		assertThat(reply).isEqualTo("How many adults?");
 		reply = bookingTS.process(testerId, "2");
 		assertThat(reply).isEqualTo("How many children (Age 4 to 11)?");
