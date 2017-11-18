@@ -395,19 +395,19 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setInt(5, user.getAge()); 
 			stmt.setString(6,user.getStage());
 			stmt.setInt(7,user.getSubStage());
-			stmt.setInt(8, ((DetailedUser)user).getExercise());
-			stmt.setDouble(9, ((DetailedUser)user).getBodyFat());
-			stmt.setInt(10, ((DetailedUser)user).getCalories());
-			stmt.setDouble(11, ((DetailedUser)user).getCarbs());
-			stmt.setDouble(12, ((DetailedUser)user).getProtein());
-			stmt.setDouble(13, ((DetailedUser)user).getVegfruit());
-			boolean[] h = ((DetailedUser)user).getEatingHabits();
+			stmt.setInt(8, (user).getExercise());
+			stmt.setDouble(9, (user).getBodyFat());
+			stmt.setInt(10, (user).getCalories());
+			stmt.setDouble(11, (user).getCarbs());
+			stmt.setDouble(12, (user).getProtein());
+			stmt.setDouble(13, (user).getVegfruit());
+			boolean[] h = (user).getEatingHabits();
 			Boolean[] b = new Boolean[h.length];
 			for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
 			Array sqlArray = connection.createArrayOf("bool",b);
 			stmt.setArray(14,sqlArray);
-			stmt.setString(15,((DetailedUser)user).getOtherInfo());
-			stmt.setInt(16,((DetailedUser)user).getAssessmentScore());
+			stmt.setString(15,(user).getOtherInfo());
+			stmt.setInt(16,(user).getAssessmentScore());
 
 		    result = stmt.execute();
 			stmt.close();
