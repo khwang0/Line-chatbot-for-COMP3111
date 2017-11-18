@@ -335,8 +335,6 @@ public class StageHandler {
 				String date = ft.format(dNow);//20171102
 
 				ArrayList<Double> plan_info = database.search_plan(user_id);
-				if(plan_info.size()==0)
-					replymsg += "spshit!!!!!!!";
 				
 				double meat_serve = plan_info.get(5);
 				double milk_serve = plan_info.get(6);

@@ -337,7 +337,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 					current_sugar = previous_sugar;
 				}	
 				PreparedStatement stmt2 = connection.prepareStatement(
-						"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");
+						//"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");
+						"UPDATE diet_conclusion SET protein = ?, fiber = ?, energy = ? WHERE id = ? AND date = ?;");
 
 				stmt2.setDouble(1, current_protein);
 				stmt2.setDouble(2, current_fat);
