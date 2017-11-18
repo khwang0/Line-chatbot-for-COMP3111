@@ -66,7 +66,7 @@ public class WebAppDBEngine extends DBEngine {
 		LinkedList<Tour> allTours = new LinkedList<Tour>();
 		PreparedStatement nstmt;
 			nstmt = connection.prepareStatement(
-					"SELECT  b.bootableid, i.tour_name, b.tourdate, b.tourguideid, b.hotel, b.tourcapcity, b.registerednum"
+					"SELECT  b.bootableid, i.tour_name, b.tourdate, b.tourguideid, b.hotel, b.tourcapcity, b.registerednum, b.mintourist"
 					+ " FROM booking_table b, tour_touroffer_relation o, tour_info i "
 					+ " WHERE b.bootableid = o.bootableid"
 					+ " AND i.tourid = o.tourid");
@@ -80,6 +80,7 @@ public class WebAppDBEngine extends DBEngine {
 				String nameOfHotel = rs.getString(5);
 				int tourCapacity = rs.getInt(6);
 				int registeredNum = rs.getInt(7);
+				int minTourist = rs.getInt(8);
 				tour.setNameOfHotel(nameOfHotel);
 				tour.setRegisteredNum(registeredNum);
 				tour.setTourCapacity(tourCapacity);
@@ -87,6 +88,7 @@ public class WebAppDBEngine extends DBEngine {
 				tour.setTourGuideId(tourGuideId);
 				tour.setTourId(tourId);
 				tour.setTourName(tourName);
+				tour.setMinTourist(minTourist);
 				allTours.add(tour);
 			}
 			nstmt.close();
