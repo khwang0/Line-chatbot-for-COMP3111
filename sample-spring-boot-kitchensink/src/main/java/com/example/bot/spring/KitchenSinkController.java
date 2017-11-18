@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.google.common.io.ByteStreams;
@@ -65,6 +66,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @LineMessageHandler
+@Controller
 public class KitchenSinkController {
 
 	@Autowired
