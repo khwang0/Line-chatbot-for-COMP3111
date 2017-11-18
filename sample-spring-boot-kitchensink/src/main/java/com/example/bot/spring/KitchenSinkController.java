@@ -213,6 +213,7 @@ public class KitchenSinkController {
         String reply = null;
         if (text.toLowerCase().contains("gather")) {
         	this.reply(replyToken, new ImageMessage(gathering,gathering));
+		return ;
         }
         try {
         	reply = processor.processText(userId, text);
