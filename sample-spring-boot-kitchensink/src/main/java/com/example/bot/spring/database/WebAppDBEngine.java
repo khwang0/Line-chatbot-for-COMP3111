@@ -29,6 +29,7 @@ public class WebAppDBEngine extends DBEngine {
 				"SELECT * "
 				+ " FROM customer_info");
 		ResultSet rs = nstmt.executeQuery();
+		int idx = 1;
 		while(rs.next()) {
 			Customer cus = new Customer();
 			String name = rs.getString(2);
@@ -40,6 +41,7 @@ public class WebAppDBEngine extends DBEngine {
 			double totalPrice = rs.getDouble(9);
 			double pricePaid = rs.getDouble(10);
 			String special = rs.getString(11);
+			cus.setIdx(idx);
 			cus.setAdults(adults);
 			cus.setBootableId(bootableid);
 			cus.setChildren(children);
@@ -50,6 +52,7 @@ public class WebAppDBEngine extends DBEngine {
 			cus.setPricePaid(pricePaid);
 			cus.setTotalPrice(totalPrice);
 			allCus.add(cus);
+			idx++;
 		}
 		nstmt.close();
 		rs.close();
@@ -153,19 +156,22 @@ public class WebAppDBEngine extends DBEngine {
 		PreparedStatement stmt;
 		ResultSet rs;
 		LinkedList<UQ> result = new LinkedList<UQ>(); 
-	
+		
 		String statement = "SELECT * FROM unanswered_question ";
 		stmt = connection.prepareStatement(statement);
-		rs = stmt.executeQuery();			
+		rs = stmt.executeQuery();	
+		int idx = 1;
 		while (rs.next()) {
 			String id = rs.getString(1); 
 			String question = rs.getString(2);
 			boolean answered = rs.getBoolean(3);
 			if(!answered) {
 				UQ uq = new UQ();
+				uq.setIdx(idx);
 				uq.setId(id);
 				uq.setQuestion(question);
 				result.add(uq);
+				idx++;
 			}
 		}
 		

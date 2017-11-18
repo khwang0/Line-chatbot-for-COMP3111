@@ -23,10 +23,10 @@
   										<div class="panel panel-default">
     										<div class="panel-heading">
       											<h4 class="panel-title">
-        											<a data-toggle="collapse" href="#collapse1">Answer this</a>
+        											<a data-toggle="collapse" th:href="'#collapse_'${uq.getIdx()}">Answer this</a>
       											</h4>
     										</div>
-    										<div id="collapse1" class="panel-collapse collapse">
+    										<div th:id="'collapse_'${uq.getIdx()}" class="panel-collapse collapse">
       											<div class="panel-body">
       												<form method = "post" class="form-group" action="/answerUQ">
       												<div class="form-group">

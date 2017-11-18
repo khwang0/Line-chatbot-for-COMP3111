@@ -11,6 +11,7 @@ public class Customer {
     String special;
     double totalPrice;
     double pricePaid;
+    int idx;
 
     public String getName() {
         return name;
@@ -82,5 +83,13 @@ public class Customer {
 	
 	public void setPricePaid(double pricePaid) {
 		this.pricePaid = pricePaid;
+	}
+	
+	public int getIdx() {
+		return idx;
+	}
+	
+	public void setIdx(int idx) {
+		this.idx = idx;
 	}
 }
