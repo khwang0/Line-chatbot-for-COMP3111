@@ -18,9 +18,6 @@ public class foodInput{
 	public String getTime() {return currentTime;}
 	public int getAmount() {return amount;}
 	public String getFoodName() {return foodName;}
-	
-	
-	
 	public void setFood(String food) {foodName = food;}
 	public void setAmount(int n) {amount = n;}
 	
