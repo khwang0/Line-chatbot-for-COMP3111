@@ -29,8 +29,8 @@ public class KitchenSinkApplication {
     static Path downloadedContentDir;
 
     public static void main(String[] args) throws IOException {
-    	LineListener listener=new LineListener();
-    	listener.start();
+    	//LineListener listener=new LineListener();
+    	//listener.start();
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
     }

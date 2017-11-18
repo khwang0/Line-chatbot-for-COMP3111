@@ -66,7 +66,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @LineMessageHandler
-@Controller
 public class KitchenSinkController {
 
 	@Autowired
