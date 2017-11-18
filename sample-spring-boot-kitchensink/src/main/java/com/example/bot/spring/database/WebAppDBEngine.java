@@ -2,9 +2,12 @@ package com.example.bot.spring.database;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -13,6 +16,8 @@ import com.example.bot.spring.webapplication.domain.*;
 
 
 public class WebAppDBEngine extends DBEngine {
+	
+	static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private Connection connection;
 	
@@ -219,6 +224,7 @@ public class WebAppDBEngine extends DBEngine {
 				+ " VALUES (?,?,?,?,?,?,0,'unconfirmed',0)");
 		String tourId = tour.getTourId();
 		String date = tour.getTourDate();
+		
 		String yyyy = date.substring(0, 4);
 		String mm = date.substring(5,7);
 		String dd = date.substring(8);
@@ -228,7 +234,7 @@ public class WebAppDBEngine extends DBEngine {
 		int tourCapacity = tour.getTourCapacity();
 		int minTourist = tour.getMinTourist();
 		nstmt.setString(1, bootableid);
-		nstmt.setString(2, date);
+		nstmt.setDate(2, (Date)df.parse(date));
 		nstmt.setInt(3,tourGuideId);
 		nstmt.setString(4,nameOfHotel);
 		nstmt.setInt(5, tourCapacity);
