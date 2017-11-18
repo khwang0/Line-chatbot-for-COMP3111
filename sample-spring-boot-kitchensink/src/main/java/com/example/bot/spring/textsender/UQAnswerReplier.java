@@ -14,14 +14,15 @@ import com.linecorp.bot.client.LineMessagingClientImpl;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.response.BotApiResponse;
 
 public class UQAnswerReplier implements Broadcaster{
 	
+	@Autowired
 	LineMessagingClient lineMessagingClient;
 
 	public UQAnswerReplier() {
 		// TODO Auto-generated constructor stub
-		lineMessagingClient = new LineMessagingClientImpl();
 	}
 
 	@Override
@@ -38,7 +39,8 @@ public class UQAnswerReplier implements Broadcaster{
 			question=temp[1];
 			answer=temp[2];
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
-			lineMessagingClient.pushMessage(new PushMessage(userID, message));
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(userID, Collections.singletonList(message))).get();
+			System.out.println(apiResponse);
 		}
 	}
 }

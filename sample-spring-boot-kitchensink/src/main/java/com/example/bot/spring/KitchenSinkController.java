@@ -36,6 +36,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.BeaconEvent;
 import com.linecorp.bot.model.event.Event;
