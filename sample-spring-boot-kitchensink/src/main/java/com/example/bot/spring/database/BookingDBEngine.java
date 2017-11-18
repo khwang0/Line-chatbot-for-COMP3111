@@ -5,9 +5,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+//import java.util.Calendar;
+//import java.util.GregorianCalendar;
+//import java.util.LinkedList;
+import java.util.*;
 
 public class BookingDBEngine extends DBEngine {
 	
@@ -733,7 +738,7 @@ public class BookingDBEngine extends DBEngine {
 			while(rs.next()) {
 				String offerId = rs.getString(1);
 				String date = offerId.substring(9); // parse date from the last 4 digit of offerID?
-				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ???? 
+	
 				if(!allDates.equals(""))
 					allDates = allDates + "," + date;
 				else
@@ -984,7 +989,5 @@ public class BookingDBEngine extends DBEngine {
 			e.printStackTrace();
 		}
 	}
-
-
 
 }
