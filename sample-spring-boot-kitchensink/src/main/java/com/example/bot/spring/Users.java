@@ -75,6 +75,7 @@ public class Users {
 		}
 	}
 	public void setOtherInfo(String s) {otherInfo = s;}
+	public void setAssessmentScore(int s){assessmentScore = s;}
 
 	//assume inputs are always valid
 	public String getID() {return UID;}
@@ -97,7 +98,6 @@ public class Users {
 
 	// modified user's assessment scores
 	public int getAssessmentScore(){return assessmentScore;}
-	public void setAssessmentScore(int s){assessmentScore = s;}
 
 
 	@Override
