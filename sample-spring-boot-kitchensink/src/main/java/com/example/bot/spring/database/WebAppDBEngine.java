@@ -1,5 +1,5 @@
 package com.example.bot.spring.database;
-/*
+
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -318,4 +318,4 @@ public class WebAppDBEngine extends DBEngine {
 		connection = null;
 	}
 	
-}*/
+}
