@@ -385,7 +385,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"UPDATE users SET name = ?, gender = ?, height = ?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitsonsump=?, eatinghabits=?, otherinformation=?, assessmentscore=? WHERE id = ?");
+					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=? WHERE id = ?");
 			stmt.setString(17, user.getID());
 			stmt.setString(1, user.getName());
 			String temp = ""+user.getGender();
@@ -399,7 +399,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setDouble(9, user.getBodyFat());
 			stmt.setInt(10, user.getCalories());
 			stmt.setDouble(11, user.getCarbs());
-			stmt.setDouble(12, user.getProtein());
+			stmt.setDouble(12, user.getProtein( ));
 			stmt.setDouble(13, user.getVegfruit());
 			boolean[] h = user.getEatingHabits();
 			Boolean[] b = new Boolean[h.length];

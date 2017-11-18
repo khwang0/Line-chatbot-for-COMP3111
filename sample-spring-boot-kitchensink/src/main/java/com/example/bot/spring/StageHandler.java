@@ -510,12 +510,14 @@ public class StageHandler {
 					//updata db
 					currentUser.setStage("Main");//back to main
 					currentUser.setSubStage(0);
+					database.updateUser(currentUser);
 				}
 			}catch(Exception e) {
 				replymsg="All changed recorded. Type anything to return to main menu.";
 				//update db
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
+				database.updateUser(currentUser);
 			}
 		}break;
 		case 1:{
@@ -674,7 +676,7 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 1:{
-			if(inputChecker.BodyfatEditting(text, currentUser, database, "set")) {
+			if(inputChecker.BodyfatEditting(text, currentUser, database, "update")) {
         		replymsg = "Please tell us your average daily calories consumption(in kcal):";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -683,7 +685,7 @@ public class StageHandler {
 
 		}break;
 		case 2:{
-			if(inputChecker.CaloriesEditting(text, currentUser, database, "set")) {
+			if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
         		replymsg = "Please tell us your average daily carbohydrates consumption(roughly in g):";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -691,7 +693,7 @@ public class StageHandler {
 				replymsg = "Please enter reasonable numbers!";
 		}break;
 		case 3:{
-			if(inputChecker.CarbsEditting(text, currentUser, database, "set")) {
+			if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
         			replymsg = "Please tell us your average daily protein consumption(roughly in g):";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -700,7 +702,7 @@ public class StageHandler {
 				}
 		}break;
 		case 4:{
-			if(inputChecker.ProteinEditting(text, currentUser, database, "set")) {
+			if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
         			replymsg = "Please tell us your average daily vegetable/fruit consumption(in serving):";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -709,7 +711,7 @@ public class StageHandler {
 				}
 		}break;
 		case 5:{
-			if(inputChecker.VegfruitEditting(text, currentUser, database, "set")) {
+			if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
         			replymsg = "Do you eat breakfast?(y/n)";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -778,7 +780,7 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 12:{
-			if(inputChecker.ExerciseEditting(text, currentUser, database, "set")) {
+			if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
 				replymsg = "Any other infomation about your body you wish to let us know?(in 1000 characters)";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -787,7 +789,7 @@ public class StageHandler {
 
 		}break;
 		case 13:{
-			if(inputChecker.OtherinfoEditting(text, currentUser, database, "set")) {
+			if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
 				replymsg = "All set and recorded. Type anything to return to main menu.";
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
