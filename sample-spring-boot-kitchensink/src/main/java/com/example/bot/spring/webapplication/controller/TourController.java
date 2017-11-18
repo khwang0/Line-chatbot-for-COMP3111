@@ -1,8 +1,5 @@
 package com.example.bot.spring.webapplication.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,12 +30,13 @@ class TourController {
         return modelAndView;
     }
     
-    @RequestMapping(value = "/addcustomer", method = RequestMethod.POST)
+    @RequestMapping(value = "/addtour", method = RequestMethod.POST)
     ModelAndView addTour(@RequestParam(value="tourId", required=true, defaultValue= "") String tourId,
     						@RequestParam(value="date", required=true, defaultValue= "") String date,
     						@RequestParam(value="capcity", required=true, defaultValue= "") Integer tourCapacity,
     						@RequestParam(value="tourGuideId", required=true, defaultValue= "") Integer tourGuideId,
-    						@RequestParam(value="nameOfHotel", required=true, defaultValue= "") String nameOfHotel) throws Exception {
+    						@RequestParam(value="nameOfHotel", required=true, defaultValue= "") String nameOfHotel,
+    						@RequestParam(value="minTourist", required=true, defaultValue= "") Integer minTourist) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView("tour");
         try {
@@ -48,10 +46,12 @@ class TourController {
         	tour.setTourCapacity(tourCapacity);
         	tour.setTourGuideId(tourGuideId);
         	tour.setTourDate(date);
+        	tour.setMinTourist(minTourist);
+        	tourService.addTour(tour);
         }
         catch (Exception e){
         	e.printStackTrace();
-            modelAndView.addObject("message", "Failed to add customer: " + e.getMessage());
+            modelAndView.addObject("message", "Failed to add tour");
         }
         try {
         	modelAndView.addObject("tours", tourService.getTours());

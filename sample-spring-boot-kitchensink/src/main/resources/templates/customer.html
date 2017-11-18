@@ -46,7 +46,7 @@
                             <label for="special">Special requests:&nbsp;</label>
                             <input class="form-control" type="text" name="special" id="special" maxlength="50"/>
                         </div>
-
+                        
                         <input class="btn btn-primary" type="submit" value="Save"/>
 
                     </form>
@@ -83,6 +83,29 @@
                                 <td th:text="${customer.getTotalPrice()}">Total Price</td>
                                 <td th:text="${customer.getPricePaid()}">Price Paid</td>
                                 <td th:text="${customer.getSpecial()}">Special Requests</td>
+                                <td><div class="panel-group">
+  										<div class="panel panel-default">
+    										<div class="panel-heading">
+      											<h4 class="panel-title">
+        											<a data-toggle="collapse" href="#collapse1">Update payment</a>
+      											</h4>
+    										</div>
+    										<div id="collapse1" class="panel-collapse collapse">
+      											<div class="panel-body">
+      												<form method = "post" class="form-group" action="/updatePayment">
+      												<div class="form-group">
+      												<input type = "hidden" name = "name" th:value="${customer.getName()}"/>
+      												<input type = "hidden" name = "bootableid" th:value="${customer.getBootableId()}"/>
+      												<input type = "hidden" name = "pricePaid" th:value="${customer.getPricePaid()}"/>
+      												Price paid: <input class="form-control" type="number" name="payment" id="payment" maxlength="100"/>
+      												<input type="submit" value="Update" />
+      												</div>
+      												</form>
+      											</div>
+    										</div>
+  										</div>
+									</div>
+								</td>	
                             </tr>
                         </tbody>
                     </table>

@@ -18,7 +18,6 @@ class UQController {
 	UQService uqService;
 	
     @RequestMapping(value = "/uq", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
     ModelAndView home() {
     	ModelAndView modelAndView = new ModelAndView("uq");
     	try {

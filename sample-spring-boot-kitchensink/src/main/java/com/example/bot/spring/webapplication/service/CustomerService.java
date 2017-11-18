@@ -34,4 +34,8 @@ public class CustomerService {
 		return tours;
 	}
 
+	public void updatePayment(Customer customer) throws Exception{
+		customerRepo.updateCusomter(customer);
+	}
+
 }

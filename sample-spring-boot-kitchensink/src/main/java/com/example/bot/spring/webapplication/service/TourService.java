@@ -24,7 +24,7 @@ public class TourService {
 		return tours;
 	}
 
-	public void addTour(Tour tour) {
+	public void addTour(Tour tour) throws Exception {
 		tourRepo.addTour(tour);
 	}
 

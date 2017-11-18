@@ -1,5 +1,6 @@
 package com.example.bot.spring.database;
 
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -192,7 +193,6 @@ public class WebAppDBEngine extends DBEngine {
 		PreparedStatement stmt;
 		ResultSet rs;
 		LinkedList<Tour> result = new LinkedList<Tour>(); 
-	
 		String statement = "SELECT DISTINCT tourid, tour_name FROM tour_info";
 		stmt = connection.prepareStatement(statement);
 		rs = stmt.executeQuery();			
@@ -215,26 +215,89 @@ public class WebAppDBEngine extends DBEngine {
 	public void addNewTour(Tour tour) throws Exception{
 		connection = this.getConnection();
 		PreparedStatement nstmt = connection.prepareStatement(
-				"SELECT");
-		nstmt = connection.prepareStatement(
-				"INSERT INTO customer_info"
-				+ " VALUES (0,?,?,0,?,?,?,?,?,0,?) ");
+				"INSERT INTO booking_table"
+				+ " VALUES (?,?,?,?,?,?,0,'unconfirmed',0)");
 		String tourId = tour.getTourId();
 		String date = tour.getTourDate();
+		String yyyy = date.substring(0, 4);
 		String mm = date.substring(5,7);
 		String dd = date.substring(8);
+		String bootableid = tourId +yyyy+mm+dd;
 		int tourGuideId = tour.getTourGuideId();
 		String nameOfHotel = tour.getNameOfHotel();
 		int tourCapacity = tour.getTourCapacity();
-		
-		nstmt.setString(1, name);
-		nstmt.setString(2, phone);
-		nstmt.setString(3,bootableid);
-		nstmt.setInt(4, adults);
-		nstmt.setInt(5, children);
-		nstmt.setInt(6, toddler);
-		nstmt.setDouble(7, totalPrice);
-		nstmt.setString(8, special);
+		int minTourist = tour.getMinTourist();
+		nstmt.setString(1, bootableid);
+		nstmt.setString(2, date);
+		nstmt.setInt(3,tourGuideId);
+		nstmt.setString(4,nameOfHotel);
+		nstmt.setInt(5, tourCapacity);
+		nstmt.setInt(6, minTourist);
+		nstmt.execute();
+		nstmt.close();
+		nstmt = connection.prepareStatement(
+				"INSERT INTO tour_touroffer_relation"
+				+ " VALUES (?,?)");
+		nstmt.setString(1, tourId);
+		nstmt.setString(2, bootableid);
+		nstmt.execute();
+		nstmt.close();
+		connection.close();
+		connection = null;
+	}
+
+	public LinkedList<Activity> getAllActivities() throws Exception{
+		// TODO Auto-generated method stub
+		connection = this.getConnection();
+		PreparedStatement stmt;
+		ResultSet rs;
+		LinkedList<Activity> result = new LinkedList<Activity>(); 
+		String statement = "SELECT * FROM double11";
+		stmt = connection.prepareStatement(statement);
+		rs = stmt.executeQuery();			
+		while (rs.next()) {
+			String bootableid = rs.getString(1); 
+			int quota = rs.getInt(2);
+			Activity activity = new Activity();
+			activity.setBootableId(bootableid);
+			activity.setQuota(quota);
+			result.add(activity);
+		}
+		rs.close();
+		stmt.close();
+		connection.close();
+		connection = null;
+		return result;
+	}
+
+	public void createNewActivity(Activity act) throws Exception{
+		// TODO Auto-generated method stub
+		connection = this.getConnection();
+		String bootableid = act.getBootableId();
+		int quota = act.getQuota();
+		PreparedStatement nstmt = connection.prepareStatement(
+				"INSERT INTO double11"
+				+ " VALUES (?,?,0.5,false)");
+		nstmt.setString(1, bootableid);
+		nstmt.setInt(2, quota);
+		nstmt.execute();
+		nstmt.close();
+		connection.close();
+		connection = null;
+	}
+
+	public void updateCustomer(Customer customer) throws Exception{
+		connection = this.getConnection();
+		String bootableid = customer.getBootableId();
+		String name = customer.getName();
+		double pricePaid = customer.getPricePaid();
+		PreparedStatement nstmt = connection.prepareStatement(
+				"UPDATE customer_info"
+				+ " SET paidamount = ?"
+				+ " WHERE customername = ? AND bootableid = ?");
+		nstmt.setDouble(1, pricePaid);
+		nstmt.setString(2, name);
+		nstmt.setString(3, bootableid);
 		nstmt.execute();
 		nstmt.close();
 		connection.close();

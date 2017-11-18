@@ -21,5 +21,11 @@ public class CustomerRepo {
 		WebAppDBEngine webDB = new WebAppDBEngine();
 		return webDB.getAllCustomerInfo();
 	}
+
+	public void updateCusomter(Customer customer) throws Exception{
+		// TODO Auto-generated method stub
+		WebAppDBEngine webDB = new WebAppDBEngine();
+		webDB.updateCustomer(customer);
+	}
 	 
 }

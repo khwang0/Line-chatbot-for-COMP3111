@@ -9,6 +9,7 @@ public class Tour {
 	String nameOfHotel;
 	int tourCapacity;
 	int registeredNum;
+	int minTourist;
 	
 	public void setTourId(String tourId) {
 		this.tourId = tourId;
@@ -64,5 +65,13 @@ public class Tour {
 	
 	public int getRegisteredNum() {
 		return registeredNum;
+	}
+	
+	public void setMinTourist(int minTourist) {
+		this.minTourist = minTourist;
+	}
+	
+	public int getMinTourist() {
+		return minTourist;
 	}
 }

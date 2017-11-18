@@ -28,6 +28,11 @@
                         </div>
                         
                         <div class="form-group">
+                            <label for="capcity">Minimum tourist number:&nbsp;</label>
+                            <input class="form-control" type="number" name="minTourist" id="minTourist" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="nameOfHotel">Hotel name:&nbsp;</label>
                             <input class="form-control" type="text" name="nameOfHotel" id="nameOfHotel" maxlength="50"/>
                         </div>
@@ -52,6 +57,7 @@
                                 <th>Tour guide ID</th>
                                 <th>Name of hotel</th>
                                 <th>Tour capacity</th>
+                                <th>Minimum tourist number</th>
                                 <th>Registered number</th>
                             </tr>
                         </thead>
@@ -63,6 +69,7 @@
                                 <td th:text="${tour.getTourGuideId()}">Tour guide ID</td>
                                 <td th:text="${tour.getNameOfHotel()}">Name of hotel</td>
                                 <td th:text="${tour.getTourCapacity()}">Tour capacity</td>
+                                <td th:text="${tour.getMinTourist()}">Minimum tourist number</td>
                                 <td th:text="${tour.getRegisteredNum()}">Registered number</td>
                             </tr>
                         </tbody>

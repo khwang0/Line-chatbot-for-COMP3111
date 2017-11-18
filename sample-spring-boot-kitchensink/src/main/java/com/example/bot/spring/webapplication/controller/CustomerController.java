@@ -63,4 +63,29 @@ class CustomerController {
         }
         return modelAndView;
     }
+    
+    @RequestMapping(value = "/updatePayment", method = RequestMethod.POST)
+    ModelAndView updatePayment(@RequestParam(value="", required=true, defaultValue= "") String name,
+			@RequestParam(value="bootableid", required=true, defaultValue= "") String bootableid,
+            @RequestParam(value="payment", required=true, defaultValue= "") Double payment,
+            @RequestParam(value="pricePaid", required=true, defaultValue= "") Double pricePaid) {
+    	ModelAndView modelAndView = new ModelAndView("customer");
+    	try {
+    		Customer customer = new Customer();
+    		customer.setName(name);
+    		customer.setBootableId(bootableid);
+    		customer.setPricePaid(pricePaid+payment);
+    		customerService.updatePayment(customer);
+    	}catch(Exception e) {
+    		modelAndView.addObject("message", "Failed update payment information.");
+    	}
+        try {
+        	modelAndView.addObject("customers", customerService.getCustomers());
+        	modelAndView.addObject("tours",customerService.getAllTours());
+        }catch(Exception e) {
+        	e.printStackTrace();
+        	modelAndView.addObject("message", "Failed to get customer infos.");
+        }
+        return modelAndView;
+    }
 }
