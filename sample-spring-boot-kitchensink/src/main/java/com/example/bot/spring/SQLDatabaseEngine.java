@@ -176,10 +176,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			food_amount[1] = 5;
 			Array sqlArray2 = connection.createArrayOf("integer",food_amount);
 			stmt.setArray(6,sqlArray2);
-			stmt.setString(7, user_id);
-			stmt.setDouble(8, 100);//fiber
-			stmt.setDouble(9, 100);//energy
-			stmt.setDouble(10, 100);//protein
+			stmt.setDouble(7, 6);//serve
+			stmt.setDouble(8, 6);//fiber
+			stmt.setDouble(9, 6);//energy
+			stmt.setDouble(10, 6);//protein
 			
 
 			stmt.execute();
