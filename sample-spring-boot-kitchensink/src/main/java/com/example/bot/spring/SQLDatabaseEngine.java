@@ -151,33 +151,36 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 	//Generate user diet_plan
-	boolean gen_plan(String user_id){
+	boolean gen_plan(String user_id, Users currentUser){
 
 		try {
 			Connection connection = this.getConnection();
-
+			PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender =? AND min_age <=? AND max_age >=?" );
+			ref.setString(1, ""+currentUser.getGender());
+			ref.setInt(2, currentUser.getAge());
+			ref.setInt(3, currentUser.getAge());
+			ResultSet rs = ref.executeQuery();
 			PreparedStatement stmt = connection.prepareStatement(
 					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
-					"INSERT INTO diet_plan VALUES(?,?,?,?,?,?)");//id | protein | fat | sugar | food_name | food_amount
+					"INSERT INTO diet_plan VALUES(?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			stmt.setString(1, user_id);
-			stmt.setInt(2, 100);//protein
-			stmt.setInt(3, 100);//fat
-			stmt.setInt(4, 100);//sugar
+			stmt.setFloat(2, rs.getFloat(9));//fiber
+			stmt.setFloat(3, rs.getFloat(10));//energy
+			stmt.setFloat(4, rs.getFloat(11));//protein
 			//set the food_name
-			String[] food_name = new String[2];
-			food_name[0] = "apple";
-			food_name[1] = "milk";
-			Array sqlArray1 = connection.createArrayOf("text",food_name);
-			stmt.setArray(5,sqlArray1);
+			stmt.setString(5,"default");//default value
 			//set the food_amount
 			//int[] food_amount = new int[2];
-			Integer[] food_amount = new Integer[2];
-			food_amount[0] = 10;
-			food_amount[1] = 5;
-			Array sqlArray2 = connection.createArrayOf("integer",food_amount);
-			stmt.setArray(6,sqlArray2);
+			stmt.setString(6,"default");//default value
+			stmt.setFloat(7, rs.getFloat(5));//fiber_serve
+			stmt.setFloat(8, rs.getFloat(6));//energy_serve
+			stmt.setFloat(9, rs.getFloat(7));//meat_serve
+			stmt.setFloat(10, rs.getFloat(8));//milk_serve
 
+			
 			stmt.execute();
+			ref.close();
+			rs.close();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
