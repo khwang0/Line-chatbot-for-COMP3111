@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html layout:decorator="layout/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block layout:fragment="content">
+    <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Add new tour</div>
+                <div class="panel-body">
+                    <form method = "post" class="form-group" action="/addtour">
+                        <div class="form-group">
+  							<label for="tourId">Tour ID:</label>
+  							<select class="form-control" id="tourId" name = "tourId">
+    							<option th:each="tour : ${generalTours}" 
+    									th:text="${tour.getTourId()}"
+    									th:value="${tour.getTourId()}"></option>
+  							</select>
+						</div>
+                        
+                        <div class="form-group">
+                            <label for="date">Date:&nbsp;</label>
+                            <input class="form-control" type="date" name="date" id="date" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="capcity">Tour capacity:&nbsp;</label>
+                            <input class="form-control" type="number" name="capcity" id="capcity" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="capcity">Minimum tourist number:&nbsp;</label>
+                            <input class="form-control" type="number" name="minTourist" id="minTourist" maxlength="10"/>
+                        </div>
+                        
+						<div class="form-group">
+                            <label for="capcity">Tour guide ID:&nbsp;</label>
+                            <input class="form-control" type="number" name="tourGuideId" id="tourGuideId" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nameOfHotel">Hotel name:&nbsp;</label>
+                            <input class="form-control" type="text" name="nameOfHotel" id="nameOfHotel" maxlength="50"/>
+                        </div>
+
+                        <input class="btn btn-primary" type="submit" value="Save"/>
+
+                    </form>
+                </div>
+                <div class="panel-footer"><span th:text="${message}">Status</span></div>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Tour List</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tour ID</th>
+                                <th>Tour name</th>
+                                <th>Tour date</th>
+                                <th>Tour guide ID</th>
+                                <th>Name of hotel</th>
+                                <th>Tour capacity</th>
+                                <th>Minimum tourist number</th>
+                                <th>Registered number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="tour : ${tours}">
+                                <td th:text="${tour.getTourId()}">Tour ID</td>
+                                <td th:text="${tour.getTourName()}">Tour name</td>
+                                <td th:text="${tour.getTourDate()}">Tour date</td>
+                                <td th:text="${tour.getTourGuideId()}">Tour guide ID</td>
+                                <td th:text="${tour.getNameOfHotel()}">Name of hotel</td>
+                                <td th:text="${tour.getTourCapacity()}">Tour capacity</td>
+                                <td th:text="${tour.getMinTourist()}">Minimum tourist number</td>
+                                <td th:text="${tour.getRegisteredNum()}">Registered number</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

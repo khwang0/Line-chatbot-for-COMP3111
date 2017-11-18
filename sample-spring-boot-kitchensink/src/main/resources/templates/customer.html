@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html layout:decorator="layout/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block layout:fragment="content">
+    <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Add new customer</div>
+                <div class="panel-body">
+                    <form method = "post" class="form-group" action="/addcustomer">
+                        <div class="form-group">
+                            <label for="name">Name:&nbsp;</label>
+                            <input class="form-control" type="text" name="name" id="name" maxlength="50"/>
+                        </div>
+                        
+                        <div class="form-group">
+  							<label for="sel1">Tour ID:</label>
+  							<select class="form-control" id="bootableid" name = "bootableid">
+    							<option th:each="tour : ${tours}" 
+    									th:text="${tour.getTourId()}"
+    									th:value="${tour.getTourId()}"></option>
+  							</select>
+						</div>
+                        
+                        <div class="form-group">
+                            <label for="adults">Number of adults:&nbsp;</label>
+                            <input class="form-control" type="number" name="adults" id="adults" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="children">Number of children:&nbsp;</label>
+                            <input class="form-control" type="number" name="children" id="children" maxlength="10"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="toddler">Number of toddlers:&nbsp;</label>
+                            <input class="form-control" type="number" name="toddler" id="toddler" maxlength="10"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone number:&nbsp;</label>
+                            <input class="form-control" type="text" name="phone" id="phone" maxlength="20"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="special">Special requests:&nbsp;</label>
+                            <input class="form-control" type="text" name="special" id="special" maxlength="50"/>
+                        </div>
+                        
+                        <input class="btn btn-primary" type="submit" value="Save"/>
+
+                    </form>
+                </div>
+                <div class="panel-footer"><span th:text="${message}">Status</span></div>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Customer List</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone Number</th>
+                                <th>Tour ID</th>
+                                <th>Number of Adults</th>
+                                <th>Number of Children</th>
+                                <th>Number of Toddlers</th>
+                                <th>Total Price</th>
+                                <th>Price Paid</th>
+                                <th>Special Requests</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="customer : ${customers}">
+                                <td th:text="${customer.getName()}">Name</td>
+                                <td th:text="${customer.getPhone()}">Phone Number</td>
+                                <td th:text="${customer.getBootableId()}">Tour ID</td>
+                                <td th:text="${customer.getAdults()}">Number of Adults</td>
+                                <td th:text="${customer.getChildren()}">Number of Children</td>
+                                <td th:text="${customer.getToddler()}">Number of Toddlers</td>
+                                <td th:text="${customer.getTotalPrice()}">Total Price</td>
+                                <td th:text="${customer.getPricePaid()}">Price Paid</td>
+                                <td th:text="${customer.getSpecial()}">Special Requests</td>
+                                <td><div class="panel-group">
+  										<div class="panel panel-default">
+    										<div class="panel-heading">
+      											<h4 class="panel-title">
+        											<a data-toggle="collapse" th:href="'#collapse_'+${customer.getIdx()}">Update payment</a>
+      											</h4>
+    										</div>
+    										<div th:id="'collapse_'+${customer.getIdx()}" class="panel-collapse collapse">
+      											<div class="panel-body">
+      												<form method = "post" class="form-group" action="/updatePayment">
+      												<div class="form-group">
+      												<input type = "hidden" name = "name" th:value="${customer.getName()}"/>
+      												<input type = "hidden" name = "bootableid" th:value="${customer.getBootableId()}"/>
+      												<input type = "hidden" name = "pricePaid" th:value="${customer.getPricePaid()}"/>
+      												Price paid: <input class="form-control" type="number" name="payment" id="payment" maxlength="100"/>
+      												<input type="submit" value="Update" />
+      												</div>
+      												</form>
+      											</div>
+    										</div>
+  										</div>
+									</div>
+								</td>	
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

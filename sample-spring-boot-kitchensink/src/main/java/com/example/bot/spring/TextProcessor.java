@@ -1,6 +1,7 @@
 package com.example.bot.spring;
 
 import com.example.bot.spring.database.DBEngine;
+import com.example.bot.spring.database.DoubleElevDBEngine;
 import com.example.bot.spring.textsender.*;
 
 public class TextProcessor {
@@ -17,9 +18,10 @@ public class TextProcessor {
 	 * @param
 	 * 		userId: userId of sender;
 	 * 		text: formated sent message (only contains char and number and decimal point)
+	 * @throws Exception 
 	 * 		
 	 * */
-	private String classifyText(String userId, String text){
+	private String classifyText(String userId, String text) throws Exception{
 		String reply="";		
 		
 		try {			
@@ -43,8 +45,8 @@ public class TextProcessor {
 				return reply;
 			}
 			
-			if (message.equals("yes")|| message.equals("no")) {
-				return double_elev_handler(text);
+			if (text.equals("yes")|| text.equals("no")) {
+				return double_elev_handler(userId, text);
 			}
 			
 			// after decide the label:
@@ -180,7 +182,7 @@ public class TextProcessor {
 			return false; 
 	}
 
-	private String double_elev_handler(String message) {
+	private String double_elev_handler(String userId, String message) throws Exception {
 		assert (message.equals("yes")|| message.equals("no"));
 		String reply = "";
 		if (message.equals("yes")) {			
