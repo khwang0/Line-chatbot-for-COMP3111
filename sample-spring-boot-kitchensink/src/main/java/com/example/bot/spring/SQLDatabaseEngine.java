@@ -85,7 +85,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?)");
+					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
 			String temp = ""+user.getGender();
@@ -95,39 +95,55 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setInt(6, user.getAge());
 			stmt.setString(7, user.getStage());
 			stmt.setInt(8, user.getSubStage());
+
+			stmt.setInt(9, ((DetailedUser)user).getExercise());
+		 	stmt.setDouble(10, ((DetailedUser)user).getBodyFat());
+		 	stmt.setInt(11, ((DetailedUser)user).getCalories());
+		 	stmt.setDouble(12, ((DetailedUser)user).getCarbs());
+		 	stmt.setDouble(13, ((DetailedUser)user).getProtein());
+		 	stmt.setDouble(14, ((DetailedUser)user).getVegfruit());
+		 	boolean[] h = user.getEatingHabits();
+		 	Boolean[] b = new Boolean[h.length];
+		 	for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
+		 	Array sqlArray = connection.createArrayOf("bool",b);
+		 	stmt.setArray(15,sqlArray);
+		 	stmt.setString(16,((DetailedUser)user).getOtherInfo());
+		 	stmt.setInt(17,((DetailedUser)user).getAssessmentScore());
+
+
 		    result = stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		if(user instanceof DetailedUser) {
-		try {
-			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO detailedusers VALUES(?,?,?,?,?,?,?,?,?,?)");
-			stmt.setString(1,user.getID());
-			stmt.setInt(2, ((DetailedUser)user).getExercise());
-			stmt.setDouble(3, ((DetailedUser)user).getBodyFat());
-			stmt.setInt(4, ((DetailedUser)user).getCalories());
-			stmt.setDouble(5, ((DetailedUser)user).getCarbs());
-			stmt.setDouble(6, ((DetailedUser)user).getProtein());
-			stmt.setDouble(7, ((DetailedUser)user).getVegfruit());
-			boolean[] h = ((DetailedUser)user).getEatingHabits();
-			Boolean[] b = new Boolean[h.length];
-			for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
-			Array sqlArray = connection.createArrayOf("bool",b);
-			stmt.setArray(8,sqlArray);
-			stmt.setString(9,((DetailedUser)user).getOtherInfo());
-			stmt.setInt(10,((DetailedUser)user).getAssessmentScore());
-			result = stmt.execute();
-			stmt.close();
-			connection.close();
-		} catch (Exception e) {
-			System.out.println(e);
-			return result;
-		}
-		}
+		// if(user instanceof DetailedUser) {
+		// try {
+		// 	Connection connection = this.getConnection();
+		// 	PreparedStatement stmt = connection.prepareStatement(
+		// 			"INSERT INTO detailedusers VALUES(?,?,?,?,?,?,?,?,?,?)");
+		// 	stmt.setString(1,user.getID());
+		// 	stmt.setInt(2, ((DetailedUser)user).getExercise());
+		// 	stmt.setDouble(3, ((DetailedUser)user).getBodyFat());
+		// 	stmt.setInt(4, ((DetailedUser)user).getCalories());
+		// 	stmt.setDouble(5, ((DetailedUser)user).getCarbs());
+		// 	stmt.setDouble(6, ((DetailedUser)user).getProtein());
+		// 	stmt.setDouble(7, ((DetailedUser)user).getVegfruit());
+		// 	boolean[] h = ((DetailedUser)user).getEatingHabits();
+		// 	Boolean[] b = new Boolean[h.length];
+		// 	for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
+		// 	Array sqlArray = connection.createArrayOf("bool",b);
+		// 	stmt.setArray(8,sqlArray);
+		// 	stmt.setString(9,((DetailedUser)user).getOtherInfo());
+		// 	stmt.setInt(10,((DetailedUser)user).getAssessmentScore());
+		// 	result = stmt.execute();
+		// 	stmt.close();
+		// 	connection.close();
+		// } catch (Exception e) {
+		// 	System.out.println(e);
+		// 	return result;
+		// }
+		// }
 		return result;
 	}
 
@@ -369,8 +385,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"UPDATE users SET name = ?, gender = ?, height = ?, weight =?, age =?, stage =?, substage =? WHERE id = ?");
-			stmt.setString(8, user.getID());
+					"UPDATE users SET name = ?, gender = ?, height = ?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitsonsump=?, eatinghabits=?,otherinformation = ?, assessmentscore = ? WHERE id = ?");
+			stmt.setString(17, user.getID());
 			stmt.setString(1, user.getName());
 			String temp = ""+user.getGender();
 			stmt.setString(2, temp) ;
@@ -379,6 +395,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setInt(5, user.getAge()); 
 			stmt.setString(6,user.getStage());
 			stmt.setInt(7,user.getSubStage());
+			stmt.setInt(8, ((DetailedUser)user).getExercise());
+			stmt.setDouble(9, ((DetailedUser)user).getBodyFat());
+			stmt.setInt(10, ((DetailedUser)user).getCalories());
+			stmt.setDouble(11, ((DetailedUser)user).getCarbs());
+			stmt.setDouble(12, ((DetailedUser)user).getProtein());
+			stmt.setDouble(13, ((DetailedUser)user).getVegfruit());
+			boolean[] h = ((DetailedUser)user).getEatingHabits();
+			Boolean[] b = new Boolean[h.length];
+			for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
+			Array sqlArray = connection.createArrayOf("bool",b);
+			stmt.setArray(14,sqlArray);
+			stmt.setString(15,((DetailedUser)user).getOtherInfo());
+			stmt.setInt(16,((DetailedUser)user).getAssessmentScore());
+
 		    result = stmt.execute();
 			stmt.close();
 			connection.close();
@@ -386,34 +416,34 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			System.out.println(e);
 		}
 
-		if(user instanceof DetailedUser) {
-		try {
-			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement(
-			"UPDATE detailedusers SET amountofexercise=?,bodyfat=?,caloriesconsump=?,carbsconsump=?,proteinconsump=?,vegfruitsonsump=?,"
-			+ "eatinghabits=?,otherinformation = ?, assessmentscore = ? WHERE id = ?");
-			stmt.setInt(1, ((DetailedUser)user).getExercise());
-			stmt.setDouble(2, ((DetailedUser)user).getBodyFat());
-			stmt.setInt(3, ((DetailedUser)user).getCalories());
-			stmt.setDouble(4, ((DetailedUser)user).getCarbs());
-			stmt.setDouble(5, ((DetailedUser)user).getProtein());
-			stmt.setDouble(6, ((DetailedUser)user).getVegfruit());
-			boolean[] h = ((DetailedUser)user).getEatingHabits();
-			Boolean[] b = new Boolean[h.length];
-			for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
-			Array sqlArray = connection.createArrayOf("bool",b);
-			stmt.setArray(7,sqlArray);
-			stmt.setString(8,((DetailedUser)user).getOtherInfo());
-			stmt.setInt(9,((DetailedUser)user).getAssessmentScore());
-			stmt.setString(10,user.getID());
-			result = stmt.execute();
-			stmt.close();
-			connection.close();
-		} catch (Exception e) {
-			System.out.println(e);
-			return result;
-		}
-		}
+		// if(user instanceof DetailedUser) {
+		// try {
+		// 	Connection connection = this.getConnection();
+		// 	PreparedStatement stmt = connection.prepareStatement(
+		// 	"UPDATE detailedusers SET amountofexercise=?,bodyfat=?,caloriesconsump=?,carbsconsump=?,proteinconsump=?,vegfruitsonsump=?,"
+		// 	+ "eatinghabits=?,otherinformation = ?, assessmentscore = ? WHERE id = ?");
+		// 	stmt.setInt(1, ((DetailedUser)user).getExercise());
+		// 	stmt.setDouble(2, ((DetailedUser)user).getBodyFat());
+		// 	stmt.setInt(3, ((DetailedUser)user).getCalories());
+		// 	stmt.setDouble(4, ((DetailedUser)user).getCarbs());
+		// 	stmt.setDouble(5, ((DetailedUser)user).getProtein());
+		// 	stmt.setDouble(6, ((DetailedUser)user).getVegfruit());
+		// 	boolean[] h = ((DetailedUser)user).getEatingHabits();
+		// 	Boolean[] b = new Boolean[h.length];
+		// 	for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
+		// 	Array sqlArray = connection.createArrayOf("bool",b);
+		// 	stmt.setArray(7,sqlArray);
+		// 	stmt.setString(8,((DetailedUser)user).getOtherInfo());
+		// 	stmt.setInt(9,((DetailedUser)user).getAssessmentScore());
+		// 	stmt.setString(10,user.getID());
+		// 	result = stmt.execute();
+		// 	stmt.close();
+		// 	connection.close();
+		// } catch (Exception e) {
+		// 	System.out.println(e);
+		// 	return result;
+		// }
+		// }
 		return result;
 	}
 
