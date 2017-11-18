@@ -200,6 +200,7 @@ public class KitchenSinkController {
         }catch(Exception e) {
         	System.err.println("XXXXXXXXXXXXXXXXXXXXXXXX");
         	System.err.println(e.getMessage());
+        	e.printStackTrace();
         	reply = "I'm stupid";
         }
         log.info("Returns echo message {}: {}", replyToken, reply);
