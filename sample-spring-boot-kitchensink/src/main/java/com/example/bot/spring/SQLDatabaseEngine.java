@@ -241,14 +241,13 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			//connect to the database with table: diet_plan
 			Connection connection = this.getConnection();
 			//prepare a SQL statement while leaving some parameters
-			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein,"
-					+ "fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
+			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
 			stmt.setString(1, user_id);//1 is the param location/index
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				plan_info.add(rs.getDouble(1));//protein
-				plan_info.add(rs.getDouble(2));//fat 
-				plan_info.add(rs.getDouble(3));//sugar
+				plan_info.add(rs.getDouble(1));//fiber
+				plan_info.add(rs.getDouble(2));//energy
+				plan_info.add(rs.getDouble(3));//protein
 				plan_info.add(rs.getDouble(4));//fiber_serve
 				plan_info.add(rs.getDouble(5));//energy_serve 
 				plan_info.add(rs.getDouble(6));//meat_serve
