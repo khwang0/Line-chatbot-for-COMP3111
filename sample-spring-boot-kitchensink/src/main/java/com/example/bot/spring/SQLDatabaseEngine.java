@@ -263,7 +263,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		if (plan_info.size() != 0)
 			return plan_info;
 
-		throw new Exception("NOT FOUND");
+		//throw new Exception("NOT FOUND");
 	}
 
 	//Query the current diet status info from "diet_conclusion" table and return
@@ -290,7 +290,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		if (current_info.size() != 0)
 			return current_info;
 
-		throw new Exception("NOT FOUND");
+		//throw new Exception("NOT FOUND");
 	}
 
 	/*  Function added by ZK*/
