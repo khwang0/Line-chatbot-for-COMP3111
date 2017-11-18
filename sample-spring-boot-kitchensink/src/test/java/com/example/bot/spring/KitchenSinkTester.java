@@ -48,7 +48,7 @@ public class KitchenSinkTester {
 		assertThat(result).isEqualTo("Sorry, I cannot answer your question.");
 	}
 
-  // only applicable when textProcessor calling no external function
+	// only applicable when textProcessor calling no external function
 	@Ignore("not ready yet") @Test
 	public void TextProcessorTester() throws Exception {
 		System.out.println("-------- inside TextProcessorTester --------------");

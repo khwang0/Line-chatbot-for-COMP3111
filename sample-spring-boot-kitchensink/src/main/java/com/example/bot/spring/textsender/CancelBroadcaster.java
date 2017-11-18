@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import com.example.bot.spring.database.*;
 
 public class CancelBroadcaster implements Broadcaster {
 	/**
@@ -43,7 +44,7 @@ public class CancelBroadcaster implements Broadcaster {
 	public int orderCancel(String bootid) throws Exception{
 		Date td=getDate(bootid.substring(bootid.length()-8));
 		Date now=new Date();
-		int day=this.getDateDiff(td, now, TimeUnit.DAYS));
+		int day=this.getDateDiff(td, now, TimeUnit.DAYS);
 		if (day<=3) {
 			String broadcast_content = "Your tour " + tourid + " has been canceled due to not enough people! Our staff will arrange your refund as soon as possible.";
 			Set<String> tourists = CDB.getAllContactors(tourid);
