@@ -15,7 +15,9 @@ import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
+import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+@LineMessageHandler
 public class UQAnswerReplier implements Broadcaster{
 	
 	@Autowired
