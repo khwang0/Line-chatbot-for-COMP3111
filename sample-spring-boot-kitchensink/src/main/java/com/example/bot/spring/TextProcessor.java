@@ -6,6 +6,7 @@ import com.example.bot.spring.textsender.*;
 public class TextProcessor {
 
 	private DBEngine DBE;
+	private DoubleElevDBEngine DEDBE; 
 	
 	public TextProcessor() {
 		// TODO Auto-generated constructor stub
@@ -29,11 +30,11 @@ public class TextProcessor {
 			label = DBE.getTextType(text);
 			reply = "tag: " + tag + " label: " + label;
 			
-			if ((tag == null || tag == "" || tag == "default" || tag == "none") 
-					&& (label == null || label == "" || label == "default" || label == "none")){
+			if ((tag == null || tag == "" || tag == "default" || tag == "none") && 
+				(label == null || label == "" || label == "default" || label == "none")){
 				reply += "tag: " + tag + " label: " + label;
 				SQTextSender sqsender = new SQTextSender();
-				reply += sqsender.process(userId, text)+"\n";	
+				reply += sqsender.process(userId, text)+"\n";
 			}
 			
 			if(tag.equals("book")) {
@@ -41,11 +42,14 @@ public class TextProcessor {
 				reply += bsender.process(userId, text);	
 				return reply;
 			}
+			
+			if (message.equals("yes")|| message.equals("no")) {
+				return double_elev_handler(text);
+			}
+			
 			// after decide the label:
 			// - update user tag;
-			// - pass the info to corresponding text processor;		
-			
-
+			// - pass the info to corresponding text processor;			
 			switch (label) {
 			case "reco": 
 				RecommendationTextSender rsender = new RecommendationTextSender();
@@ -81,42 +85,6 @@ public class TextProcessor {
 			default:
 				// no action, continue to unanswered question processor; 
 			}
-			/*
-			if(text.toLowerCase().contains("recommend")||
-			   text.toLowerCase().contains("do you have")) {
-				RecommendationTextSender rsender = new RecommendationTextSender();
-				DBE.updateLineUserInfo(userId,"categorization","reco");	
-				reply += rsender.process(userId, text);			
-				return reply; //return "in recomend";
-			}
-
-			if(text.toLowerCase().contains("tell me")||
-			   text.toLowerCase().contains("introduc")) {
-				GQTextSender gqsender = new GQTextSender();
-				DBE.updateLineUserInfo(userId,"categorization", "gq");	
-				reply += gqsender.process(userId, text);			
-				return reply; //return "in general q";
-			}
-
-			if(text.toLowerCase().contains("book")) {
-				BookingTextSender bsender = new BookingTextSender();
-				DBE.updateLineUserInfo(userId,"categorization","book");	
-				reply += bsender.process(userId, text);			
-				return reply; //return "in booking";
-			}
-			
-			if (tag.equals("reco")) {				
-				RecommendationTextSender rsender = new RecommendationTextSender();
-				reply += rsender.process(userId, text);	
-				return reply;
-			}
-			
-			if (tag.equals("gq")) {
-				GQTextSender gqsender = new GQTextSender();
-				reply += gqsender.process(userId, text);	
-				return reply;
-			}
-			*/
 			
 			reply += "You can send your request by specifying: recommendation/ general question/booking a trip";
 			UQAutomateSender uqSender = new UQAutomateSender();
@@ -179,7 +147,10 @@ public class TextProcessor {
 		return outputMsg;
 	}
 	
-	// helper function for formatMsg()
+	/**
+	 * helper function for formatMsg()
+	 * check if next character is 'char'
+	 * */ 
 	private boolean isChar (char c) {
 		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 			return true;
@@ -187,7 +158,10 @@ public class TextProcessor {
 			return false; 
 	}
 	
-	// helper function for formatMsg()
+	/**
+	 * helper function for formatMsg()
+	 * check if next character is 0-9 or decimal point
+	 * */ 
 	private boolean isDigit (char c) {
 		if ((c >= '0' && c <= '9') || c == '.')
 			return true;
@@ -195,13 +169,30 @@ public class TextProcessor {
 			return false; 
 	}
 	
+	/**
+	 * helper function for formatMsg()
+	 * check if next character is legal puncuation
+	 * */ 
 	private boolean isAllowedPunc(char c) {
 		if ( c == '/')
 			return true;
 		else
 			return false; 
 	}
-	/* TODO:
-	 *  do you think we need to add ?.. into allowedPunc list?
-	 */
+
+	private String double_elev_handler(String message) {
+		assert (message.equals("yes")|| message.equals("no"));
+		String reply = "";
+		if (message.equals("yes")) {			
+			DBE.updateLineUserInfo(userId,"categorization", "booking"); 			// update line_user_info.categorization into "booking"			
+			String discount_tourid = DEDBE.getDiscountBookid(); 					// check double11 table, get available tour's id; id =  DEDBE.getDiscountBookid()			
+			DBE.updateLineUserInfo(userId,"discount_tour_id", "discount_tourid"); 	// update line_user_info.discount_tour_id = id; 
+			reply = "Congratulations! You Got A Discount Ticket! Now you can continue booking!";
+		}
+		else {
+			reply = "Sure =) Have a nice days."; 
+		}
+		
+		return reply;
+	}
 }

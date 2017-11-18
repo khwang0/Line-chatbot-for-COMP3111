@@ -86,12 +86,13 @@ public class DBEngine {
 	 * */
 	public String getTextType(String text) {	
 		if(text == null || text.equals("")) {
-			return ""; //???????????///
+			return "";
 		}		
+		
 		Connection connection = null; 
 		PreparedStatement stmt  = null;
 		ResultSet rs = null;		// string(1): keywords; string(2): position; string(3): label; 		
-		
+				
 		// classify input according to classify_table: get returned type; 
 		// if there r multiple types;
 		// check: label(diff with previous label) && position(correct position)  && length of keywords (choose the label to the longer keywords)
