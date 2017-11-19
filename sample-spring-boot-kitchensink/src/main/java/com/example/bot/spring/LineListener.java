@@ -3,12 +3,10 @@ package com.example.bot.spring;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-=======
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
->>>>>>> be34857748acf9bf28ab523e48002190ebdd375e
 import com.example.bot.spring.textsender.*;
 
 @Component
