@@ -44,7 +44,7 @@ public class MenuReader {
 		ArrayList<String> tempList;
 		String patternString = "(.+?)([0-9]+)";
 		Pattern pattern = Pattern.compile(patternString);
-		Matcher matcher = pattern.matcher(plainTexts[i]);
+		Matcher matcher;
 		nameList = new String[plainTexts.length];
 		priceList = new int[plainTexts.length];
 		ingredientList = new String[plainTexts.length][];
