@@ -214,7 +214,7 @@ public class CouponWarehouse{
   }
   public boolean canGetCouponFromCode(Users user){
     if (isNewUser(user)){
-      return gotCouponNewUsers.contains(user.getID());
+      return (!gotCouponNewUsers.contains(user.getID()));
     }
     else return false;
   }
