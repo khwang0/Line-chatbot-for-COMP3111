@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.example.bot.spring.database.*;
 import com.linecorp.bot.client.LineMessagingClient;
@@ -14,6 +15,7 @@ import com.linecorp.bot.model.Multicast;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 
+@Component
 public class CancelBroadcaster implements Broadcaster {
 	
 	@Autowired

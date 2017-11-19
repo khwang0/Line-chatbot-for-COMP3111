@@ -7,7 +7,9 @@ import com.linecorp.bot.client.*;
 import com.linecorp.bot.model.*;
 import com.linecorp.bot.model.message.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ConfirmBroadcaster implements Broadcaster {
 	
 	ConfirmDBEngine confirmdb; 

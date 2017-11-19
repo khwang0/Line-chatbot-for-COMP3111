@@ -3,7 +3,7 @@ package com.example.bot.spring.textsender;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Component;
 //import java.util.GregorianCalendar;
 //import java.util.List;
 //import java.util.Set;
@@ -17,14 +17,15 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+@Component
 public class UQAnswerReplier implements Broadcaster{
 	
-	//@Autowired
+	@Autowired
 	LineMessagingClient lineMessagingClient;
 
 	public UQAnswerReplier() {
 		// TODO Auto-generated constructor stub
-		lineMessagingClient = new LineMessagingClientImpl();
+		//lineMessagingClient = new LineMessagingClientImpl();
 	}
 
 	@Override
@@ -48,16 +49,13 @@ public class UQAnswerReplier implements Broadcaster{
 			
 			// end testing			
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
-			if(message == null) {
-				System.out.println("--------- message is null ----");
-			}
 			if(lineMessagingClient == null) {
 				System.out.println("--------- lineMessagingClient is null ----");
 			}
 			
 			
 			// lineMessagingClient.pushMessage(new PushMessage(userID, message));
-			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(userID, message)).get();
+			lineMessagingClient.pushMessage(new PushMessage(userID, message));
 			// System.out.println("Sent messages: {}", apiResponse);
 		}
 	}
