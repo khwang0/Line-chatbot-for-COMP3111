@@ -167,7 +167,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 	//Generate user diet_plan
-	boolean gen_plan(String user_id, Users currentUser){
+	boolean gen_plan(Users currentUser){
 
 		try {
 			Connection connection = this.getConnection();
@@ -180,7 +180,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			PreparedStatement stmt = connection.prepareStatement(
 					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
 					"INSERT INTO diet_plan VALUES(?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
-			stmt.setString(1, user_id);
+			stmt.setString(1, currentUser.getID());
 			stmt.setDouble(2, rs.getDouble(8));//fiber
 			stmt.setDouble(3, rs.getDouble(9));//energy
 			stmt.setDouble(4, rs.getDouble(10));//protein
