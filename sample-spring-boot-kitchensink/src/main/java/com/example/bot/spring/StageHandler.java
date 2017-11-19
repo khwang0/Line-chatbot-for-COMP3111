@@ -932,6 +932,7 @@ public class StageHandler {
 			else
 				replymsg = "Please enter reasonable numbers!";
 
+		}break;
 		// }break;
 		// case 2:{
 		// 	if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
