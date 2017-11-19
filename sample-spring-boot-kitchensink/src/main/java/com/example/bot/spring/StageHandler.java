@@ -272,13 +272,21 @@ public class StageHandler {
 		}break;
 		case 12:{
 			if(inputChecker.amountAdd(text, foodinput, database)) {
-				inputChecker.consumptionUpdate(healthSearcher,database,Integer.parseInt(text),event.getSource().getUserId(),time);
-				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-				currentUser.setSubStage(0) ;
+				replymsg= "Please enter the price it roughly costs:";
+				currentUser.setSubStage(currentUser.getSubStage()+1) ;
 				}
 			else
 				replymsg= "Please enter a reasonable number!";
 		}break;
+		case 13:{
+			if(inputChecker.priceAdd(text, foodinput, database)) {
+				inputChecker.consumptionUpdate(healthSearcher,database,foodinput.getAmount(),event.getSource().getUserId(),time,Float.valueOf(text));
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+				currentUser.setSubStage(0) ;
+				}
+			else
+				replymsg= "Please enter a reasonable number!";				
+		}break;	
 		case 2:{
 			replymsg= "Please enter the date(yyyymmdd): ";
 			currentUser.setSubStage(currentUser.getSubStage()+20) ;

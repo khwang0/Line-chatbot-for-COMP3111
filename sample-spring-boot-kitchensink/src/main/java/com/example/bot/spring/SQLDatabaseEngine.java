@@ -251,10 +251,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 	/*  Function added by ZK*/
-	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time) {
+	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time,float price) {
 		try {
 			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber FROM diet_conclusion where id = ? AND date = ?");
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber,price FROM diet_conclusion where id = ? AND date = ?");
 			stmt.setString(1,id);
 			stmt.setString(2,time.substring(0,8));
 			ResultSet rs = stmt.executeQuery();
@@ -262,12 +262,19 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				double previous_energy =0;
 				double previous_fiber =0;
 				double previous_protein =0;
+				double previous_price = 0;
 				double current_protein = 0;
 				double current_energy =0;
 				double current_fiber = 0;
+				double current_price = 0;
 				previous_protein = rs.getDouble(1);
 				previous_energy = rs.getDouble(2);
 				previous_fiber = rs.getDouble(3);	
+				previous_price = rs.getDouble(4);
+				
+				current_price = price + previous_price;
+				
+				
 				if( !healthSearcher.getProtein().equals("N/A")) {
 					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
 				}
@@ -287,25 +294,33 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				else {
 					current_fiber = previous_fiber;
 				}	
+				
+				
+				
+				
+				
+				
 				PreparedStatement stmt2 = connection.prepareStatement(
-						"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ? WHERE id = ? AND date = ?;");
+						"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
 				stmt2.setDouble(1, current_protein);
 				stmt2.setDouble(2, current_energy);
 				stmt2.setDouble(3, current_fiber);
-				stmt2.setString(4, id);
-				stmt2.setString(5, time.substring(0,8));
+				stmt2.setDouble(4, current_price);
+				stmt2.setString(5, id);
+				stmt2.setString(6, time.substring(0,8));
 				stmt2.execute();
 				stmt2.close();
 			}
 			else {
 				PreparedStatement stmt1 = connection.prepareStatement(
-						"INSERT INTO diet_conclusion VALUES(?,?,?,?,?)");
+						"INSERT INTO diet_conclusion VALUES(?,?,?,?,?,?)");
 				stmt1.setString(1,id);
 				stmt1.setString(2, time.substring(0,8));
 				stmt1.setDouble(3, Double.parseDouble(healthSearcher.getProtein())*amount/100.0);
 				stmt1.setDouble(4, Double.parseDouble(healthSearcher.getEnergy())*amount/100.0);
 				stmt1.setDouble(5, Double.parseDouble(healthSearcher.getFiber())*amount/100.0);
+				stmt1.setDouble(6, price);
 				stmt1.execute();
 				stmt1.close();
 			}
@@ -349,12 +364,13 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO dietrecord VALUES(?,?,?,?,?)");
+					"INSERT INTO dietrecord VALUES(?,?,?,?,?,?)");
 			stmt.setString(1,foodinput.getKey());
 			stmt.setString(2,foodinput.getId());
 			stmt.setString(3,foodinput.getFoodName());
 			stmt.setInt(4,foodinput.getAmount());
 			stmt.setString(5,foodinput.getTime());
+			stmt.setDouble(6,foodinput.getPrice());
 			result = stmt.execute();
 			stmt.close();
 			connection.close();

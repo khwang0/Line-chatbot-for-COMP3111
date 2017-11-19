@@ -280,6 +280,17 @@ public class InputChecker {
 		try {
 		if(ValidAmount(text)) {
 			foodinput.setAmount(Integer.parseInt(text));
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+	
+	public boolean priceAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
+		try {
+		if(ValidAmount(text)) {
+			foodinput.setPrice(Float.valueOf(text));
 			database.pushDietRecord(foodinput);
     		return true;
     	}
@@ -287,6 +298,10 @@ public class InputChecker {
 			return false;
 		}catch(NumberFormatException ne){return false;}
 	}
+	
+	
+	
+	
 	public boolean dateCheck(String text) {
 		try {
 			if(ValidDate(text)) {
@@ -299,7 +314,7 @@ public class InputChecker {
 	public String dietsearch(String text, SQLDatabaseEngine database, String id ) {
 		return database.reportDiet(text,id);
 	}
-	public void consumptionUpdate(HealthSearch healthSearcher,SQLDatabaseEngine database,int amount,String id,String time) {
-		database.updateconsumption(healthSearcher,amount,id,time);	
+	public void consumptionUpdate(HealthSearch healthSearcher,SQLDatabaseEngine database,int amount,String id,String time,float price) {
+		database.updateconsumption(healthSearcher,amount,id,time,price);	
 	}
 }
