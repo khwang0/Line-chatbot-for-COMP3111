@@ -64,13 +64,11 @@ public class DBEngine {
 			rs=stmt.executeQuery();
 		}catch(Exception e){
 			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-			System.out.println("with userid "+userID);
 			e.printStackTrace();
 			throw new Exception("Wrong Command1");
 		}
 		if(!rs.next()) { 
 			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-			System.out.println("No such entry!!!!!");
 			throw new Exception("No such entry");
 		}
 		String tmp=rs.getString(1);
@@ -138,8 +136,7 @@ public class DBEngine {
 				}				
 			}
 		}catch(Exception e){
-			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-			System.out.println("-- inside DBENGINE: getTextType --");
+			System.out.println("----------------------- inside DBENGINE: getTextType -------------------------");
 			e.printStackTrace();
 		}finally {
 			try {
@@ -161,6 +158,7 @@ public class DBEngine {
 			if(key.equals(message.substring(0, key.length())))
 				positionWrong = false;
 			break;
+		/*
 		case "end":
 	        int lenMsg = message.length();
 	        int lenKey = key.length();
@@ -168,6 +166,7 @@ public class DBEngine {
 	        if(key.equals(message.substring(startIndex)))
 	        	positionWrong = false;
 	        break; 
+	    */
 		case "any":
 			positionWrong = false;
 			break;

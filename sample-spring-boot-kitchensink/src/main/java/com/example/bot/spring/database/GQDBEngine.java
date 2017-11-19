@@ -66,7 +66,7 @@ public class GQDBEngine extends DBEngine {
 			String answer="";
 			String tag="";
 			System.err.println(TourID);
-		try {
+		//try {
 			connection = getConnection();
 			stmt=connection.prepareStatement("SELECT * FROM gqtag");
 			rs=stmt.executeQuery();
@@ -122,20 +122,20 @@ public class GQDBEngine extends DBEngine {
 				}
 				break;
 			}
-		}catch(Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getMessage());
-		}finally {
+		//}catch(Exception e) {
+		//	e.printStackTrace();
+		//	System.err.println(e.getMessage());
+		//}finally {
 			//rs.close();
 			//stmt.close();
-			try {
+			//try {
 				if (rs.next()) rs.close();
 				if (stmt != null) stmt.close();
 				if (connection != null) connection.close();
-			} catch (Exception e) {
+			//} catch (Exception e) {
 				//System.err.println(e.getMessage());
-			}
-		}
+			//}
+		//}
 		return answer;
 	}
 	public void update(String UserID,String TourID) throws Exception{
