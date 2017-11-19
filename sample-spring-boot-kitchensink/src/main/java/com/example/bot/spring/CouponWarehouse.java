@@ -191,7 +191,7 @@ public class CouponWarehouse{
   public boolean isCodeValid(String code){
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {
-        if(c.getInvitee() != "")
+        if(c.getInvitee().length() < 10) // no invitees
           return true;
       }
     }
@@ -213,9 +213,11 @@ public class CouponWarehouse{
     }
     else return false;
   }
-  public boolean checkSelf(String uid){
+  public boolean checkSelf(String uid, String text){
     for(Coupon c : coupons){
-      if(c.getInviter().equals(uid)) return true;
+      if(c.getCode().equals(text))
+        if(c.getInviter().equals(uid))
+          return true;
     }
     return false;
   }
