@@ -24,12 +24,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.example.bot.spring.LineListener;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @SpringBootApplication
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
+    @Autowired
+    LineListener listener;
 
     public static void main(String[] args) throws IOException {
-    	LineListener listener=new LineListener();
+    	//LineListener listener = new LineListener();
     	listener.start();
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
