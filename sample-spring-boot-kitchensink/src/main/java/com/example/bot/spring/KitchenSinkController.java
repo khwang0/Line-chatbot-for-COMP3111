@@ -172,37 +172,19 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
-		stageHandler.unfollowHandler(currentUser);
-		currentUser = null;
+		currentUser = getSourceUser(event);
+		if (currentUser!=null) {
+			stageHandler.unfollowHandler(currentUser, database);
+		}
+		//currentUser = null;
 	}
 
 	@EventMapping
 	public void handleFollowEvent(FollowEvent event) {
 		String replyToken = event.getReplyToken();
 		String msgbuffer = null;
-		try{
-			currentUser = database.searchUser(event.getSource().getUserId());
-			try {
-				currentUser = database.searchUser(event.getSource().getUserId());
-
-				//load other data from db
-			}catch(Exception e) {
-				log.info(e.getMessage());
-			}finally {
-				msgbuffer = stageHandler.followHandler(currentUser);
-			}
-		}catch(Exception e){
-			msgbuffer = "Welcome!!\nTo start using our services, please follow the instructions below.\n\n"
-					+ "Create Personal Diet Tracker: type \'1\'\n\n"
-					+ "Say goodbye to me: type any\n";
-			currentUser = new Users(event.getSource().getUserId());
-			//database.pushUser(currentUser);
-
-		}finally {
-			this.replyText(replyToken, msgbuffer);
-			//this.pushText(currentUser.getID(),"FUCK");
-			//database.updateUser(currentUser);
-		}
+		msgbuffer = stageHandler.followHandler(replyToken,event,currentUser,database);
+		this.replyText(replyToken, msgbuffer);
 	}
 
 	@EventMapping
@@ -294,7 +276,7 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
-		//currentUser = getSourceUser(event);
+		currentUser = getSourceUser(event);
         switch(currentUser.getStage()) {
         	case "Init":
         		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);

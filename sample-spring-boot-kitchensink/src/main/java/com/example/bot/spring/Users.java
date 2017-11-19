@@ -7,7 +7,7 @@ public class Users {
 	protected char gender = 'M'; // this can be "M" or "F"
 	protected double weight = 0;
 	protected double height = 0;
-	protected int age = 10;
+	protected int age = 0;
 	protected int subStage = 0;
 	protected String stage  = "Init";
 

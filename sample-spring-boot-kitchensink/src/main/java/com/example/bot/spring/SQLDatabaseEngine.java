@@ -179,6 +179,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next() ) {
+				rs.close();
+				stmt.close();
+				connection.close();
 				return true;
 			}
 		} catch (Exception e) {
@@ -188,57 +191,211 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 	//Generate user diet_plan
-	boolean gen_plan(String user_id){
+	public boolean gen_plan(Users currentUser){
 
 		try {
 			Connection connection = this.getConnection();
+			String gender =Character.toString(currentUser.getGender());
+			
+			if(search_intake_reference(gender,currentUser.getAge())) {
+				ArrayList<Double> plan = new ArrayList<Double>();
+				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age <= ? AND max_age >= ?" );
+				ref.setString(1, gender);
+				ref.setInt(2, currentUser.getAge());
+				ref.setInt(3, currentUser.getAge());
+				ResultSet result = ref.executeQuery();
+				while (result.next()) {
+					plan.add(result.getDouble(8));//fiber0
+					plan.add(result.getDouble(9));//energy1
+					plan.add(result.getDouble(10));//protein2
+					
+					plan.add(result.getDouble(4));//fiber_serve3
+					plan.add(result.getDouble(5));//energy_serve4
+					plan.add(result.getDouble(6));//meat_serve5
+					plan.add(result.getDouble(7));//milk_serve6
+				}
+				
+				ref.close();
+				result.close();
+				
+				PreparedStatement stmt = connection.prepareStatement(
+						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+				//String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
 
-			PreparedStatement stmt = connection.prepareStatement(
-					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
-					"INSERT INTO diet_plan VALUES(?,?,?,?,?,?)");//id | protein | fat | sugar | food_name | food_amount
-			stmt.setString(1, user_id);
-			stmt.setInt(2, 100);//protein
-			stmt.setInt(3, 100);//fat
-			stmt.setInt(4, 100);//sugar
-			//set the food_name
-			String[] food_name = new String[2];
-			food_name[0] = "apple";
-			food_name[1] = "milk";
-			Array sqlArray1 = connection.createArrayOf("text",food_name);
-			stmt.setArray(5,sqlArray1);
-			//set the food_amount
-			//int[] food_amount = new int[2];
-			Integer[] food_amount = new Integer[2];
-			food_amount[0] = 10;
-			food_amount[1] = 5;
-			Array sqlArray2 = connection.createArrayOf("integer",food_amount);
-			stmt.setArray(6,sqlArray2);
+				stmt.setString(1, currentUser.getID());
+				
+				stmt.setDouble(2, plan.get(0));//fiber
+				stmt.setDouble(3, plan.get(1));//energy
+				stmt.setDouble(4, plan.get(2));//protein
+//				stmt.setDouble(2, 0.5);//fiber
+//				stmt.setDouble(3, 0.5);//energy
+//				stmt.setDouble(4, 0.5);//protein
+				
+				//set the food_name
+	//			stmt.setString(5,"default");//default value
+	//			//set the food_amount
+				//set the food_name
+			    String[] food_name = new String[2];
+			    food_name[0] = "apple";
+			    food_name[1] = "milk";
+			    Array sqlArray1 = connection.createArrayOf("text",food_name);
+			    stmt.setArray(5,sqlArray1);
+			    //set the food_amount
+			    //int[] food_amount = new int[2];
+			    Integer[] food_amount = new Integer[2];
+			    food_amount[0] = 10;
+			    food_amount[1] = 5;
+			    Array sqlArray2 = connection.createArrayOf("integer",food_amount);
+			    stmt.setArray(6,sqlArray2);
+	//			String[] food_name = new String[2];
+	//			int[] food_amount = new int[2];
+	//			stmt.setArray(5, food_name);//fiber_serve
+	//			stmt.setArray(6, food_amount);//energy_serve
+	//			stmt.setString(6,"default");//default value
+//				stmt.setDouble(7, 0.5);//fiber_serve
+//				stmt.setDouble(8, 0.5);//energy_serve
+//				stmt.setDouble(9, 0.5);//meat_serve
+//				stmt.setDouble(10, 0.5);//milk_serve
+				stmt.setDouble(7, plan.get(3));//fiber_serve
+				stmt.setDouble(8, plan.get(4));//energy_serve
+				stmt.setDouble(9, plan.get(5));//meat_serve
+				stmt.setDouble(10, plan.get(6));//milk_serve
+				
+				stmt.execute();
+				stmt.close();
+				connection.close();
 
-			stmt.execute();
-			stmt.close();
-			connection.close();
+			}
+			else {
+				PreparedStatement stmt = connection.prepareStatement(
+						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+				
+				stmt.setString(1, currentUser.getID());
+				stmt.setDouble(2, 40);//fiber
+				stmt.setDouble(3, 717);//energy
+				stmt.setDouble(4, 57);//protein
+				//set the food_name
+//				stmt.setString(5,"default");//default value
+//				//set the food_amount
+				//set the food_name
+				   String[] food_name = new String[2];
+				   food_name[0] = "apple";
+				   food_name[1] = "milk";
+				   Array sqlArray1 = connection.createArrayOf("text",food_name);
+				   stmt.setArray(5,sqlArray1);
+				   //set the food_amount
+				   //int[] food_amount = new int[2];
+				   Integer[] food_amount = new Integer[2];
+				   food_amount[0] = 10;
+				   food_amount[1] = 5;
+				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
+				   stmt.setArray(6,sqlArray2);
+//				String[] food_name = new String[2];
+//				int[] food_amount = new int[2];
+//				stmt.setArray(5, food_name);//fiber_serve
+//				stmt.setArray(6, food_amount);//energy_serve
+//				stmt.setString(6,"default");//default value
+				stmt.setDouble(7, 8);//fiber_serve
+				stmt.setDouble(8, 6);//energy_serve
+				stmt.setDouble(9, 3);//meat_serve
+				stmt.setDouble(10, 2.5);//milk_serve
+				
+				stmt.execute();
+				stmt.close();
+				connection.close();
+			}
+
 		} catch (Exception e) {
-			System.out.println(e);
-			return false;
+			
+			return false; 
 		}
 		return true;
 	}
+	
+	boolean search_intake_reference(String gender, int age){
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age <= ? AND max_age >= ?" );
+			stmt.setString(1, gender);
+			stmt.setInt(2, age);
+			stmt.setInt(3, age);
 
+			ResultSet res = stmt.executeQuery();
+			if (res.next() ) {
+				res.close();
+				stmt.close();
+				connection.close();
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return false;
+	}
+	
+	
+	
+	//Display function for the diet plan to return a String
+	String display_diet_plan(String user_id, double budget) {
+		String result = "(DAILY BASIS)\n";
 
+		
+		try {
+			ArrayList<Double> plan_info = search_plan(user_id);
+			double fiber = plan_info.get(0);
+			double energy = plan_info.get(1);
+			double protein = plan_info.get(2);
+			double meat_serve = plan_info.get(5);
+			double milk_serve = plan_info.get(6);
+			
+			double protein_meat = protein*meat_serve/(meat_serve+milk_serve);
+			double protein_milk = protein*milk_serve/(meat_serve+milk_serve);
+			
+			result = result + "Vegetables & Fruit: " + Double.toString(fiber) + "\n";
+			result = result + "Grain (cereal) foods: " + Double.toString(energy) + "\n";
+			result = result + "Meat: " + String.format("%.2f", protein_meat) + "\n";
+			result = result + "Milk: " + String.format("%.2f", protein_milk) + "\n";
+			result = result + "Budget: " + Double.toString(budget) + "\n";
+			
+//			Connection connection = this.getConnection();
+//
+//			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein FROM diet_plan WHERE id = ?");
+//			stmt.setString(1, user_id);
+//
+//			ResultSet rs = stmt.executeQuery();
+//
+//			if(rs.next()) {
+//				
+//			}
+//
+//			stmt.close();
+//			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return result;
+	}
+	
 	//Query the target diet plan info from "diet_plan" table and return
-	ArrayList<Double> search_plan(String user_id) throws Exception {
+	ArrayList<Double> search_plan(String user_id) {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table
 		try {
 			//connect to the database with table: diet_plan
 			Connection connection = this.getConnection();
 			//prepare a SQL statement while leaving some parameters
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_plan where id = ? ");
+			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
+			//PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, budget, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
 			stmt.setString(1, user_id);//1 is the param location/index
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				plan_info.add(rs.getDouble(1));//protein
-				plan_info.add(rs.getDouble(2));//fat 
-				plan_info.add(rs.getDouble(3));//sugar
+				plan_info.add(rs.getDouble(1));//fiber
+				plan_info.add(rs.getDouble(2));//energy
+				plan_info.add(rs.getDouble(3));//protein
+				//plan.info.add(rs.getDouble(4));//budget
+				plan_info.add(rs.getDouble(4));//fiber_serve
+				plan_info.add(rs.getDouble(5));//energy_serve 
+				plan_info.add(rs.getDouble(6));//meat_serve
+				plan_info.add(rs.getDouble(7));//milk_serve
 			}
 			rs.close();
 			stmt.close();
@@ -247,26 +404,27 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			log.info("query error for search_plan: {}", e.toString());
 			//System.out.println(e);
 		}
-		if (plan_info.size() != 0)
-			return plan_info;
+		//if (plan_info.size() != 0)
+		return plan_info;
 
-		throw new Exception("NOT FOUND");
+		//throw new Exception("NOT FOUND");
 	}
 
 	//Query the current diet status info from "diet_conclusion" table and return
-	ArrayList<Double> search_current(String user_id, String date) throws Exception {
+	ArrayList<Double> search_current(String user_id, String date) {
 		ArrayList<Double> current_info = new ArrayList<Double>(); // store the query result from current table
 		try {
 			//connect
 			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_conclusion where id = ? AND date = ?");
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber, price FROM diet_conclusion where id = ? AND date = ?");
 			stmt.setString(1, user_id);
 			stmt.setString(2, date);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
+				current_info.add(rs.getDouble(3));//fiber
+				current_info.add(rs.getDouble(2));//energy
 				current_info.add(rs.getDouble(1));//protein
-				current_info.add(rs.getDouble(2));//fat
-				current_info.add(rs.getDouble(3));//sugar
+				current_info.add(rs.getDouble(4));//price
 			}
 			rs.close();
 			stmt.close();
@@ -274,10 +432,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} catch (Exception e) {
 			log.info("query error for search_current: {}", e.toString());
 		}
-		if (current_info.size() != 0)
-			return current_info;
+			
+		return current_info;//can be null
 
-		throw new Exception("NOT FOUND");
 	}
 
 	/*  Function added by ZK*/
@@ -331,7 +488,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				
 				
 				PreparedStatement stmt2 = connection.prepareStatement(
-						"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
+				"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
 				stmt2.setDouble(1, current_protein);
 				stmt2.setDouble(2, current_energy);
