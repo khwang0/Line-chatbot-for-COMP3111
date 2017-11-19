@@ -398,7 +398,7 @@ public class Users {
 			 // +"Eat dinner: "+ Boolean.toString(eatingHabits[3]) +"\n"
 			 // +"Eat midnight snacks: "+ Boolean.toString(eatingHabits[4]) +"\n"
 			 // +"More meals: "+ Boolean.toString(eatingHabits[5]) +"\n"
-			 +temp
+			 +temp;
 			 //+"Other information: "+ otherInfo ;
 	}
 
