@@ -55,7 +55,7 @@ public class MenuReader {
 			}
 		}
 		//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
-		ingredientList[0] = tempList.toArray(new String[foodNamesArray.size()]);
+		ingredientList[0] = tempList.toArray(new String[tempList.size()]);
 		return fi;
 	}
 
