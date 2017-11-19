@@ -384,11 +384,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				
 				
 				PreparedStatement stmt2 = connection.prepareStatement(
-<<<<<<< HEAD
-						"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");//nothing here
-=======
-						"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
->>>>>>> upstream/master
+				"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
 				stmt2.setDouble(1, current_protein);
 				stmt2.setDouble(2, current_energy);
