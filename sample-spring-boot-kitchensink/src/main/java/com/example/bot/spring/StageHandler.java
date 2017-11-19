@@ -222,6 +222,7 @@ public class StageHandler {
 				//if(currentUser.registerTime after compaign starting time)
 				if(CouponWarehouse.getInstance().isCouponRemaining()){
 					replymsg = "Please input your invitation code:";
+
 					currentUser.setStage("Coupon");
 					currentUser.setSubStage(0);
 				}
@@ -1049,7 +1050,7 @@ public class StageHandler {
 	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(text)){
-			replymsg = CouponWarehouse.getInstance().issueCoupon();
+			replymsg = CouponWarehouse.getInstance().issueCoupon(text);
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used.";
