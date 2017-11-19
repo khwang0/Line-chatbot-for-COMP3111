@@ -42,6 +42,7 @@ import java.net.URI;
 public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
+
 	private foodInput foodinput = null;
 	private foodinfo food = null;
 	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n",
@@ -67,11 +68,11 @@ public class StageHandler {
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
-	
+
 	// used for serve-weight conversion
 	private float VF_weight_per_serve = 75;//75g Vegetable&Fruit
 	private float Grain_weight_per_serve = 500;//500kj Grain
-	private float MM_weight_per_serve = 100; 
+	private float MM_weight_per_serve = 100;
 
 
 	public String initStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -155,7 +156,7 @@ public class StageHandler {
 				+ "4 Feedback \n"
 				+ "5 User Guide(recommended for first-time users)\n"
 //				+ "6 Self Assessment(recommened for first-time users)\n\n"
-				+ "Please enter your choice:(1-5)";
+				+ "Please enter your choice:(1-5)\n";
 			}else {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
@@ -216,7 +217,29 @@ public class StageHandler {
 //				currentUser.setStage("SelfAssessment");
 //				currentUser.setSubStage(0);
 //				//move to self assessment
-//			}break;
+//			}break
+			case "code" :{
+				//if(currentUser.registerTime after compaign starting time)
+				if(CouponWarehouse.getInstance().isCouponRemaining()){
+					replymsg = "Please input your invitation code:";
+					currentUser.setStage("Coupon");
+					currentUser.setSubStage(0);
+				}
+				else{
+					replymsg = "You are not either qualified nor there is no coupons remaining.";
+				}
+			}break;
+			case "friend" :{
+				//if(currentUser.registerTime after compaign starting time)
+				if(CouponWarehouse.getInstance().isCouponRemaining()){
+					replymsg = "This is your code for campaign:" + CouponWarehouse.getInstance().issueCode();
+					currentUser.setStage("Main");
+					currentUser.setSubStage(0);
+				}
+				else{
+					replymsg = "You are not either qualified nor there is no coupons remaining.";
+				}
+			}break;
 			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
 			}
 			//replymsg= msg);
@@ -294,8 +317,8 @@ public class StageHandler {
 				currentUser.setSubStage(0) ;
 				}
 			else
-				replymsg= "Please enter a reasonable number!";				
-		}break;	
+				replymsg= "Please enter a reasonable number!";
+		}break;
 		case 2:{
 			replymsg= "Please enter the date(yyyymmdd): ";
 			currentUser.setSubStage(currentUser.getSubStage()+20) ;
@@ -313,7 +336,7 @@ public class StageHandler {
 		//substage 3: Diet plan genereator
 		case 3:{
 			/*
-			 * Update corresponding user's "diet_plan" table based on his/her information 
+			 * Update corresponding user's "diet_plan" table based on his/her information
 			 * */
 			String user_id = currentUser.getID();
 			//double budget = currentUser.getBudget();
@@ -325,9 +348,9 @@ public class StageHandler {
 			}
 			else {
 				boolean result = database.gen_plan(currentUser);
-				if (result) {					
+				if (result) {
 					replymsg = "We have successfully generated a diet plan for you:\n\n";
-					replymsg += database.display_diet_plan(user_id, budget);							
+					replymsg += database.display_diet_plan(user_id, budget);
 				}
 				else {
 					replymsg  = "Since your personal information is not completed, we have genereated a default one for you.\n";
@@ -345,10 +368,10 @@ public class StageHandler {
 			try {
 				String user_id = currentUser.getID();
 				//double budget = currentUser.getBudget();
-				
-				
+
+
 				double budget = 100;
-				
+
 				// Instantiate a Date object
 				Date dNow = new Date();
 				SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd");
@@ -359,21 +382,21 @@ public class StageHandler {
 				if(plan_info.size()==0) {
 					replymsg += "We can not find your diet plan, please design your own diet plan first!\n";
 				}
-				
+
 				double meat_serve = plan_info.get(5);
 				double milk_serve = plan_info.get(6);
-				
+
 				//ArrayList<Integer> current_info = new ArrayList<Integer>();
 				ArrayList<Double> current_info = database.search_current(user_id, date); // diet current status
-				
+
 				//User hasn't input any diet consumption
 				if(current_info.size() == 0) {
 					double zero = 0;
 					for (int i = 0; i<4; i++) {
-						current_info.add(zero);				
+						current_info.add(zero);
 					}
 				}
-				
+
 				for (int i = 0; i < 3/*plan_info.size()*/; i++) {
 					//fiber|energy|protein
 					double diff = plan_info.get(i) - current_info.get(i);
@@ -394,7 +417,7 @@ public class StageHandler {
 						replymsg += "Energy: ";
 						if (plan_info.get(i) > current_info.get(i)) {
 							replymsg += String.format("You still need to consume %.2f kcal", diff);
-							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";			
+							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";
 						}
 						else
 							replymsg += "Finish!\n";
@@ -409,7 +432,7 @@ public class StageHandler {
 						}
 						else
 							replymsg += "Finish!\n";
-						
+
 						replymsg += "######\n";
 						replymsg += "Milk: ";
 						if (plan_info.get(i) > current_info.get(i)) {
@@ -420,7 +443,7 @@ public class StageHandler {
 							replymsg += "Finish!\n\n";
 					}
 				}
-				
+
 				//generate plan based on budget
 				//expensive
 				if (current_info.get(3) < budget*2/3){
@@ -435,8 +458,8 @@ public class StageHandler {
 				//over budget
 				else {
 					replymsg = replymsg + "You are OVER budget now!\n";
-				}		
-				
+				}
+
 			} catch (Exception e) {
 				//log.info("plan not found: {}", e.toString());
 				replymsg += "Exception!\n";
@@ -455,7 +478,7 @@ public class StageHandler {
 				currentUser.setSubStage(0);
 			}finally { replymsg= REDIRECT;}
 		}break;
-		
+
 		//subStage5: self Assessment;
 		case 5:{
 			suggestion = "";
@@ -465,16 +488,16 @@ public class StageHandler {
 					+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
 			currentUser.setSubStage(-2);
 		}break;
-		
-		
-		
+
+
+
 		//subStage6 : insert user-defined data
 		case 6:{
 			food = new foodinfo();
 			replymsg= "Please enter the food name: ";
 			currentUser.setSubStage(currentUser.getSubStage()+10);
 		}break;
-		case 16:{			
+		case 16:{
 			if(inputChecker.foodAdd(text,food,database)) {
 				replymsg= "Please enter rough energy in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
@@ -482,7 +505,7 @@ public class StageHandler {
 			else replymsg= "Please enter valid food name: ";
 		}break;
 		case 17:{
-			
+
 			if(inputChecker.energyAdd(text,food,database)) {
 				replymsg= "Please enter rough protein in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
@@ -490,32 +513,32 @@ public class StageHandler {
 			else replymsg= "Please enter valid number: ";
 		}break;
 		case 18:{
-			
+
 			if(inputChecker.proteinAdd(text,food,database)) {
 				replymsg= "Please enter rough fiber in 100g: ";
-				currentUser.setSubStage(currentUser.getSubStage()+1);				
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else replymsg= "Please enter valid number: ";
-			
-			
+
+
 		}break;
 		case 19:{
-			
+
 			if(inputChecker.fiberAdd(text,food,database)) {
 				replymsg= "Please enter rough price in 100g: ";
-				currentUser.setSubStage(currentUser.getSubStage()+1);	
-			}
-			else replymsg= "Please enter valid number: ";	
-		}break;
-		case 20:{
-			
-			if(inputChecker.priceAdd(text,food,database)) {
-				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
-				currentUser.setSubStage(0);	
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else replymsg= "Please enter valid number: ";
-						
-		}break;	
+		}break;
+		case 20:{
+
+			if(inputChecker.priceAdd(text,food,database)) {
+				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				currentUser.setSubStage(0);
+			}
+			else replymsg= "Please enter valid number: ";
+
+		}break;
 		case -2:{
 			if(text.equalsIgnoreCase("q")) {
 				currentUser.setStage("Main");
@@ -844,7 +867,7 @@ public class StageHandler {
         			}
 				else {
 					replymsg = "Please enter reasonable numbers!";
-				} 
+				}
 		}break;
 		case 6:{
 			boolean input = false;
@@ -1023,6 +1046,19 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
+	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		if(CouponWarehouse.getInstance().isCodeValid(text)){
+			replymsg = CouponWarehouse.getInstance().issueCoupon();
+		}
+		else{
+			replymsg = "oops! Your code is either invalid or used.";
+		}
+		currentUser.setStage("Main");//back to main
+		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
+		return replymsg;
+	}
 
 	// this is self assessment Handler function
 //	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -1140,7 +1176,7 @@ public class StageHandler {
 			msg = "Welcome!!\nTo start using our Personal Diet services, please follow the instructions below.\n\n"
 					+ "Please first tell us some of your personal information: type anything to continue";
 			currentUser = new Users(event.getSource().getUserId());
-			database.pushUser(currentUser); // push new user  
+			database.pushUser(currentUser); // push new user
 		}finally {
 			database.updateUser(currentUser);//update user stage when the stage has been changed
 		}

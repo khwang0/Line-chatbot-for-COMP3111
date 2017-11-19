@@ -302,6 +302,9 @@ public class KitchenSinkController {
         	case "UserGuide":
         		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
         		break;
+					case "Coupon":
+						replymsg = stageHandler.couponHandler(replyToken, event, text, currentUser, database);
+						break;
 //        	case "SelfAssessment":{
 //				if(!(currentUser instanceof DetailedUser)){
 //					currentUser = new DetailedUser(currentUser);

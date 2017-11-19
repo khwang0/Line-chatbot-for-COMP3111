@@ -14,22 +14,23 @@ public class CouponWarehouse{
     couponsRemaining = numOfCoupons;
     for(int i = 0; i < numOfCoupons; i++) {
     	String code = "";
-    	do {
-    		/*for(int j = 0; j < 6 ; j++) {
+    	do
+      {
+    		for(int j = 0; j < 6 ; j++) {
     			Random rand = new Random();
     			int rn = rand.nextInt(3) + 1;
     			int n = 0;
     			switch(rn) {
-    				case 1:n = rand.nextInt(10)+48;break;
-    				case 2:n = rand.nextInt(26)+65;break;
-    				case 3:n = rand.nextInt(26)+97;break;
+    				case 1:n = rand.nextInt(10)+48; break;
+    				case 2:n = rand.nextInt(26)+65; break;
+    				case 3:n = rand.nextInt(26)+97; break;
     			}
-    			code += (char)n;*/
-          Random rand = new Random();
-          code = Integer.toString(rand.nextInt(899999) + 100000);
-    		}
-    	}while(!codes.contains(code));
-    	codes.add(code);
+    			code += (char)n;
+        }
+        System.out.println("");
+    	}while(codes.contains(code));
+
+      codes.add(code);
     }
   }
   static public CouponWarehouse getInstance(){
@@ -70,9 +71,13 @@ public class CouponWarehouse{
 	  String code = codes.get(n);
     return code;
   }
-  public void issueCoupon(){
-    if (couponsRemaining >0)
+  public String issueCoupon(){
+    if (isCouponRemaining())
       couponsRemaining--;
+    return "This is your ice cream coupon(for 2 perons) :)";
+  }
+  public boolean isCodeValid(String code){
+    return codes.contains(code);
   }
   public boolean isCouponRemaining(){
     return (couponsRemaining > 0);
