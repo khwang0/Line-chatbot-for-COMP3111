@@ -13,6 +13,9 @@ public class FoodInput{
 		this.UID = UID;
 		currentTime = time;
 		key = UID+time;
+		foodName = "N/A"
+		amount = 0;
+		price = 0;
 	}
 	public String getKey() {return key;}
 	public String getId() {return UID;}
