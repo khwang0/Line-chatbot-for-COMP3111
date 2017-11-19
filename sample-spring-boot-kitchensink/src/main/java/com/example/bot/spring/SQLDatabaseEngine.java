@@ -242,9 +242,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			}
 			else {
 				stmt.setString(1, currentUser.getID());
-				stmt.setDouble(2, 123);//fiber
-				stmt.setDouble(3, 123);//energy
-				stmt.setDouble(4, 123);//protein
+				stmt.setDouble(2, 40);//fiber
+				stmt.setDouble(3, 717);//energy
+				stmt.setDouble(4, 57);//protein
 				//set the food_name
 //				stmt.setString(5,"default");//default value
 //				//set the food_amount
@@ -266,10 +266,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 //				stmt.setArray(5, food_name);//fiber_serve
 //				stmt.setArray(6, food_amount);//energy_serve
 //				stmt.setString(6,"default");//default value
-				stmt.setDouble(7, 123);//fiber_serve
-				stmt.setDouble(8, 123);//energy_serve
-				stmt.setDouble(9, 123);//meat_serve
-				stmt.setDouble(10, 123);//milk_serve
+				stmt.setDouble(7, 8);//fiber_serve
+				stmt.setDouble(8, 6);//energy_serve
+				stmt.setDouble(9, 3);//meat_serve
+				stmt.setDouble(10, 2.5);//milk_serve
 			}
 			stmt.execute();
 			stmt.close();
