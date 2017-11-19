@@ -218,6 +218,7 @@ public class StageHandler {
 //				currentUser.setSubStage(0);
 //				//move to self assessment
 //			}break
+
 			case "code" :{
 				//if(currentUser.registerTime after compaign starting time)
 				if(CouponWarehouse.getInstance().isCouponRemaining() &&
@@ -232,6 +233,14 @@ public class StageHandler {
 					replymsg = "You are not either qualified nor there is no coupons remaining.";
 				}
 			}break;
+			case "6" :{
+				MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
+				replymsg = replyinfo.getMsg();
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+			}break;
+			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
+			}
 			case "friend" :{
 				//if(currentUser.registerTime after compaign starting time)
 				replymsg = "This is your code for campaign:"

@@ -89,7 +89,7 @@ public class Users {
 	public void setBudget(double b) {budget = b;}
 	public void setAssessmentScore(int s){assessmentScore = s;}
 	public void setRegisterTime(String s){registerTime = s;}
-	//assume inputs are always valid
+	//assume inputs are always validx
 	public String getID() {return UID;}
 	public String getName() {return name;}
 	public char getGender() {return gender;}
