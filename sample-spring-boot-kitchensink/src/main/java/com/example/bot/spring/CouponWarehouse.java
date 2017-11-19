@@ -94,7 +94,8 @@ public class CouponWarehouse{
     return code;
   }
   public Coupon issueCoupon(String invitee, String code){
-    if (isCouponRemaining()){
+    //if (isCouponRemaining()){
+    if(true){}
       couponsRemaining--;
 
       int i = 0;
@@ -106,8 +107,9 @@ public class CouponWarehouse{
       if(found){
        coupons.get(i).setInvitee(invitee);
        if( ! isNewUser(coupons.get(i).getInviter()) ) couponsRemaining--;
+       return coupons.get(i);
      }
-      return coupons.get(i);
+     return null;
     }
     return null;
   }
