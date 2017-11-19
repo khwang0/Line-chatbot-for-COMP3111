@@ -96,9 +96,10 @@ public class CouponWarehouse{
   public Coupon issueCoupon(String invitee, String code){
     if (isCouponRemaining()){
       couponsRemaining--;
-      coupons.get(coupons.indexOf(code)).setInvitee(invitee);
-      if( ! isNewUser(coupons.get(coupons.indexOf(code)).getInviter()) )
-      couponsRemaining--;
+
+      coupons.get(coupons.indexOf(new Coupon("",code))).setInvitee(invitee);
+      if( ! isNewUser(coupons.get(coupons.indexOf(new Coupon("",code))).getInviter()) )
+        couponsRemaining--;
     }
     return coupons.get(coupons.indexOf(code));
   }
