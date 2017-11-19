@@ -372,38 +372,42 @@ public class StageHandler {
 					double diff = plan_info.get(i) - current_info.get(i);
 					//fiber
 					if (i==0) {
+						replymsg += "######\n";
 						replymsg += "Fiber: ";
 						if (plan_info.get(i) > current_info.get(i)) {
 							replymsg += String.format("You still need to consume %.2f g more\n", diff);
-							replymsg = replymsg + "You can try to eat more vegetables & legumes/beans or fruit!\n";
+							replymsg = replymsg + ", try to eat more vegetables & legumes/beans or fruit!\n";
 						}
 						else
 							replymsg += "Finish!\n";
 					}
 					//energy
 					else if (i== 1){
+						replymsg += "######\n";
 						replymsg += "Energy: ";
 						if (plan_info.get(i) > current_info.get(i)) {
 							replymsg += String.format("You still need to consume %.2f kcal\n", diff);
-							replymsg += "You can try to eat more Grain (cereal) foods, mostly wholegrain!\n";			
+							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";			
 						}
 						else
 							replymsg += "Finish!\n";
 					}
 					//protein: Meat + Milk
 					else{
+						replymsg += "######\n";
 						replymsg += "Meat: ";
 						if (plan_info.get(i) > current_info.get(i)) {
 							replymsg += String.format("You still need to consume %.2f g\n", diff*meat_serve/(meat_serve+milk_serve));
-							replymsg += "You can try to eat more Lean meat and poultry, fish, eggs, nuts and seeds!\n";
+							replymsg += ", try to eat more Lean meat and poultry, fish, eggs, nuts and seeds!\n";
 						}
 						else
 							replymsg += "Finish!\n";
 						
+						replymsg += "######\n";
 						replymsg += "Milk: ";
 						if (plan_info.get(i) > current_info.get(i)) {
 							replymsg += String.format("You still need to consume %.2f g\n", diff*milk_serve/(meat_serve+milk_serve));
-							replymsg += "You can try to consume more Milk, yoghurt, cheese and/or alternatives!\n\n";
+							replymsg += ", try to consume more milk, yoghurt, cheese and/or alternatives!\n\n";
 						}
 						else
 							replymsg += "Finish!\n\n";
@@ -414,7 +418,7 @@ public class StageHandler {
 				//expensive
 				if (current_info.get(3) < budget*2/3){
 					replymsg = replymsg + "Budget ~="
-							+ Double.toString(budget*1/3) + "!\n";
+							+ String.format("%.2f", budget*1/3) + "!\n";
 				}
 				//cheap
 				else if(budget-current_info.get(3) > 0) {
