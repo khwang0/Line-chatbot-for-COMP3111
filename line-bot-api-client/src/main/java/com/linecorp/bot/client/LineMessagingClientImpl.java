@@ -32,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Proxy implementation of {@link LineMessagingClient} to hind internal implementation.
+ * Proxy implementation of {@link `} to hind internal implementation.
  */
 @AllArgsConstructor
 public class LineMessagingClientImpl implements LineMessagingClient {

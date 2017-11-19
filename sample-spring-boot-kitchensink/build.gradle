@@ -56,7 +56,6 @@ jacocoTestReport{
 }
 
 test {
-    //environment "DATABASE_URL", "postgres://wwwbvxwsfefwqo:eb8451f02c101b8722c2ff3222814acae1a53125d0a3207dc871a5d23def557d@ec2-50-19-218-160.compute-1.amazonaws.com:5432/d6p7sk8brnkcvl"
-    environment "DATABASE_URL", "postgres://iwmlmgqrojcmxx:3142b7169b1e7e32af76e757e2a03c941df52d341b800a427cfcc959f9267380@ec2-50-19-105-113.compute-1.amazonaws.com:5432/d6thleqqte1nlh" 
-// for my_self_test; 
+    //environment "DATABASE_URL", "postgres://iwmlmgqrojcmxx:3142b7169b1e7e32af76e757e2a03c941df52d341b800a427cfcc959f9267380@ec2-50-19-105-113.compute-1.amazonaws.com:5432/d6thleqqte1nlh"  
+	environment "DATABASE_URL", "postgres://wwwbvxwsfefwqo:eb8451f02c101b8722c2ff3222814acae1a53125d0a3207dc871a5d23def557d@ec2-50-19-218-160.compute-1.amazonaws.com:5432/d6p7sk8brnkcvl" //group
 }
