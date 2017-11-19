@@ -323,7 +323,7 @@ public class StageHandler {
 					foodInput.setAmount(amount);
 					foodInput.setPrice(realPrice);
 					database.pushDietRecord(foodInput);
-					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Double.valueOf(text));
+					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
 				}
 			}
 			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
@@ -355,7 +355,7 @@ public class StageHandler {
 						foodInput.setAmount(amount);
 						foodInput.setPrice(realPrice);
 						database.pushDietRecord(foodInput);
-						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Double.valueOf(text));
+						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
 					}
 				}
 			}
