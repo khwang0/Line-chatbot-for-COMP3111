@@ -39,9 +39,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 		user.setCarbs(rs.getDouble(12));
 		 		user.setProtein(rs.getDouble(13));
 		 		user.setVegfruit(rs.getDouble(14));
-		 		// Array a = rs.getArray(15);
-		 		// Boolean[] b = (Boolean[])a.getArray();
-		 		// user.setEatingHabits(b);
+		 		Array a = rs.getArray(15);
+		 		Boolean[] b = (Boolean[])a.getArray();
+		 		user.setEatingHabits(b);
 		 		user.setOtherInfo(rs.getString(16));
 		 		user.setAssessmentScore(rs.getInt(17));
 			}
