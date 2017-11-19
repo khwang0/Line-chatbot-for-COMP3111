@@ -317,17 +317,9 @@ public class KitchenSinkController {
         }
 		//database.updateUser(currentUser);
 		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
-			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-			log.info(replymsg);
-			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			String[] replyinfo = replymsg.split("@@");
-			for(int i = 0 ; i < replyinfo.length ; i ++){
-				log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-				log.info(replyinfo[i]);
-				log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-			}
-			this.pushText(replyinfo[0], replyinfo[2]);
-			this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[2]);
+			this.pushText(replyinfo[1], replyinfo[3]);
+			this.pushText(replyinfo[2],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[2]);
 		}
 		else
 			this.replyText(replyToken,replymsg);
