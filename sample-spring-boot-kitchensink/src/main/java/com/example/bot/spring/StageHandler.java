@@ -307,7 +307,7 @@ public class StageHandler {
 					replymsg = "We have successfully generated a diet plan for you!\n";
 				}
 				else {
-					replymsg  = "Sorry, we fail to generate a diet plan for you now.\n";
+					replymsg  = "Since your personal information is not completed, we have genereated a default one for you.\n";
 				}
 			}
 			replymsg+= "Type anything to go back to Diet Planner...\n";

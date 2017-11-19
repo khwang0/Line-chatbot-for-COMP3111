@@ -179,20 +179,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			ResultSet rs = ref.executeQuery();
 			PreparedStatement stmt = connection.prepareStatement(
 					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
-					"INSERT INTO diet_plan VALUES(?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+					"INSERT INTO diet_plan VALUES(?,?,?,?,,,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			stmt.setString(1, currentUser.getID());
 			stmt.setDouble(2, rs.getDouble(8));//fiber
 			stmt.setDouble(3, rs.getDouble(9));//energy
 			stmt.setDouble(4, rs.getDouble(10));//protein
 			//set the food_name
-			stmt.setString(5,"default");//default value
-			//set the food_amount
-			//int[] food_amount = new int[2];
-			stmt.setString(6,"default");//default value
-			stmt.setDouble(7, rs.getDouble(4));//fiber_serve
-			stmt.setDouble(8, rs.getDouble(5));//energy_serve
-			stmt.setDouble(9, rs.getDouble(6));//meat_serve
-			stmt.setDouble(10, rs.getDouble(7));//milk_serve
+//			stmt.setString(5,"default");//default value
+//			//set the food_amount
+//			//int[] food_amount = new int[2];
+//			stmt.setString(6,"default");//default value
+			stmt.setDouble(5, rs.getDouble(4));//fiber_serve
+			stmt.setDouble(6, rs.getDouble(5));//energy_serve
+			stmt.setDouble(7, rs.getDouble(6));//meat_serve
+			stmt.setDouble(8, rs.getDouble(7));//milk_serve
 
 			
 			stmt.execute();
@@ -201,7 +201,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
-			System.out.println(e);
 			return false;
 		}
 		return true;
