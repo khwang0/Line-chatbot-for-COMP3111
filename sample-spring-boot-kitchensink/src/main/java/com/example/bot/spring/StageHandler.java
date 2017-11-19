@@ -302,7 +302,7 @@ public class StageHandler {
 				replymsg = "You've already generated a diet plan!\n";
 			}
 			else {
-				boolean result = database.gen_plan(user_id, currentUser);//tempory
+				boolean result = database.gen_plan(currentUser);//tempory
 				if (result) {
 					replymsg = "We have successfully generated a diet plan for you!\n";
 				}

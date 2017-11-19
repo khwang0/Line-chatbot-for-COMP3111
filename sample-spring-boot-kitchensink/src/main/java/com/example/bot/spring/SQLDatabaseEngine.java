@@ -167,7 +167,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 	//Generate user diet_plan
-	boolean gen_plan(Users currentUser){
+	public boolean gen_plan(Users currentUser){
 
 		try {
 			Connection connection = this.getConnection();
