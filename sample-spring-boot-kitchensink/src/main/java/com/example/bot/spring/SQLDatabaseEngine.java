@@ -197,7 +197,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Connection connection = this.getConnection();
 			String gender =Character.toString(currentUser.getGender());
 
-			if(search_intake_reference(gender,currentUser.getAge())) {
+//			if(search_intake_reference(gender,currentUser.getAge())) {
 				ArrayList<Double> plan = new ArrayList<Double>();
 				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age <= ? AND max_age >= ?" );
 				ref.setString(1, gender);
@@ -265,45 +265,45 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				stmt.close();
 				connection.close();
 
-			}
-			else {
-				PreparedStatement stmt = connection.prepareStatement(
-						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
-
-				stmt.setString(1, currentUser.getID());
-				stmt.setDouble(2, 40);//fiber
-				stmt.setDouble(3, 717);//energy
-				stmt.setDouble(4, 57);//protein
-				//set the food_name
-//				stmt.setString(5,"default");//default value
-//				//set the food_amount
-				//set the food_name
-				   String[] food_name = new String[2];
-				   food_name[0] = "apple";
-				   food_name[1] = "milk";
-				   Array sqlArray1 = connection.createArrayOf("text",food_name);
-				   stmt.setArray(5,sqlArray1);
-				   //set the food_amount
-				   //int[] food_amount = new int[2];
-				   Integer[] food_amount = new Integer[2];
-				   food_amount[0] = 10;
-				   food_amount[1] = 5;
-				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
-				   stmt.setArray(6,sqlArray2);
-//				String[] food_name = new String[2];
-//				int[] food_amount = new int[2];
-//				stmt.setArray(5, food_name);//fiber_serve
-//				stmt.setArray(6, food_amount);//energy_serve
-//				stmt.setString(6,"default");//default value
-				stmt.setDouble(7, 8);//fiber_serve
-				stmt.setDouble(8, 6);//energy_serve
-				stmt.setDouble(9, 3);//meat_serve
-				stmt.setDouble(10, 2.5);//milk_serve
-
-				stmt.execute();
-				stmt.close();
-				connection.close();
-			}
+//			}
+//			else {
+//				PreparedStatement stmt = connection.prepareStatement(
+//						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+//
+//				stmt.setString(1, currentUser.getID());
+//				stmt.setDouble(2, 40);//fiber
+//				stmt.setDouble(3, 717);//energy
+//				stmt.setDouble(4, 57);//protein
+//				//set the food_name
+////				stmt.setString(5,"default");//default value
+////				//set the food_amount
+//				//set the food_name
+//				   String[] food_name = new String[2];
+//				   food_name[0] = "apple";
+//				   food_name[1] = "milk";
+//				   Array sqlArray1 = connection.createArrayOf("text",food_name);
+//				   stmt.setArray(5,sqlArray1);
+//				   //set the food_amount
+//				   //int[] food_amount = new int[2];
+//				   Integer[] food_amount = new Integer[2];
+//				   food_amount[0] = 10;
+//				   food_amount[1] = 5;
+//				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
+//				   stmt.setArray(6,sqlArray2);
+////				String[] food_name = new String[2];
+////				int[] food_amount = new int[2];
+////				stmt.setArray(5, food_name);//fiber_serve
+////				stmt.setArray(6, food_amount);//energy_serve
+////				stmt.setString(6,"default");//default value
+//				stmt.setDouble(7, 8);//fiber_serve
+//				stmt.setDouble(8, 6);//energy_serve
+//				stmt.setDouble(9, 3);//meat_serve
+//				stmt.setDouble(10, 2.5);//milk_serve
+//
+//				stmt.execute();
+//				stmt.close();
+//				connection.close();
+//			}
 
 		} catch (Exception e) {
 
@@ -462,20 +462,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				current_price = price + previous_price;
 
 
-				if( !healthSearcher.getProtein().equals("N/A")) {
+				if( !healthSearcher.getProtein().equals("0")) {
 					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
 				}
 				else {
 					current_protein = previous_protein;
 
 				}
-				if( !healthSearcher.getEnergy().equals("N/A")) {
+				if( !healthSearcher.getEnergy().equals("0")) {
 					current_energy = previous_energy + Double.parseDouble(healthSearcher.getEnergy())*amount/100.0;
 				}
 				else {
 					current_energy = previous_energy;
 				}
-				if( !healthSearcher.getFiber().equals("N/A")) {
+				if( !healthSearcher.getFiber().equals("0")) {
 					current_fiber = previous_fiber + Double.parseDouble(healthSearcher.getFiber())*amount/100.0;
 				}
 				else {
