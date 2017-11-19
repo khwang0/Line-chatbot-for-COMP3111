@@ -78,16 +78,16 @@ public class StageHandler {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
-			if(text.equals("1")) {
+			//if(!text.equals("")) {
         		replymsg = "Please enter your name: (1-32 characters)";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
-        	}
-        	else {
-        		replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
-        		currentUser.setStage("");
-        		currentUser.setSubStage(0);
-        		currentUser = null;
-        	}
+        	//}
+        	// else {
+        	// 	replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
+        	// 	currentUser.setStage("");
+        	// 	currentUser.setSubStage(0);
+        	// 	currentUser = null;
+        	// }
 		}break;
 		case 1:{
 			if(inputChecker.NameEditting(text,currentUser,database,"set")) {
@@ -1128,16 +1128,16 @@ public class StageHandler {
 			if (currentUser.getAge()==0) {
 				currentUser.setStage("Init");
 				currentUser.setSubStage(0);
+				msg = "User data reloaded. Type anything to continue...";
 			}
 			else{
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
+				msg = "User data reloaded. Type anything to continue...";
 			}
-			msg = "User data reloaded. Type anything to continue...";
 		}catch(Exception e){
-			msg = "Welcome!!\nTo start using our services, please follow the instructions below.\n\n"
-					+ "Create Personal Diet Tracker: type \'1\'\n\n"
-					+ "Say goodbye to me: type any\n";
+			msg = "Welcome!!\nTo start using our Personal Diet services, please follow the instructions below.\n\n"
+					+ "Please first tell us some of your personal information: type anything to continue";
 			currentUser = new Users(event.getSource().getUserId());
 			database.pushUser(currentUser); // push new user  
 		}finally {
