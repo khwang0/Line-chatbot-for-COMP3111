@@ -2,6 +2,7 @@ package com.example.bot.spring;
 
 import java.io.IOException;
 
+
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -39,6 +40,9 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+
+
+@Slf4j
 public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
