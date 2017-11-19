@@ -14,9 +14,9 @@ import org.json.*;
 * @since   2017/11/19
 */
 public class MenuReader {
-	String[] nameList;
-	int[] priceList;
-	String [][] ingredientList;
+	private String[] nameList;
+	private int[] priceList;
+	private String [][] ingredientList;
 	//private SQLDatabaseEngine database;
 	/**
 	* Constructor of MenuReader
