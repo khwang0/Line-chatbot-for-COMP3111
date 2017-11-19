@@ -195,7 +195,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 			PreparedStatement stmt = connection.prepareStatement(
 					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
-					"INSERT INTO diet_plan (id, fiber, energy, protein, fiber_serve, energy_serve, meat_serve, milk_serve) VALUES (?,?,?,?,,,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+					"INSERT INTO diet_plan (id, fiber, energy, protein, fiber_serve, energy_serve, meat_serve, milk_serve) VALUES (?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			stmt.setString(1, currentUser.getID());
 			stmt.setDouble(2, rs.getDouble(8));//fiber
 			stmt.setDouble(3, rs.getDouble(9));//energy
