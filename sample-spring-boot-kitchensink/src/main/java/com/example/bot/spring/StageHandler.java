@@ -330,12 +330,8 @@ public class StageHandler {
 			database.pushTest(realPrice);
 			for (int i =0; i<ingredients[0].length; i++) {
 				foodInput = new FoodInput(event.getSource().getUserId(),time);
-				foodInput.setPrice(60);
-				database.pushDietRecord(foodInput);
 				foodInput.setFoodName(ingredients[0][i]);
-				database.pushDietRecord(foodInput);
 				healthSearcher.setKeyword(ingredients[0][i]);
-				database.pushDietRecord(foodInput);
 				if (healthSearcher.search()) {
 					foodInput.setAmount(amount);
 					foodInput.setPrice(realPrice);
