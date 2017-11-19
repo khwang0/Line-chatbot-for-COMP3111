@@ -31,12 +31,13 @@ public class KitchenSinkApplication {
     static Path downloadedContentDir;
     //@Autowired
     static LineListener listener;
-    
+        
     @Autowired
-    public void setLineListener(LineListener listener) {
-    	System.out.println("------------- trying to find linelistener --------------");
+    public void setListener(LineListener listener) {
+    	//System.out.println("------------- trying to find linelistener --------------");
     	KitchenSinkApplication.listener = listener;
     }
+    
     
     public static void main(String[] args) throws IOException {
     	//LineListener listener = new LineListener();
