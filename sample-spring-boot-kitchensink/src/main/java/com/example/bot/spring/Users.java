@@ -1,11 +1,11 @@
 package com.example.bot.spring;
-<<<<<<< HEAD
+
 import java.util.*;
 /**
 * Users will store the basic variable and get/set/display function that a chatbot user need to has.
 *
 * @author  G8
-* @version 1.0
+* @version 1.0Z
 * @since   2017/11/19
 */
 public class Users {
@@ -16,31 +16,31 @@ public class Users {
 	/**
 	* the name of the Users
 	*/
-	protected String name;
+	private String name;
 	/**
 	* the gender of the Users
 	*/
-	protected char gender = 'M'; // this can be "M" or "F"
+	private char gender = 'M'; // this can be "M" or "F"
 	/**
 	* the weight of the Users
 	*/
-	protected double weight = 0;
+	private double weight = 0;
 	/**
 	* the height of the Users
 	*/
-	protected double height = 0;
+	private double height = 0;
 	/**
 	* the age of the Users
 	*/
-	protected int age = 0;
+	private int age = 0;
 	/**
 	* the subStage of the Users, will be used to handle user's message
 	*/
-	protected int subStage = 0;
+	private int subStage = 0;
 	/**
 	* the stage of the Users, will be used to handle user's message
 	*/
-	protected String stage  = "Init";
+	private String stage  = "Init";
 	/**
 	* the Exercise amount of the Users (in hour/day)
 	*/
@@ -355,6 +355,10 @@ public class Users {
 	 * @return String this is the other information of the Users
      */
 	public String getOtherInfo() {return otherInfo;}
+	/**
+     * This method will return the Budget of the Users
+	 * @return int this is the Budget of the Users
+     */
 	public double getBudget() {return budget;}
 	//public String getRegisterTime(){return registerTime;}
 	// modified user's assessment scores
@@ -365,7 +369,6 @@ public class Users {
 	public int getAssessmentScore(){return assessmentScore;}
 
 
-	@Override
 	/**
      * This method will return formatted display of all needed information of the Users
 	 * @return String this is String that contains all the needed information of the Users
