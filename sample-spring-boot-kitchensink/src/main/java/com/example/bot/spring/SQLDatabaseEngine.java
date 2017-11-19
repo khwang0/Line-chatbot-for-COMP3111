@@ -202,6 +202,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			
 			if(search_intake_reference(gender,currentUser.getAge())) {
 				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age <= ? AND max_age >= ?" );
+				
 				ref.setString(1, gender);
 				ref.setInt(2, currentUser.getAge());
 				ref.setInt(3, currentUser.getAge());
@@ -210,7 +211,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				
 
 				stmt.setString(1, currentUser.getID());
-//				while(result.next()) {
+				while(result.next()) {
 //					stmt.setDouble(2, result.getDouble(8));//fiber
 //					stmt.setDouble(3, result.getDouble(9));//energy
 //					stmt.setDouble(4, result.getDouble(10));//protein
@@ -246,7 +247,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 //					stmt.setDouble(8, result.getDouble(5));//energy_serve
 //					stmt.setDouble(9, result.getDouble(6));//meat_serve
 //					stmt.setDouble(10, result.getDouble(7));//milk_serve
-//				}
+				}
 				result.close();
 
 			}
