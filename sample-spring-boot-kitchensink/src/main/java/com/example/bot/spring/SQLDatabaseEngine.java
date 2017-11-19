@@ -33,17 +33,17 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				user.setStage(rs.getString(7));
 				user.setSubStage(rs.getInt(8));
 
-				// user.setExercise(rs.getInt(9));
-		 	// 	user.setBodyFat(rs.getDouble(10));
-		 	// 	user.setCalories(rs.getInt(11));
-		 	// 	user.setCarbs(rs.getDouble(12));
-		 	// 	user.setProtein(rs.getDouble(13));
-		 	// 	user.setVegfruit(rs.getDouble(14));
-		 	// 	// Array a = rs.getArray(15);
-		 	// 	// Boolean[] b = (Boolean[])a.getArray();
-		 	// 	// user.setEatingHabits(b);
-		 	// 	user.setOtherInfo(rs.getString(16));
-		 	// 	user.setAssessmentScore(rs.getInt(17));
+				user.setExercise(rs.getInt(9));
+		 		user.setBodyFat(rs.getDouble(10));
+		 		user.setCalories(rs.getInt(11));
+		 		user.setCarbs(rs.getDouble(12));
+		 		user.setProtein(rs.getDouble(13));
+		 		user.setVegfruit(rs.getDouble(14));
+		 		// Array a = rs.getArray(15);
+		 		// Boolean[] b = (Boolean[])a.getArray();
+		 		// user.setEatingHabits(b);
+		 		user.setOtherInfo(rs.getString(16));
+		 		user.setAssessmentScore(rs.getInt(17));
 			}
 			rs.close();
 			stmt.close();
