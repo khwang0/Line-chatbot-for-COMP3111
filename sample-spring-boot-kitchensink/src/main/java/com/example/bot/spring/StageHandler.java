@@ -58,12 +58,12 @@ public class StageHandler {
 			{"Diferent types of fat may cause different consequences, which should not be ignored.\n",""},
 			{"Never eat anything too much even if you love it desperately./n",""},
 			{"Keeping balance of nutrients is important. It's time to add some fruits or vegatable in your daily menu.\n",""},
-			{"Try to make your snacks not that harmful to your health or stop it.\n","Even if nuts are generally healthy, never eat them too much or the intake of fat would be amazingly huge.\n"},
-			{"Eating three meals a day prevents overeating in a single meal and secures more energy throughout the day. Its importance is beyond your imagination\n",""},
+			{"","Even if nuts are generally healthy, never eat them too much or the intake of fat would be amazingly huge.\n"},
+			{"",""},
 			{"Other nutrients like vitamins and minerals are also necessary to your body's process of metabolism, please make your diet varied.\n",""},
 			{"Seafood contains lowfat and plenty of trace element that is good to our body. It's not a bad idea to eat some seafood.\n",""},
-			{"Processed foods may contain high levels of salt, sugar and fat. Therefore, you're recommended to have some fresh food instead.\n",""},
-			{"Based on the fact that your daily menu could be improved, our diet planner can help you improve it.\n",""}};
+			{"",""},
+			{"",""}};
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
@@ -320,13 +320,14 @@ public class StageHandler {
 				// TODO: allow user to change it
 			}
 			else {
-				boolean result = database.gen_plan(user_id);
+				boolean result = database.gen_plan(currentUser);
 				if (result) {					
 					replymsg = "We have successfully generated a diet plan for you:\n\n";
 					replymsg += database.display_diet_plan(user_id, budget);							
 				}
 				else {
-					replymsg  = "Sorry, we fail to generate a diet plan for you now.\n";
+					replymsg  = "Since your personal information is not completed, we have genereated a default one for you.\n";
+//					database.gen_plan_default(currentUser);//default
 				}
 			}
 			replymsg+= "Type anything to go back to Diet Planner...\n";
@@ -834,7 +835,7 @@ public class StageHandler {
         			}
 				else {
 					replymsg = "Please enter reasonable numbers!";
-				}
+				} 
 		}break;
 		case 6:{
 			boolean input = false;
