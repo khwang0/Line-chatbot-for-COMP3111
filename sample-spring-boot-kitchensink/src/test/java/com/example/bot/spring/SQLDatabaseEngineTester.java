@@ -151,6 +151,7 @@ public class SQLDatabaseEngineTester {
 		boolean thrown = false;
 		HealthSearch healthSearcher = new HealthSearch();
 		healthSearcher.setKeyword("apple");
+		
 		Users user = new Users("1001test","HXH");
 		//gen plan yes -> remeber to delete diet_plan after every test!!!
 		user.setAge(50);
