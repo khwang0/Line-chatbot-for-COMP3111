@@ -30,6 +30,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -247,10 +249,16 @@ public class KitchenSinkController {
 	}
 
 
-	
+    @Autowired
+    private TaskExecutor taskExecutor;
+    
+    @Autowired
+    private ApplicationContext applicationContext;
 
 
 	public KitchenSinkController() {
+        LineListener ll = applicationContext.getBean(LineListener.class);
+        taskExecutor.execute(ll);
 		processor = new TextProcessor();
 	}
 

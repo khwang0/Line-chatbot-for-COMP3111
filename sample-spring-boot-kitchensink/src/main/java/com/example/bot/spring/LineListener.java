@@ -1,12 +1,20 @@
 package com.example.bot.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.example.bot.spring.textsender.*;
 
+@Component
 public class LineListener extends Thread{
 	
+	@Autowired
 	private ConfirmBroadcaster confirmBroadcaster;
+	@Autowired
 	private CancelBroadcaster cancelBroadcaster;
+	@Autowired
 	private UQAnswerReplier uqAnswerReplier;
+	@Autowired
 	private DoubleElevBroadcaster double11Broadcaster;
 	
 	public LineListener() {

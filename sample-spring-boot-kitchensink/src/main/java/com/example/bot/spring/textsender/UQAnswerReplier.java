@@ -3,6 +3,7 @@ package com.example.bot.spring.textsender;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 //import java.util.GregorianCalendar;
 //import java.util.List;
@@ -17,6 +18,7 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+@Component
 public class UQAnswerReplier implements Broadcaster{
 	
 	@Autowired
