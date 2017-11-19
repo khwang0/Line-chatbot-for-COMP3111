@@ -221,7 +221,18 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return true;
 	}
 
-
+	//
+	public void gen_plan_default(Users currentUser){
+		Connection connection = this.getConnection();
+		PreparedStatement stmt = connection.prepareStatement(
+				//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
+				"INSERT INTO diet_plan (id, fiber, energy, protein, fiber_serve, energy_serve, meat_serve, milk_serve) VALUES (?,40,717,57,8,6,3,2.5)");//id | fiber | energy | protein | food_name | food_amount
+		stmt.setString(1, currentUser.getID());
+		stmt.execute();
+		stmt.close();
+		connection.close();
+	}
+	
 	//Query the target diet plan info from "diet_plan" table and return
 	ArrayList<Double> search_plan(String user_id) throws Exception {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table

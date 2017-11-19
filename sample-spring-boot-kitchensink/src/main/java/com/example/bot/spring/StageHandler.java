@@ -308,6 +308,7 @@ public class StageHandler {
 				}
 				else {
 					replymsg  = "Since your personal information is not completed, we have genereated a default one for you.\n";
+					database.gen_plan_default(currentUser);
 				}
 			}
 			replymsg+= "Type anything to go back to Diet Planner...\n";
