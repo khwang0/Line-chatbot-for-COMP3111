@@ -306,7 +306,7 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+40);
 		}break;
 		case 42:{
-			Data data;
+			Date date;
 			SimpleDateFormat ft;
 			menuReader.readFromText(text,database);
 			String[][] ingredients = menuReader.getIngredient();
