@@ -331,8 +331,10 @@ public class StageHandler {
 					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
 				}
 			}
+			foodInput = new FoodInput(event.getSource().getUserId(),time);
+			database.pushDietRecord(foodInput);
 			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-			currentUser.setSubStage(-1) ;
+			currentUser.setSubStage(0) ;
 		}break;
 
 		case 3:{
@@ -365,7 +367,7 @@ public class StageHandler {
 				}
 			}
 			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-			currentUser.setSubStage(-1) ;
+			currentUser.setSubStage(0) ;
 		}break;
 
 		case 4:{
