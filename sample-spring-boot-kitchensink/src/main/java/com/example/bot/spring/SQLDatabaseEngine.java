@@ -47,10 +47,17 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			}
 			rs.close();
 			stmt.close();
-			connection.close();
+			connection.close();			
+			
+
 		} catch (Exception e) {
 			log.info(e.getMessage());
 		}
+		finally {
+
+		}
+		
+		
 		if(user != null)	{
 			return user;
 		}
@@ -363,67 +370,76 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 	/*  Function added by ZK*/
-	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time) {
-
+	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time,float price) {
 		try {
 			Connection connection = this.getConnection();
-			
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_conclusion where id = ? AND date = ?");
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber,price FROM diet_conclusion where id = ? AND date = ?");
 			stmt.setString(1,id);
 			stmt.setString(2,time.substring(0,8));
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
-				double previous_fat =0;
-				double previous_sugar =0;
+				double previous_energy =0;
+				double previous_fiber =0;
 				double previous_protein =0;
+				double previous_price = 0;
 				double current_protein = 0;
-				double current_fat =0;
-				double current_sugar = 0;
+				double current_energy =0;
+				double current_fiber = 0;
+				double current_price = 0;
 				previous_protein = rs.getDouble(1);
-				previous_fat = rs.getDouble(2);
-				previous_sugar = rs.getDouble(3);
+				previous_energy = rs.getDouble(2);
+				previous_fiber = rs.getDouble(3);	
+				previous_price = rs.getDouble(4);
 				
+				current_price = price + previous_price;
 				
 				
 				if( !healthSearcher.getProtein().equals("N/A")) {
 					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
-
 				}
 				else {
 					current_protein = previous_protein;
 					
 				}
-				if( !healthSearcher.getFat().equals("N/A")) {
-					current_fat = previous_fat + Double.parseDouble(healthSearcher.getFat())*amount/100.0;
+				if( !healthSearcher.getEnergy().equals("N/A")) {
+					current_energy = previous_energy + Double.parseDouble(healthSearcher.getEnergy())*amount/100.0;
 				}
 				else {
-					current_fat = previous_fat;
+					current_energy = previous_energy;
 				}				
-				if( !healthSearcher.getSugar().equals("N/A")) {
-					current_sugar = previous_sugar + Double.parseDouble(healthSearcher.getSugar())*amount/100.0;
+				if( !healthSearcher.getFiber().equals("N/A")) {
+					current_fiber = previous_fiber + Double.parseDouble(healthSearcher.getFiber())*amount/100.0;
 				}
 				else {
-					current_sugar = previous_sugar;
+					current_fiber = previous_fiber;
 				}	
+				
+				
+				
+				
+				
+				
 				PreparedStatement stmt2 = connection.prepareStatement(
-						"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");
+						"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
 				stmt2.setDouble(1, current_protein);
-				stmt2.setDouble(2, current_fat);
-				stmt2.setDouble(3, current_sugar);
-				stmt2.setString(4, id);
-				stmt2.setString(5, time.substring(0,8));
+				stmt2.setDouble(2, current_energy);
+				stmt2.setDouble(3, current_fiber);
+				stmt2.setDouble(4, current_price);
+				stmt2.setString(5, id);
+				stmt2.setString(6, time.substring(0,8));
 				stmt2.execute();
 				stmt2.close();
 			}
 			else {
 				PreparedStatement stmt1 = connection.prepareStatement(
-						"INSERT INTO diet_conclusion VALUES(?,?,?,?,?)");
+						"INSERT INTO diet_conclusion VALUES(?,?,?,?,?,?)");
 				stmt1.setString(1,id);
 				stmt1.setString(2, time.substring(0,8));
 				stmt1.setDouble(3, Double.parseDouble(healthSearcher.getProtein())*amount/100.0);
-				stmt1.setDouble(4, Double.parseDouble(healthSearcher.getFat())*amount/100.0);
-				stmt1.setDouble(5, Double.parseDouble(healthSearcher.getSugar())*amount/100.0);
+				stmt1.setDouble(4, Double.parseDouble(healthSearcher.getEnergy())*amount/100.0);
+				stmt1.setDouble(5, Double.parseDouble(healthSearcher.getFiber())*amount/100.0);
+				stmt1.setDouble(6, price);
 				stmt1.execute();
 				stmt1.close();
 			}
@@ -462,17 +478,18 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
-	boolean pushDietRecord(foodInput foodinput) {
+	boolean pushDietRecord(foodInput foodinput){
 		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO dietrecord VALUES(?,?,?,?,?)");
+					"INSERT INTO dietrecord VALUES(?,?,?,?,?,?)");
 			stmt.setString(1,foodinput.getKey());
 			stmt.setString(2,foodinput.getId());
 			stmt.setString(3,foodinput.getFoodName());
 			stmt.setInt(4,foodinput.getAmount());
 			stmt.setString(5,foodinput.getTime());
+			stmt.setDouble(6,foodinput.getPrice());
 			result = stmt.execute();
 			stmt.close();
 			connection.close();
@@ -482,6 +499,31 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;
 	}
+	boolean pushfoodinfo(foodinfo food) {
+		boolean result = false;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"INSERT INTO foodinfo VALUES(?,?,?,?,?)");
+			stmt.setString(1,food.getFood());
+			stmt.setDouble(2,food.getEnergy());
+			stmt.setDouble(3,food.getProtein());
+			stmt.setDouble(4,food.getFiber());
+			stmt.setInt(5,food.getPrice());
+			result = stmt.execute();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+			return result;
+		}
+		return result;
+	}
+	
+	
+	
+	
+	
 	boolean updateUser(Users user) {
 		boolean result = false;
 
