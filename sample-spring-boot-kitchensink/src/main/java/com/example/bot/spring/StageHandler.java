@@ -468,7 +468,6 @@ public class StageHandler {
 			try {
 				String user_id = currentUser.getID();
 				//double budget = currentUser.getBudget();
-
 				double budget = 100;
 
 				// Instantiate a Date object

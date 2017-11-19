@@ -353,8 +353,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 			result = result + "Vegetables & Fruit: " + Double.toString(fiber) + "\n";
 			result = result + "Grain (cereal) foods: " + Double.toString(energy) + "\n";
-			result = result + "Meat: " + Double.toString(protein_meat) + "\n";
-			result = result + "Milk: " + Double.toString(protein_milk) + "\n";
+			result = result + "Meat: " + String.format("%.2f", protein_meat) + "\n";
+			result = result + "Milk: " + String.format("%.2f", protein_milk) + "\n";
 			result = result + "Budget: " + Double.toString(budget) + "\n";
 
 //			Connection connection = this.getConnection();
