@@ -280,10 +280,11 @@ public class KitchenSinkController {
 		
 		
 		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {		
-			String[] usersid= database.findallusers();
-			for (int i=0;i<usersid.length;i++) {
-				pushText(usersid[i],"Fuck");
+			ArrayList<String> usersid= database.findallusers();
+			for (int i=0;i<usersid.size();i++) {
+				pushText(usersid.get(i),"Fuck");
 			}
+			 
 		}
 		
 		else {	

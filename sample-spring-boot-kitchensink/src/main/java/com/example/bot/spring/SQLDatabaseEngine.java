@@ -547,17 +547,17 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 	}
 	
-	String[] findallusers() {
-		String[] answer = null;
+	ArrayList<String> findallusers() {
+		ArrayList<String> answer = new ArrayList<String>();
 		try {
 
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT userid FROM users ");
+					"SELECT * FROM users ");
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()) {
-				answer[answer.length] = rs.getString(1);
+				answer.add(rs.getString(1));
 			}
 			rs.close();
 			stmt.close();
