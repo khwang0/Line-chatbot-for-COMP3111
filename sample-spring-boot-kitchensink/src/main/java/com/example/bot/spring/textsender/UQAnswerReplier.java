@@ -30,8 +30,8 @@ public class UQAnswerReplier implements Broadcaster{
 		//lineMessagingClient = new LineMessagingClientImpl();
 	}
 
+	//@PostConstruct  // seems required, yet @PostConstruct does not support exception
 	@Override
-	@PostConstruct
 	public void broadcast() throws Exception {
 		System.out.println("You are here in the UQAnswerReplier");
 		UQDBEngine searchEngine = new UQDBEngine();
@@ -54,8 +54,7 @@ public class UQAnswerReplier implements Broadcaster{
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
 			if(lineMessagingClient == null) {
 				System.out.println("--------- lineMessagingClient is null ----");
-			}
-			
+			}		
 			
 			// lineMessagingClient.pushMessage(new PushMessage(userID, message));
 			lineMessagingClient.pushMessage(new PushMessage(userID, message));
