@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
     @Autowired
-    LineListener listener;
+    static LineListener listener;
 
     public static void main(String[] args) throws IOException {
     	//LineListener listener = new LineListener();
