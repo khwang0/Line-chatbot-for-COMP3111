@@ -6,7 +6,7 @@ public class FoodInfo{
 	protected double protein;
 	protected double fiber;
 	protected int price;
-	
+
 	public FoodInfo() {}
 	public void setFoodName(String foodname) {
 		this.foodName = foodName;
