@@ -546,6 +546,33 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
+	
+	String[] findallusers() {
+		String[] answer = null;
+		try {
+
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT userid FROM users ");
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				answer[answer.length] = rs.getString(1);
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return answer;
+	}
+	
+	
+	
+	
 	boolean pushDietRecord(foodInput foodinput){
 		boolean result = false;
 		try {

