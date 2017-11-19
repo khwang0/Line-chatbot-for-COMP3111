@@ -40,7 +40,7 @@ public class CouponWarehouse{
   }
   private CouponWarehouse(){
     generateRandomCode();
-    //fetchUsers();
+    fetchUsers();
   }
   static public CouponWarehouse getInstance(){
     return couponWarehouse;
@@ -80,7 +80,9 @@ public class CouponWarehouse{
 
   public String issueCode(String inviter) {
     for(Coupon c:coupons){
-      if(c.getInviter().equals(inviter))  return c.getCode();
+      if(c != null)
+        if(c.getInviter().equals(inviter))
+          return c.getCode();
     }
 
 	  Random rand = new Random();
@@ -119,7 +121,7 @@ public class CouponWarehouse{
     }
     else return false;
   }
-  public boolean isCampaignStarted(){
+  public static boolean isCampaignStarted(){
     return started;
   }
   public boolean haveNotGotCouponYet(Users user){

@@ -236,8 +236,11 @@ public class StageHandler {
 				}
 			}break;
 			case "6" :{
-				MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
-				replymsg = replyinfo.getMsg();
+				if(CouponWarehouse.isCampaignStarted()){
+					MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
+					replymsg = replyinfo.getMsg();
+				}
+				else{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 			}break;
@@ -248,7 +251,7 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 			}break;
-			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
+			default:{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 			}
 			//replymsg= msg);
 		}break;
