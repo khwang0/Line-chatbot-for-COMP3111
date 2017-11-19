@@ -313,9 +313,9 @@ public class StageHandler {
 			menuReader.readFromText(text,database);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
-			foodInput = new FoodInput(event.getSource().getUserId(),time);
-			foodInput.setPrice(50);
-			database.pushDietRecord(foodInput);
+			//foodInput = new FoodInput(event.getSource().getUserId(),time);
+			//foodInput.setPrice(50);
+			//database.pushDietRecord(foodInput);
 			int amount;
 			int realPrice;
 			if (ingredients[0].length!=0) {
@@ -326,6 +326,8 @@ public class StageHandler {
 				amount = 100;
 				realPrice = 10;
 			}
+			database.pushTest(amount);
+			database.pushTest(realPrice);
 			for (int i =0; i<ingredients[0].length; i++) {
 				foodInput = new FoodInput(event.getSource().getUserId(),time);
 				foodInput.setPrice(60);
