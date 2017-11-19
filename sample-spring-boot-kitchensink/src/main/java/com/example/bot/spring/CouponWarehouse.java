@@ -131,6 +131,7 @@ public class CouponWarehouse{
     + "After 5000 copies of ice-cream coupon were given out, the campaign stops.";
     Date now = new Date();
     started = true;
+    fetchUsers();
     return new MsgAttachedData<Date>(msg,now);
   }
 
