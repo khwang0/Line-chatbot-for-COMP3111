@@ -1075,7 +1075,7 @@ public class StageHandler {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
-			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
+			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
 			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
 				else replymsg = "@@" + "nowhere";
 
