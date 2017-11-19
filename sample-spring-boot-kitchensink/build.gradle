@@ -13,6 +13,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+apply plugin: "jacoco"
+ jacocoTestReport {
+     reports {
+         xml.enabled false
+         csv.enabled false
+         html.destination file("${buildDir}/jacocoHtml")
+} 
+}
 
 apply plugin: 'org.springframework.boot'
 
