@@ -628,7 +628,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"SELECT * FROM foodinfo WHERE foodname=(?)");
+					"SELECT foodname FROM foodinfo");
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
 				foodNamesArray.add(rs.getString(1));
