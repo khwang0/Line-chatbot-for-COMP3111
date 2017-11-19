@@ -259,7 +259,7 @@ public class KitchenSinkController {
 		//ll.start();
 	}
 
-	private TextProcessor processor;
+	private TextProcessor processor;  
 	
 
 	//The annontation @Value is from the package lombok.Value
