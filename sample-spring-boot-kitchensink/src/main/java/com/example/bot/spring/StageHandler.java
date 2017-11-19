@@ -335,6 +335,7 @@ public class StageHandler {
 				if (healthSearcher.search()) {
 					foodInput.setAmount(amount);
 					foodInput.setPrice(realPrice);
+					database.pushTest(i);
 					database.pushDietRecord(foodInput);
 					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
 				}
