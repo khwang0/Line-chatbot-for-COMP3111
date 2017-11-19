@@ -179,6 +179,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next() ) {
+				rs.close();
+				stmt.close();
+				connection.close();
 				return true;
 			}
 		} catch (Exception e) {
@@ -202,15 +205,15 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				ref.setString(1, gender);
 				ref.setInt(2, currentUser.getAge());
 				ref.setInt(3, currentUser.getAge());
-				ResultSet rs = ref.executeQuery();
+				ResultSet result = ref.executeQuery();
 				ref.close();
 				
 
 				stmt.setString(1, currentUser.getID());
-				while(rs.next()) {
-					stmt.setDouble(2, rs.getDouble(8));//fiber
-					stmt.setDouble(3, rs.getDouble(9));//energy
-					stmt.setDouble(4, rs.getDouble(10));//protein
+				while(result.next()) {
+					stmt.setDouble(2, result.getDouble(8));//fiber
+					stmt.setDouble(3, result.getDouble(9));//energy
+					stmt.setDouble(4, result.getDouble(10));//protein
 					//set the food_name
 		//			stmt.setString(5,"default");//default value
 		//			//set the food_amount
@@ -232,12 +235,12 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		//			stmt.setArray(5, food_name);//fiber_serve
 		//			stmt.setArray(6, food_amount);//energy_serve
 		//			stmt.setString(6,"default");//default value
-					stmt.setDouble(7, rs.getDouble(4));//fiber_serve
-					stmt.setDouble(8, rs.getDouble(5));//energy_serve
-					stmt.setDouble(9, rs.getDouble(6));//meat_serve
-					stmt.setDouble(10, rs.getDouble(7));//milk_serve
+					stmt.setDouble(7, result.getDouble(4));//fiber_serve
+					stmt.setDouble(8, result.getDouble(5));//energy_serve
+					stmt.setDouble(9, result.getDouble(6));//meat_serve
+					stmt.setDouble(10, result.getDouble(7));//milk_serve
 				}
-				rs.close();
+				result.close();
 
 			}
 			else {
@@ -289,11 +292,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setInt(2, age);
 			stmt.setInt(3, age);
 
-			ResultSet rs = stmt.executeQuery();
-			if (rs.next() ) {
-//				rs.close();
-//				stmt.close();
-//				connection.close();
+			ResultSet res = stmt.executeQuery();
+			if (res.next() ) {
+				res.close();
+				stmt.close();
+				connection.close();
 				return true;
 			}
 		} catch (Exception e) {
