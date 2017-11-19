@@ -185,17 +185,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 		try {
 			Connection connection = this.getConnection();
-			PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age < ? AND max_age > ?" );
+			
+			PreparedStatement stmt = connection.prepareStatement(
+					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
+					"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
+			
+			if(search_intake_reference(gender,currentUser.getAge())) {
+			PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age < ? AND max_age > ?" );
 			ref.setString(1, gender);
 			ref.setInt(2, currentUser.getAge());
 			ref.setInt(3, currentUser.getAge());
 			ResultSet rs = ref.executeQuery();
 			ref.close();
 
-			PreparedStatement stmt = connection.prepareStatement(
-					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
-					"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			stmt.setString(1, currentUser.getID());
 			stmt.setDouble(2, rs.getDouble(8));//fiber
 			stmt.setDouble(3, rs.getDouble(9));//energy
@@ -227,8 +230,41 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setDouble(10, rs.getDouble(7));//milk_serve
 
 			
-			stmt.execute();
 			rs.close();
+
+			}
+			else {
+				stmt.setString(1, currentUser.getID());
+				stmt.setDouble(2, 123);//fiber
+				stmt.setDouble(3, 123);//energy
+				stmt.setDouble(4, 123);//protein
+				//set the food_name
+//				stmt.setString(5,"default");//default value
+//				//set the food_amount
+				//set the food_name
+				   String[] food_name = new String[2];
+				   food_name[0] = "apple";
+				   food_name[1] = "milk";
+				   Array sqlArray1 = connection.createArrayOf("text",food_name);
+				   stmt.setArray(5,sqlArray1);
+				   //set the food_amount
+				   //int[] food_amount = new int[2];
+				   Integer[] food_amount = new Integer[2];
+				   food_amount[0] = 10;
+				   food_amount[1] = 5;
+				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
+				   stmt.setArray(6,sqlArray2);
+//				String[] food_name = new String[2];
+//				int[] food_amount = new int[2];
+//				stmt.setArray(5, food_name);//fiber_serve
+//				stmt.setArray(6, food_amount);//energy_serve
+//				stmt.setString(6,"default");//default value
+				stmt.setDouble(7, 123);//fiber_serve
+				stmt.setDouble(8, 123);//energy_serve
+				stmt.setDouble(9, 123);//meat_serve
+				stmt.setDouble(10, 123);//milk_serve
+			}
+			stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
@@ -236,7 +272,29 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return true;
 	}
+	
+	boolean search_intake_reference(String gender, int age){
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age < ? AND max_age > ?" );
+			stmt.setString(1, gender);
+			stmt.setInt(2, age);
+			stmt.setInt(3, age);
 
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next() ) {
+				rs.close();
+				stmt.close();
+				connection.close();
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return false;
+	}
+	
 	//generate a default plan for user
 //	public void gen_plan_default(Users currentUser) throws Exception {
 //		Connection connection = this.getConnection();
