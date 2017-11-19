@@ -211,9 +211,12 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 				stmt.setString(1, currentUser.getID());
 				while(result.next()) {
-					stmt.setDouble(2, result.getDouble(8));//fiber
-					stmt.setDouble(3, result.getDouble(9));//energy
-					stmt.setDouble(4, result.getDouble(10));//protein
+//					stmt.setDouble(2, result.getDouble(8));//fiber
+//					stmt.setDouble(3, result.getDouble(9));//energy
+//					stmt.setDouble(4, result.getDouble(10));//protein
+					stmt.setDouble(2, 0.5);//fiber
+					stmt.setDouble(3, 0.5);//energy
+					stmt.setDouble(4, 0.5);//protein
 					//set the food_name
 		//			stmt.setString(5,"default");//default value
 		//			//set the food_amount
@@ -235,10 +238,14 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		//			stmt.setArray(5, food_name);//fiber_serve
 		//			stmt.setArray(6, food_amount);//energy_serve
 		//			stmt.setString(6,"default");//default value
-					stmt.setDouble(7, result.getDouble(4));//fiber_serve
-					stmt.setDouble(8, result.getDouble(5));//energy_serve
-					stmt.setDouble(9, result.getDouble(6));//meat_serve
-					stmt.setDouble(10, result.getDouble(7));//milk_serve
+					stmt.setDouble(7, 0.5);//fiber_serve
+					stmt.setDouble(8, 0.5);//energy_serve
+					stmt.setDouble(9, 0.5);//meat_serve
+					stmt.setDouble(10, 0.5);//milk_serve
+//					stmt.setDouble(7, result.getDouble(4));//fiber_serve
+//					stmt.setDouble(8, result.getDouble(5));//energy_serve
+//					stmt.setDouble(9, result.getDouble(6));//meat_serve
+//					stmt.setDouble(10, result.getDouble(7));//milk_serve
 				}
 				result.close();
 
