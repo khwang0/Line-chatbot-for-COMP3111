@@ -55,9 +55,9 @@ public class UQAnswerReplier implements Broadcaster{
 			}
 			
 			
-			//lineMessagingClient.pushMessage(new PushMessage(userID, message));
+			// lineMessagingClient.pushMessage(new PushMessage(userID, message));
 			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(userID, message)).get();
-			//System.out.println("Sent messages: {}", apiResponse);
+			// System.out.println("Sent messages: {}", apiResponse);
 		}
 	}
 }
