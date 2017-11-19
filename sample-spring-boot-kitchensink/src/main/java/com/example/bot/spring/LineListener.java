@@ -18,10 +18,10 @@ public class LineListener extends Thread{
 	private DoubleElevBroadcaster double11Broadcaster;
 	
 	public LineListener() {
-		confirmBroadcaster = new ConfirmBroadcaster();
-		cancelBroadcaster = new CancelBroadcaster();
-		uqAnswerReplier = new UQAnswerReplier();
-		double11Broadcaster = new DoubleElevBroadcaster();
+		//confirmBroadcaster = new ConfirmBroadcaster();
+		//cancelBroadcaster = new CancelBroadcaster();
+		//uqAnswerReplier = new UQAnswerReplier();
+		//double11Broadcaster = new DoubleElevBroadcaster();
 	}
 	
 	@Override

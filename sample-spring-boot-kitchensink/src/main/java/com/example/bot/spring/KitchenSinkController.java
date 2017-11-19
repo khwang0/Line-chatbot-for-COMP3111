@@ -251,11 +251,14 @@ public class KitchenSinkController {
 	}
 
 
-    @Autowired
-    private TaskExecutor taskExecutor;
+    //@Autowired
+    //private TaskExecutor taskExecutor;
     
-    @Autowired
-    private ApplicationContext applicationContext;
+    //@Autowired
+    //private ApplicationContext applicationContext;
+	
+	@Autowired
+	LineListener ll;
 
 
 	public KitchenSinkController() {
@@ -264,8 +267,9 @@ public class KitchenSinkController {
 	
 	@PostConstruct
 	private void startUpListener() {
-        LineListener ll = applicationContext.getBean(LineListener.class);
-        taskExecutor.execute(ll);
+        //LineListener ll = applicationContext.getBean(LineListener.class);
+        //taskExecutor.execute(ll);
+		ll.start();
 	}
 
 	private TextProcessor processor;
