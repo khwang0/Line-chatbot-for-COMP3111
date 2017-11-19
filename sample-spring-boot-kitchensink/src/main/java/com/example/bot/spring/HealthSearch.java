@@ -2,6 +2,7 @@ package com.example.bot.spring;
 
 public class HealthSearch {
 	private SearchWeb searchweb;
+	private SQLDatabaseEngine database;
 	private boolean isFound;
 	private String foodName;
 	private String energy;
@@ -18,25 +19,37 @@ public class HealthSearch {
 
 	public HealthSearch()
 	{
-		this.foodName = "N/A";
-		this.energy = "N/A";
-		this.protein = "N/A";
-		this.fat = "N/A";
-		this.carbohydrate = "N/A";
-		this.sugar = "N/A";
-		this.water = "N/A";
-		this.calcium = "N/A";
-		this.sodium = "N/A";
-		this.unit = "N/A";
-		this.fiber = "N/A";
+		database = new SQLDatabaseEngine();
+		this.foodName = "0";//"N/A";
+		this.energy = "0";//"N/A";
+		this.protein = "0";//"N/A";
+		this.fat = "0";//"N/A";
+		this.carbohydrate = "0";//"N/A";
+		this.sugar = "0";//"N/A";
+		this.water = "0";//"N/A";
+		this.calcium = "0";//"N/A";
+		this.sodium = "0";//"N/A";
+		this.unit = "0";//"N/A";
+		this.fiber = "0";//"N/A";
 		this.searchweb = new SearchWeb();
 		this.isFound = false;
 	}
 
 	public void setKeyword(String keyword) {
 		this.searchweb.setKeyword(keyword);
+		this.foodName = keyword;
 	}
-	public boolean search() {
+	public boolean searchInOwnDatabase(){
+		FoodInfo foodInfo = database.searchFoodInfo(this.foodName);
+		if (foodInfo!=null) {
+			this.protein = Double.toString(foodInfo.getProtein());
+			this.energy = Double.toString(foodInfo.getEnergy());
+			this.fiber = Double.toString(foodInfo.getFiber());
+			return true;
+		}
+		return false;
+	}
+	public boolean searchInWeb() {
 		String url = "";
 
 		url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Standard+Reference&&&qlookup=";
@@ -44,13 +57,13 @@ public class HealthSearch {
 		String newurl = this.searchweb.RegexString(result, "href=\"(/ndb/foods/show.+?)\"");
 		foodName = this.searchweb.RegexStringName(result,"href=\"/ndb/foods/show(.+?)fgcd(.+?)>(.*?)<");
 
-		if(newurl.equals("N/A")){
+		if(newurl.equals("0")){
 			url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Branded+Food+Products&&qlookup=";
 			result = this.searchweb.SendGet(url);
 			newurl = this.searchweb.RegexString(result, "href=\"(/ndb/foods/show.+?)\"");
 		}
 
-		if(!newurl.equals("N/A")) {
+		if(!newurl.equals("0")) {
 			this.isFound = true;
 			newurl = "https://ndb.nal.usda.gov" + newurl;
 			result = this.searchweb.SendGet(newurl);
@@ -71,12 +84,21 @@ public class HealthSearch {
 			this.calcium = searchweb.RegexStringProperty(result,"Sodium, Na");
 
 			this.sodium = searchweb.RegexStringProperty(result,"Calcium, Ca");
+
 			this.fiber = searchweb.RegexStringProperty(result,"Fiber");
 		}
 		else {
 			this.isFound=false;
 		}
 		return this.isFound;
+	}
+
+
+	public boolean search(){
+		if (searchInOwnDatabase()) {
+			return true;
+		}
+		return searchInWeb();
 	}
 	public boolean getStatus() {
 		return this.isFound;

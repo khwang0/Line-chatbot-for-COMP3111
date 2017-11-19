@@ -61,7 +61,7 @@ public class SearchWeb {
 		Matcher checkMatcher = checkPattern.matcher(targetStr);
 		boolean fi = checkMatcher.find();
 		if(fi) {
-			return "N/A";
+			return "0";
 		}
 
 		Pattern pattern = Pattern.compile(patternStr);
@@ -77,7 +77,7 @@ public class SearchWeb {
 		boolean fi = matcher.find();
 		String[] propertyList;
 		if (!fi) {
-			return "N/A";
+			return "0";
 		}
 		propertyList= new String[matcher.groupCount()];
 		for(int i=0;i<matcher.groupCount();i++){
@@ -96,7 +96,7 @@ public class SearchWeb {
 		Matcher matcher = pattern.matcher(targetStr);
 		boolean fi = matcher.find();
 		if(!fi) {
-			return "N/A";
+			return "0";
 		}
 		String result = matcher.group(1);
   		return result;
@@ -111,7 +111,7 @@ public class SearchWeb {
 		boolean fi = matcher.find();
 		String[] propertyList;
 		if (!fi) {
-			return "N/A";
+			return "0";
 		}
 		propertyList= new String[matcher.groupCount()];
 		for(int i=0;i<matcher.groupCount();i++){
