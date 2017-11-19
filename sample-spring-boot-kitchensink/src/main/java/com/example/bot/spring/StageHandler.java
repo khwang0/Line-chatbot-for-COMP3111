@@ -231,6 +231,8 @@ public class StageHandler {
 				}
 				else{
 					replymsg = "You are not either qualified nor there is no coupons remaining.";
+					currentUser.setStage("Main");
+					currentUser.setSubStage(0);
 				}
 			}break;
 			case "6" :{
