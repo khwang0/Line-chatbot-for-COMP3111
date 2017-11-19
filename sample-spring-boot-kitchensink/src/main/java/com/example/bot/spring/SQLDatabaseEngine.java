@@ -194,7 +194,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 
 	//Display function for the diet plan to return a String
-	String display_diet_plan(String user_id) {
+	String display_diet_plan(String user_id, double budget) {
 		String result = "(DAILY BASIS)\n";
 
 		
@@ -213,6 +213,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			result = result + "Grain (cereal) foods: " + Double.toString(energy) + "\n";
 			result = result + "Meat: " + Double.toString(protein_meat) + "\n";
 			result = result + "Milk: " + Double.toString(protein_milk) + "\n";
+			result = result + "Budget: " + Double.toString(budget) + "\n";
 			
 //			Connection connection = this.getConnection();
 //
@@ -235,19 +236,21 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	
 	
 	//Query the target diet plan info from "diet_plan" table and return
-	ArrayList<Double> search_plan(String user_id) throws Exception {
+	ArrayList<Double> search_plan(String user_id) {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table
 		try {
 			//connect to the database with table: diet_plan
 			Connection connection = this.getConnection();
 			//prepare a SQL statement while leaving some parameters
 			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
+			//PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, budget, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
 			stmt.setString(1, user_id);//1 is the param location/index
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				plan_info.add(rs.getDouble(1));//fiber
 				plan_info.add(rs.getDouble(2));//energy
 				plan_info.add(rs.getDouble(3));//protein
+				//plan.info.add(rs.getDouble(4));//budget
 				plan_info.add(rs.getDouble(4));//fiber_serve
 				plan_info.add(rs.getDouble(5));//energy_serve 
 				plan_info.add(rs.getDouble(6));//meat_serve
@@ -261,25 +264,26 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			//System.out.println(e);
 		}
 		//if (plan_info.size() != 0)
-			return plan_info;
+		return plan_info;
 
 		//throw new Exception("NOT FOUND");
 	}
 
 	//Query the current diet status info from "diet_conclusion" table and return
-	ArrayList<Double> search_current(String user_id, String date) throws Exception {
+	ArrayList<Double> search_current(String user_id, String date) {
 		ArrayList<Double> current_info = new ArrayList<Double>(); // store the query result from current table
 		try {
 			//connect
 			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber FROM diet_conclusion where id = ? AND date = ?");
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber, price FROM diet_conclusion where id = ? AND date = ?");
 			stmt.setString(1, user_id);
 			stmt.setString(2, date);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				current_info.add(rs.getDouble(3));//protein
+				current_info.add(rs.getDouble(3));//fiber
 				current_info.add(rs.getDouble(2));//energy
-				current_info.add(rs.getDouble(1));//fiber
+				current_info.add(rs.getDouble(1));//protein
+				current_info.add(rs.getDouble(4));//price
 			}
 			rs.close();
 			stmt.close();
@@ -287,10 +291,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} catch (Exception e) {
 			log.info("query error for search_current: {}", e.toString());
 		}
-		//if (current_info.size() != 0)
-			return current_info;
+			
+		return current_info;//can be null
 
-		//throw new Exception("NOT FOUND");
 	}
 
 	/*  Function added by ZK*/
@@ -337,8 +340,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 					current_sugar = previous_sugar;
 				}	
 				PreparedStatement stmt2 = connection.prepareStatement(
-						//"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");
-						"UPDATE diet_conclusion SET protein = ?, fiber = ?, energy = ? WHERE id = ? AND date = ?;");
+						"UPDATE diet_conclusion SET protein = ?, fat = ?, sugar = ? WHERE id = ? AND date = ?;");//nothing here
 
 				stmt2.setDouble(1, current_protein);
 				stmt2.setDouble(2, current_fat);
