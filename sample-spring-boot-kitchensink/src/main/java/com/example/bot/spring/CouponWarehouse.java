@@ -191,7 +191,8 @@ public class CouponWarehouse{
   public boolean isCodeValid(String code){
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {
-        if(c.getInvitee() == null) // no invitees
+        if(!isNewUser(c.getInviter())) return true;
+        else if(c.getInvitee() == null) // no invitees
           return true;
       }
     }
