@@ -201,7 +201,7 @@ public class KitchenSinkController {
 		}finally {
 			this.replyText(replyToken, msgbuffer);
 			//this.pushText(currentUser.getID(),"FUCK");
-		//database.updateUser(currentUser);
+			//database.updateUser(currentUser);
 		}
 	}
 
@@ -227,12 +227,12 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
-	
+
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
-	
+
 	private void push(@NonNull String to, @NonNull Message message) {
         push(to,  Collections.singletonList(message));
     }
@@ -263,7 +263,7 @@ public class KitchenSinkController {
 		}
 		this.reply(replyToken, new TextMessage(message));
 	}
-	
+
 	private void pushText(@NonNull String to, @NonNull String message) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("to must not be empty");
@@ -303,9 +303,6 @@ public class KitchenSinkController {
         		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "LivingHabitCollector":{
-				//if(!(currentUser instanceof DetailedUser)){
-				//	currentUser = new DetailedUser(currentUser);
-				//}
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         	}	break;
         	case "LivingHabitEditor":
@@ -343,17 +340,20 @@ public class KitchenSinkController {
 	}
 
 	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
+		//Thread chatbotThread = new Thread(() -> {
+			ProcessBuilder processBuilder = new ProcessBuilder(args);
+			try {
+				Process start = processBuilder.start();
+				int i = start.waitFor();
+				log.info("result: {} =>  {}", Arrays.toString(args), i);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			} catch (InterruptedException e) {
+				log.info("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+		//});
+		//chatbotThread.start();
 	}
 
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
