@@ -33,7 +33,7 @@ public class KitchenSinkApplication {
     static LineListener listener;
     
     @Autowired
-    public LineListener setLineListener(LineListener listener) {
+    public void setLineListener(LineListener listener) {
     	KitchenSinkApplication.listener = listener;
     }
     
