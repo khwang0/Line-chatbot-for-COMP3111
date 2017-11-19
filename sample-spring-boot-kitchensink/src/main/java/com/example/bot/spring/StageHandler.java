@@ -336,7 +336,14 @@ public class StageHandler {
 					database.pushTest(i);
 					database.pushDietRecord(foodInput);
 					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
-					Thread.sleep(1000);
+					try{
+						Thread.sleep(1000);
+					}catch (InterruptedException e) {
+
+					}
+					finally{
+						
+					}
 				}
 			}
 			foodInput = new FoodInput(event.getSource().getUserId(),time);
