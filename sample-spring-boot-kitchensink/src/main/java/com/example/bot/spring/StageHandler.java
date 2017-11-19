@@ -239,8 +239,6 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 			}break;
-			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
-			}
 			case "friend" :{
 				//if(currentUser.registerTime after compaign starting time)
 				replymsg = "This is your code for campaign:"
