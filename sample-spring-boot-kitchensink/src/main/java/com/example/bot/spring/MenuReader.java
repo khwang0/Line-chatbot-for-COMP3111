@@ -48,7 +48,7 @@ public class MenuReader {
 		nameList = new String[plainTexts.length];
 		priceList = new int[plainTexts.length];
 		ingredientList = new String[plainTexts.length][];
-		boolean fi;
+		boolean fi = false;
 		for (int i =0; i<plainTexts.length;i++ ) {
 			matcher = pattern.matcher(plainTexts[i]);
 			fi = matcher.find();
