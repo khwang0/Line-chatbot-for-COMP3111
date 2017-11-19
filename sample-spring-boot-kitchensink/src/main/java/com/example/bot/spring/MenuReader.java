@@ -48,7 +48,7 @@ public class MenuReader {
 		priceList[0] = Integer.parseInt(matcher.group(2));
 		String[] temp = database.getFoodInfo();
 
-		database.pushTest(temp.length);
+		//database.pushTest(temp.length);
 
 		ArrayList<String> tempList = new ArrayList<String>();
 		for (int i = 0; i<temp.length; i++ ) {
@@ -59,7 +59,7 @@ public class MenuReader {
 		//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
 		ingredientList = new String[1][tempList.size()];
 		ingredientList[0] = tempList.toArray(new String[tempList.size()]);
-		database.pushTest(ingredientList[0].length);
+		//database.pushTest(ingredientList[0].length);
 		return fi;
 	}
 

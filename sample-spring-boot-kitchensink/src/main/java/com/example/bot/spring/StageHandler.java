@@ -326,10 +326,8 @@ public class StageHandler {
 				amount = 100;
 				realPrice = 10;
 			}
-			database.pushTest(amount);
-			database.pushTest(realPrice);
 			for (int i =0; i<ingredients[0].length; i++) {
-				foodInput = new FoodInput(event.getSource().getUserId(),time);
+				foodInput = new FoodInput(event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i));
 				foodInput.setFoodName(ingredients[0][i]);
 				healthSearcher.setKeyword(ingredients[0][i]);
 				if (healthSearcher.search()) {
@@ -337,7 +335,7 @@ public class StageHandler {
 					foodInput.setPrice(realPrice);
 					database.pushTest(i);
 					database.pushDietRecord(foodInput);
-					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i),(double)realPrice);
 				}
 			}
 			foodInput = new FoodInput(event.getSource().getUserId(),time);
@@ -362,7 +360,7 @@ public class StageHandler {
 			int realPrice;
 			for (int i =0; i<ingredients.length; i++) {
 				for(int j =0; j<ingredients[i].length;j++){
-					foodInput = new FoodInput(event.getSource().getUserId(),time);
+					foodInput = new FoodInput(event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i*ingredients[i].length+j));
 					foodInput.setFoodName(ingredients[i][j]);
 					healthSearcher.setKeyword(ingredients[i][j]);
 					if (healthSearcher.search()) {
@@ -371,7 +369,7 @@ public class StageHandler {
 						foodInput.setAmount(amount);
 						foodInput.setPrice(realPrice);
 						database.pushDietRecord(foodInput);
-						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i*ingredients[i].length+j),(double)realPrice);
 					}
 				}
 			}
