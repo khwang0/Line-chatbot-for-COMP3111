@@ -249,13 +249,6 @@ public class KitchenSinkController {
 		tempFile.toFile().deleteOnExit();
 		return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
 	}
-
-
-    //@Autowired
-    //private TaskExecutor taskExecutor;
-    
-    //@Autowired
-    //private ApplicationContext applicationContext;
 	
 	@Autowired
 	LineListener ll;
@@ -267,8 +260,6 @@ public class KitchenSinkController {
 	
 	@PostConstruct
 	private void startUpListener() {
-        //LineListener ll = applicationContext.getBean(LineListener.class);
-        //taskExecutor.execute(ll);
 		ll.start();
 	}
 
