@@ -64,6 +64,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 		user.setEatingHabits(b);
 		 		user.setOtherInfo(rs.getString(16));
 		 		user.setAssessmentScore(rs.getInt(17));
+				user.setBudget(rs.getDouble(18));
+				user.setRegisterTime(rs.getString(19));
 			}
 			rs.close();
 			stmt.close();
@@ -126,7 +128,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
 			String temp = ""+user.getGender();
@@ -150,9 +152,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 	stmt.setArray(15,sqlArray);
 		 	stmt.setString(16,(user).getOtherInfo());
 		 	stmt.setInt(17,(user).getAssessmentScore());
+			stmt.setDouble(18,(user).getBudget());
+			stmt.setString(19,(user).getRegisterTime());
 
-
-		    result = stmt.execute();
+		  result = stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
@@ -618,8 +621,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=? WHERE id = ?");
-			stmt.setString(17, user.getID());
+					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=?, budget = ?, registertime = ?, WHERE id = ?");
+			stmt.setString(19, user.getID());
 			stmt.setString(1, user.getName());
 			String temp = ""+user.getGender();
 			stmt.setString(2, temp) ;
@@ -641,7 +644,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setArray(14,sqlArray);
 			stmt.setString(15,user.getOtherInfo());
 			stmt.setInt(16,user.getAssessmentScore());
-
+			stmt.setDouble(17,user.getBudget());
+			stmt.setString(18,user.getRegisterTime());
 		    result = stmt.execute();
 			stmt.close();
 			connection.close();

@@ -88,7 +88,7 @@ public class Users {
 	public void setOtherInfo(String s) {otherInfo = s;}
 	public void setBudget(double b) {budget = b;}
 	public void setAssessmentScore(int s){assessmentScore = s;}
-
+	public void setRegisterTime(String s){registerTime = s;}
 	//assume inputs are always valid
 	public String getID() {return UID;}
 	public String getName() {return name;}
@@ -109,6 +109,7 @@ public class Users {
 	public boolean[] getEatingHabits() {return eatingHabits;}
 	public String getOtherInfo() {return otherInfo;}
 	public double getBudget() {return budget;}
+	public String getRegisterTime(){return registerTime;}
 	// modified user's assessment scores
 	public int getAssessmentScore(){return assessmentScore;}
 
