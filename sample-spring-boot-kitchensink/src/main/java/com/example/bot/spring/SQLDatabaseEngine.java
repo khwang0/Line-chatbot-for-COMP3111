@@ -721,6 +721,23 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 	}
 
 
+	boolean pushTest(int a){
+		boolean result = false;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"INSERT INTO test VALUES(?)");
+			stmt.setInt(1,a);
+			result = stmt.execute();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+			return result;
+		}
+		return result;
+	}
+
 	private Connection getConnection() throws URISyntaxException, SQLException {
 		Connection connection;
 		URI dbUri = new URI(System.getenv("DATABASE_URL"));//postgres://eazgxsrhxkhibl:69bfc6652d06407b34ffce5af54a478c07788cf800075f42c70e7e21fdde3630@ec2-107-22-187-21.compute-1.amazonaws.com:5432/ddqi3nebsahm4i

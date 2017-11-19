@@ -37,7 +37,6 @@ public class MenuReader {
 	public boolean readFromText(String plainText,SQLDatabaseEngine database){
 		nameList = new String[1];
 		priceList = new int[1];
-		ingredientList = new String[1][];
 		String patternString = "(.+?)([0-9]+)";
 		Pattern pattern = Pattern.compile(patternString);
 		Matcher matcher = pattern.matcher(plainText);
@@ -48,6 +47,9 @@ public class MenuReader {
 		nameList[0] = matcher.group(1);
 		priceList[0] = Integer.parseInt(matcher.group(2));
 		String[] temp = database.getFoodInfo();
+
+		database.pushTest(temp.length);
+
 		ArrayList<String> tempList = new ArrayList<String>();
 		for (int i = 0; i<temp.length; i++ ) {
 			if (nameList[0].contains(temp[i])) {
@@ -55,7 +57,9 @@ public class MenuReader {
 			}
 		}
 		//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
+		ingredientList = new String[1][tempList.size()];
 		ingredientList[0] = tempList.toArray(new String[tempList.size()]);
+		database.pushTest(ingredients[0].length);
 		return fi;
 	}
 
