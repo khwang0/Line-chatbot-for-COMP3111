@@ -194,17 +194,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
 					"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
-			String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
+			//String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
+			String gender =Character.toString(currentUser.getGender());
 			
 			if(search_intake_reference(gender,currentUser.getAge())) {
-				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age < ? AND max_age > ?" );
+				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age < ? AND max_age > ?" );
 				ref.setString(1, gender);
 				ref.setInt(2, currentUser.getAge());
 				ref.setInt(3, currentUser.getAge());
 				ResultSet rs = ref.executeQuery();
 				ref.close();
+				
 
 				stmt.setString(1, currentUser.getID());
+				rs.next();
 				stmt.setDouble(2, rs.getDouble(8));//fiber
 				stmt.setDouble(3, rs.getDouble(9));//energy
 				stmt.setDouble(4, rs.getDouble(10));//protein
@@ -272,6 +275,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
+			
 			return false; 
 		}
 		return true;
