@@ -327,7 +327,7 @@ public class StageHandler {
 				realPrice = 10;
 			}
 			for (int i =0; i<ingredients[0].length; i++) {
-				foodInput = new FoodInput(event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i));
+				foodInput = new FoodInput(event.getSource().getUserId(),time);
 				foodInput.setFoodName(ingredients[0][i]);
 				healthSearcher.setKeyword(ingredients[0][i]);
 				if (healthSearcher.search()) {
@@ -335,7 +335,8 @@ public class StageHandler {
 					foodInput.setPrice(realPrice);
 					database.pushTest(i);
 					database.pushDietRecord(foodInput);
-					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i),(double)realPrice);
+					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+					Thread.sleep(1000);
 				}
 			}
 			foodInput = new FoodInput(event.getSource().getUserId(),time);
