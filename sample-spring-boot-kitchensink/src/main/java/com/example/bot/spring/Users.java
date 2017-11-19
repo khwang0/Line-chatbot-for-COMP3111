@@ -357,7 +357,7 @@ public class Users {
 	public String getOtherInfo() {return otherInfo;}
 	/**
      * This method will return the Budget of the Users
-	 * @return int this is the Budget of the Users
+	 * @return double this is the Budget of the Users
      */
 	public double getBudget() {return budget;}
 	//public String getRegisterTime(){return registerTime;}
@@ -399,7 +399,7 @@ public class Users {
 			 // +"Eat midnight snacks: "+ Boolean.toString(eatingHabits[4]) +"\n"
 			 // +"More meals: "+ Boolean.toString(eatingHabits[5]) +"\n"
 			 +temp
-			 +"Other information: "+ otherInfo ;
+			 //+"Other information: "+ otherInfo ;
 	}
 
 }
