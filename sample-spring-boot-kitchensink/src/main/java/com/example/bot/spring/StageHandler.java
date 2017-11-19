@@ -39,6 +39,8 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+
+@Slf4j
 public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
@@ -1074,10 +1076,14 @@ public class StageHandler {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(text)){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
-			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
+			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
+			  log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+				log.info(replymsg);
+				log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			 	replymsg = "@@" + newCoupon.getInviter()
 			 						+"@@" + newCoupon.getInvitee()
 									+"@@" + newCoupon.getCoupon();
+				}
 				else
 					replymsg = newCoupon.getCoupon();
 		}

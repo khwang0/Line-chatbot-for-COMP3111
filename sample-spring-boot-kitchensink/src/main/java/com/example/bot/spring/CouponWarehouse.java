@@ -181,7 +181,7 @@ public class CouponWarehouse{
       if(found){
        coupons.get(i).setInvitee(invitee);
        if( ! isNewUser(coupons.get(i).getInviter()) ) couponsRemaining--;
-   log.info("X!#R@#%#$^%@$&U^%IJ^*(K%HE$YG#Q$WTC$QRC#)RC<@#_R(!#<_CR*@＃)");
+       //log.info("X!#R@#%#$^%@$&U^%IJ^*(K%HE$YG#Q$WTC$QRC#)RC<@#_R(!#<_CR*@＃)");
        return coupons.get(i);
      }
      return null;
