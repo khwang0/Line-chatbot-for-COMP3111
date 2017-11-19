@@ -39,31 +39,37 @@ public class MenuReader {
 	}
 
 	public boolean readFromText(String plainText,SQLDatabaseEngine database){
-		nameList = new String[1];
-		priceList = new int[1];
+		String[] plainTexts = plainText.split("\n");
+		String[] temp = database.getFoodInfo();
+		ArrayList<String> tempList;
 		String patternString = "(.+?)([0-9]+)";
 		Pattern pattern = Pattern.compile(patternString);
-		Matcher matcher = pattern.matcher(plainText);
-		boolean fi = matcher.find();
-		if(!fi) {
-			return fi;
-		}
-		nameList[0] = matcher.group(1);
-		priceList[0] = Integer.parseInt(matcher.group(2));
-		String[] temp = database.getFoodInfo();
-
-		//database.pushTest(temp.length);
-
-		ArrayList<String> tempList = new ArrayList<String>();
-		for (int i = 0; i<temp.length; i++ ) {
-			if (nameList[0].contains(temp[i])) {
-				tempList.add(temp[i]);
+		Matcher matcher = pattern.matcher(plainTexts[i]);
+		nameList = new String[plainTexts.length];
+		priceList = new int[plainTexts.length];
+		ingredientList = new String[plainTexts.length][];
+		boolean fi;
+		for (int i =0; i<plainTexts.length;i++ ) {
+			matcher = pattern.matcher(plainTexts[i]);
+			fi = matcher.find();
+			if(!fi) {
+				priceList = new int[1];
+				priceList[0] = 0;
+				return fi;
 			}
+			nameList[i] = matcher.group(1);
+			priceList[i] = Integer.parseInt(matcher.group(2));
+			//database.pushTest(temp.length);
+
+			tempList = new ArrayList<String>();
+			for (int j = 0; j<temp.length; j++ ) {
+				if (nameList[i].contains(temp[j])) {
+					tempList.add(temp[j]);
+				}
+			}
+			//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
+			ingredientList[i] = tempList.toArray(new String[tempList.size()]);
 		}
-		//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
-		ingredientList = new String[1][tempList.size()];
-		ingredientList[0] = tempList.toArray(new String[tempList.size()]);
-		//database.pushTest(ingredientList[0].length);
 		return fi;
 	}
 
