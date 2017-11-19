@@ -136,6 +136,8 @@ public class StageHandler {
 				//log.info("Stage error.");
 			}
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -220,6 +222,8 @@ public class StageHandler {
 			//replymsg= msg);
 		}break;
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 	public String dietPlannerHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -590,6 +594,7 @@ public class StageHandler {
 		}break;
 		}
 
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 
 	}
@@ -782,6 +787,8 @@ public class StageHandler {
 			currentUser.setSubStage(0);
 		}break;
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -921,6 +928,8 @@ public class StageHandler {
 		default:
 			break;
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -993,6 +1002,7 @@ public class StageHandler {
 		}break;
 		default:break;
 		}
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -1001,6 +1011,7 @@ public class StageHandler {
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 	public String userGuideHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -1008,6 +1019,7 @@ public class StageHandler {
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -1106,12 +1118,14 @@ public class StageHandler {
 	public void unfollowHandler(Users currentUser){
 		currentUser.setStage("Init");
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
 
 	public String followHandler(Users currentUser){
 		String msg = "User data reloaded. Type anything to continue...";
 		currentUser.setStage("Main");
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return msg;
 	}
 

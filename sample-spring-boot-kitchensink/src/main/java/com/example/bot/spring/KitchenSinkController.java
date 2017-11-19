@@ -172,6 +172,7 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
+		currenUser = getSourceUser(event);
 		stageHandler.unfollowHandler(currentUser);
 		currentUser = null;
 	}
@@ -184,7 +185,6 @@ public class KitchenSinkController {
 			currentUser = database.searchUser(event.getSource().getUserId());
 			try {
 				currentUser = database.searchUser(event.getSource().getUserId());
-
 				//load other data from db
 			}catch(Exception e) {
 				log.info(e.getMessage());
@@ -294,7 +294,7 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
-		//currentUser = getSourceUser(event);
+		currentUser = getSourceUser(event);
         switch(currentUser.getStage()) {
         	case "Init":
         		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
