@@ -69,11 +69,11 @@ public class StageHandler {
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
-	
+
 	// used for serve-weight conversion
 	private float VF_weight_per_serve = 75;//75g Vegetable&Fruit
 	private float Grain_weight_per_serve = 500;//500kj Grain
-	private float MM_weight_per_serve = 100; 
+	private float MM_weight_per_serve = 100;
 
 
 	public String initStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -237,11 +237,12 @@ public class StageHandler {
 									  +"1 Input daily diet by answering the questions\n"
 									  +"2 Input daily diet by menu(formatted plain text)\n"
 									  +"3 Input daily diet by menu(URL of JSON doc)\n"
-									  +"2 Visualize your diet consumption in a specific day\n"
-									  +"3 Design My Diet Plan\n"
-									  +"4 Reminder\n"
-									  +"5 Self-Assessment\n"
-									  +"6 Insert user-defined food\n"
+									  +"3 Visualize your diet consumption in a specific day\n"
+									  +"4 Design My Diet Plan\n"
+									  +"5 Reminder\n"
+									  +"6 Self-Assessment\n"
+									  +"7 Insert user-defined food\n"
+									  +"8 Insert food you what(which you find that is not in our database)\n"
 									  +"(type other things to back to menu)";
 			currentUser.setSubStage(-1);
 		}break;
@@ -298,11 +299,74 @@ public class StageHandler {
 				currentUser.setSubStage(0) ;
 				}
 			else
-				replymsg= "Please enter a reasonable number!";				
-		}break;	
+				replymsg= "Please enter a reasonable number!";
+		}break;
+
 		case 2:{
+			replymsg= "Please state your menu in plain text:";
+			currentUser.setSubStage(currentUser.getSubStage()+40);
+		}break;
+		case 42:{
+			Date date = new Date();
+			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
+			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+			time = ft.format(date);
+			menuReader.readFromText(text,database);
+			String[][] ingredients = menuReader.getIngredient();
+			int[] price = menuReader.getPrice();
+			int amount = (100/ingredients[0].length);
+			int realPrice = (price[0]/ingredients[0].length);
+			for (int i =0; i<ingredients[0].length; i++) {
+				foodInput = new FoodInput(event.getSource().getUserId(),time);
+				foodInput.setFoodName(ingredients[0][i]);
+				healthSearcher.setKeyword(ingredients[0][i]);
+				if (healthSearcher.search()) {
+					foodInput.setAmount(amount);
+					foodInput.setPrice(realPrice);
+					database.pushDietRecord(foodInput);
+					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Double.valueOf(text));
+				}
+			}
+			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+			currentUser.setSubStage(0) ;
+		}break;
+
+		case 3:{
+			replymsg= "Please state your menu in url of JSON:";
+			currentUser.setSubStage(currentUser.getSubStage()+40);
+		}break;
+		case 43:{
+			Date date = new Date();
+			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
+			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+			time = ft.format(date);
+			menuReader.readFromJSON(text);
+			String[][] ingredients = menuReader.getIngredient();
+			int[] price = menuReader.getPrice();
+			int amount;
+			int realPrice;
+			for (int i =0; i<ingredients.length; i++) {
+				for(int j =0; j<ingredients[i].length;j++){
+					foodInput = new FoodInput(event.getSource().getUserId(),time);
+					foodInput.setFoodName(ingredients[i][j]);
+					healthSearcher.setKeyword(ingredients[i][j]);
+					if (healthSearcher.search()) {
+						amount = (100/ingredients[i].length);
+						realPrice = (price[i]/ingredients[i].length);
+						foodInput.setAmount(amount);
+						foodInput.setPrice(realPrice);
+						database.pushDietRecord(foodInput);
+						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Double.valueOf(text));
+					}
+				}
+			}
+			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+			currentUser.setSubStage(0) ;
+		}break;
+
+		case 4:{
 			replymsg= "Please enter the date(yyyymmdd): ";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
+			currentUser.setSubStage(currentUser.getSubStage()+18) ;
 		}break;
 		case 22:{
 			if(inputChecker.dateCheck(text)) {
@@ -314,10 +378,11 @@ public class StageHandler {
 				replymsg= "Please enter a valid date(yyyymmdd): ";
 			}
 		}break;
-		//substage 3: Diet plan genereator
-		case 3:{
+
+		//substage 5: Diet plan genereator
+		case 5:{
 			/*
-			 * Update corresponding user's "diet_plan" table based on his/her information 
+			 * Update corresponding user's "diet_plan" table based on his/her information
 			 * */
 			String user_id = currentUser.getID();
 			//double budget = currentUser.getBudget();
@@ -329,9 +394,9 @@ public class StageHandler {
 			}
 			else {
 				boolean result = database.gen_plan(currentUser);
-				if (result) {					
+				if (result) {
 					replymsg = "We have successfully generated a diet plan for you:\n\n";
-					replymsg += database.display_diet_plan(user_id, budget);							
+					replymsg += database.display_diet_plan(user_id, budget);
 				}
 				else {
 					replymsg  = "Since your personal information is not completed, we have genereated a default one for you.\n";
@@ -343,15 +408,15 @@ public class StageHandler {
 		}break;
 
 
-		//substage 4: Reminder
-		case 4:{
+		//substage 6: Reminder
+		case 6:{
 			replymsg = "Reminder List:\n";
 			try {
 				String user_id = currentUser.getID();
 				//double budget = currentUser.getBudget();
-				
+
 				double budget = 100;
-				
+
 				// Instantiate a Date object
 				Date dNow = new Date();
 				SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd");
@@ -362,21 +427,21 @@ public class StageHandler {
 				if(plan_info.size()==0) {
 					replymsg += "We can not find your diet plan, please design your own diet plan first!\n";
 				}
-				
+
 				double meat_serve = plan_info.get(5);
 				double milk_serve = plan_info.get(6);
-				
+
 				//ArrayList<Integer> current_info = new ArrayList<Integer>();
 				ArrayList<Double> current_info = database.search_current(user_id, date); // diet current status
-				
+
 				//User hasn't input any diet consumption
 				if(current_info.size() == 0) {
 					double zero = 0;
 					for (int i = 0; i<4; i++) {
-						current_info.add(zero);				
+						current_info.add(zero);
 					}
 				}
-				
+
 				for (int i = 0; i < 3/*plan_info.size()*/; i++) {
 					//fiber|energy|protein
 					double diff = plan_info.get(i) - current_info.get(i);
@@ -397,7 +462,7 @@ public class StageHandler {
 						replymsg += "Energy: ";
 						if (plan_info.get(i) > current_info.get(i)) {
 							replymsg += String.format("You still need to consume %.2f kcal", diff);
-							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";			
+							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";
 						}
 						else
 							replymsg += "Finish!\n";
@@ -412,7 +477,7 @@ public class StageHandler {
 						}
 						else
 							replymsg += "Finish!\n";
-						
+
 						replymsg += "######\n";
 						replymsg += "Milk: ";
 						if (plan_info.get(i) > current_info.get(i)) {
@@ -423,7 +488,7 @@ public class StageHandler {
 							replymsg += "Finish!\n\n";
 					}
 				}
-				
+
 				//generate plan based on budget
 				//expensive
 				if (current_info.get(3) < budget*2/3){
@@ -438,14 +503,14 @@ public class StageHandler {
 				//over budget
 				else {
 					replymsg = replymsg + "You are OVER budget now!\n";
-				}		
-				
+				}
+
 			} catch (Exception e) {
 				//log.info("plan not found: {}", e.toString());
 				replymsg += "Exception!\n";
 			}
 			replymsg += "Type 1 to go back to Diet Planner...\nType other things to return to main menu...\n";
-			currentUser.setSubStage(currentUser.getSubStage()+10);
+			currentUser.setSubStage(currentUser.getSubStage()+8);
 		}break;
 		case 14:{
 			try {
@@ -458,9 +523,9 @@ public class StageHandler {
 				currentUser.setSubStage(0);
 			}finally { replymsg= REDIRECT;}
 		}break;
-		
-		//subStage5: self Assessment;
-		case 5:{
+
+		//subStage7: self Assessment;
+		case 7:{
 			suggestion = "";
 			(currentUser).setAssessmentScore(0);
 			replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
@@ -468,16 +533,16 @@ public class StageHandler {
 					+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
 			currentUser.setSubStage(-2);
 		}break;
-		
-		
-		
-		//subStage6 : insert user-defined data
-		case 6:{
+
+
+
+		//subStage8 : insert user-defined data
+		case 8:{
 			foodInfo = new FoodInfo();
 			replymsg= "Please enter the food name: ";
-			currentUser.setSubStage(currentUser.getSubStage()+10);
+			currentUser.setSubStage(currentUser.getSubStage()+8);
 		}break;
-		case 16:{			
+		case 16:{
 			if(inputChecker.foodAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough energy in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
@@ -485,7 +550,7 @@ public class StageHandler {
 			else replymsg= "Please enter valid food name: ";
 		}break;
 		case 17:{
-			
+
 			if(inputChecker.energyAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough protein in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
@@ -493,32 +558,32 @@ public class StageHandler {
 			else replymsg= "Please enter valid number: ";
 		}break;
 		case 18:{
-			
+
 			if(inputChecker.proteinAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough fiber in 100g: ";
-				currentUser.setSubStage(currentUser.getSubStage()+1);				
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else replymsg= "Please enter valid number: ";
-			
-			
+
+
 		}break;
 		case 19:{
-			
+
 			if(inputChecker.fiberAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough price in 100g: ";
-				currentUser.setSubStage(currentUser.getSubStage()+1);	
-			}
-			else replymsg= "Please enter valid number: ";	
-		}break;
-		case 20:{
-			
-			if(inputChecker.priceAdd(text,foodInfo,database)) {
-				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
-				currentUser.setSubStage(0);	
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
 			else replymsg= "Please enter valid number: ";
-						
-		}break;	
+		}break;
+		case 20:{
+
+			if(inputChecker.priceAdd(text,foodInfo,database)) {
+				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				currentUser.setSubStage(0);
+			}
+			else replymsg= "Please enter valid number: ";
+
+		}break;
 		case -2:{
 			if(text.equalsIgnoreCase("q")) {
 				currentUser.setStage("Main");
@@ -847,7 +912,7 @@ public class StageHandler {
         			}
 				else {
 					replymsg = "Please enter reasonable numbers!";
-				} 
+				}
 		}break;
 		case 6:{
 			boolean input = false;
@@ -1143,7 +1208,7 @@ public class StageHandler {
 			msg = "Welcome!!\nTo start using our Personal Diet services, please follow the instructions below.\n\n"
 					+ "Please first tell us some of your personal information: type anything to continue";
 			currentUser = new Users(event.getSource().getUserId());
-			database.pushUser(currentUser); // push new user  
+			database.pushUser(currentUser); // push new user
 		}finally {
 			database.updateUser(currentUser);//update user stage when the stage has been changed
 		}
