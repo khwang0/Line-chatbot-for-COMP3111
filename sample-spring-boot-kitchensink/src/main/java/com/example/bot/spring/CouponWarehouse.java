@@ -95,7 +95,7 @@ public class CouponWarehouse{
   }
   public Coupon issueCoupon(String invitee, String code){
     //if (isCouponRemaining()){
-    if(true){}
+    if(true){
       couponsRemaining--;
 
       int i = 0;
