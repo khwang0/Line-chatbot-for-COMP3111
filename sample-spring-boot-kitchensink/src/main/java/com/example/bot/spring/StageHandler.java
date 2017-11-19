@@ -1076,18 +1076,18 @@ public class StageHandler {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
-			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
+			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
+			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
+				else replymsg = "@@" + "nowhere";
 
-			 	replymsg = "@@" + newCoupon.getInviter()
-			 						+"@@" + newCoupon.getInvitee()
-									+"@@" + newCoupon.getCoupon();
+			 	replymsg += "@@" + newCoupon.getInvitee() +"@@" + newCoupon.getCoupon();
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 									log.info(replymsg);
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-				}
-				else
+				//}
+				//else
 
-					replymsg = newCoupon.getCoupon();
+				//	replymsg = newCoupon.getCoupon();
 					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 		else{

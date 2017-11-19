@@ -182,11 +182,11 @@ public class CouponWarehouse{
       }
       if(found){
         coupons.get(i).setInvitee(invitee);
-        if( ! isNewUser(coupons.get(i).getInviter()) ) couponsRemaining--;
-        else gotCouponNewUsers.add(coupons.get(i).getInviter());
+        if( ! gotCouponNewUsers.contains(coupons.get(i).getInviter()) ) couponsRemaining--;
+        gotCouponNewUsers.add(coupons.get(i).getInviter());
         gotCouponNewUsers.add(invitee);
         return coupons.get(i);
-     }
+      }
      return null;
     }
     return null;
