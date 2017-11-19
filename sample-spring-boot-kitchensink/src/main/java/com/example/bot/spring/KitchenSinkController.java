@@ -78,6 +78,8 @@ public class KitchenSinkController {
 		log.info("This is your entry point:");
 		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		TextMessageContent message = event.getMessage();
+		//PushMessage pushMessage = new PushMessage(event.getSource().getUserId(),new TextMessage("aaaaaa"));
+		//lineMessagingClient.pushMessage(pushMessage);
 		handleTextContent(event.getReplyToken(), event, message);
 	}
 
@@ -248,13 +250,16 @@ public class KitchenSinkController {
 
 
 	
-
-
+	//@Autowired
+	//LineListener ll;
+	
+	//static boolean newT=false;
 	public KitchenSinkController() {
 		processor = new TextProcessor();
+		//ll.start();
 	}
 
-	private TextProcessor processor;
+	private TextProcessor processor;  
 	
 
 	//The annontation @Value is from the package lombok.Value

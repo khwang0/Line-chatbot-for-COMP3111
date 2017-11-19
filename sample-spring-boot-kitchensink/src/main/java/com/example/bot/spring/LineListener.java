@@ -1,22 +1,32 @@
 package com.example.bot.spring;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import com.example.bot.spring.textsender.*;
 
+@Component
 public class LineListener extends Thread{
 	
+	@Autowired
 	private ConfirmBroadcaster confirmBroadcaster;
+	@Autowired
 	private CancelBroadcaster cancelBroadcaster;
+	@Autowired
 	private UQAnswerReplier uqAnswerReplier;
+	@Autowired
 	private DoubleElevBroadcaster double11Broadcaster;
 	
 	public LineListener() {
-		confirmBroadcaster = new ConfirmBroadcaster();
-		cancelBroadcaster = new CancelBroadcaster();
-		uqAnswerReplier = new UQAnswerReplier();
-		double11Broadcaster = new DoubleElevBroadcaster();
+		//confirmBroadcaster = new ConfirmBroadcaster();
+		//cancelBroadcaster = new CancelBroadcaster();
+		//uqAnswerReplier = new UQAnswerReplier();
+		//double11Broadcaster = new DoubleElevBroadcaster();
 	}
 	
 	@Override
+	@PostConstruct
 	public void run() {
 		while(true) {
 			//TODO: Add what ever function need to run

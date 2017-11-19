@@ -7,7 +7,9 @@ import com.linecorp.bot.client.*;
 import com.linecorp.bot.model.*;
 import com.linecorp.bot.model.message.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ConfirmBroadcaster implements Broadcaster {
 	
 	ConfirmDBEngine confirmdb; 
@@ -29,8 +31,9 @@ public class ConfirmBroadcaster implements Broadcaster {
 			// extract all contactor info into a Set<String> to;
 			// extract tourid into String tourid;
 			for (String tourid: tourids) {
+				boolean paid = false; 
 				String broadcast_content = "Your tour " + tourid + " has been confirmed! Looking forward to see you on the depart day!";
-				Set<String> tourists = confirmdb.getAllContactors(tourid);
+				Set<String> tourists = confirmdb.getAllContactors(tourid, paid);
 				
 				Message message = new TextMessage(broadcast_content);			
 				lineMessagingClient.multicast(new Multicast(tourists, message));  // Multicast(Set<String> to, String msg)

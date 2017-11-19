@@ -3,6 +3,8 @@ package com.example.bot.spring.textsender;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
 
 //import java.util.GregorianCalendar;
 //import java.util.List;
@@ -17,6 +19,7 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
+@Component
 public class UQAnswerReplier implements Broadcaster{
 	
 	@Autowired
@@ -24,8 +27,10 @@ public class UQAnswerReplier implements Broadcaster{
 
 	public UQAnswerReplier() {
 		// TODO Auto-generated constructor stub
+		//lineMessagingClient = new LineMessagingClientImpl();
 	}
 
+	//@PostConstruct  // seems required, yet @PostConstruct does not support exception
 	@Override
 	public void broadcast() throws Exception {
 		System.out.println("You are here in the UQAnswerReplier");
@@ -39,8 +44,21 @@ public class UQAnswerReplier implements Broadcaster{
 			userID=temp[0];
 			question=temp[1];
 			answer=temp[2];
+			
+			// testing 
+			System.out.println("--------- userid: " + userID);
+			System.out.println("--------- question: " + question);
+			System.out.println("--------- answer" + answer);
+			
+			// end testing			
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
+			if(lineMessagingClient == null) {
+				System.out.println("--------- lineMessagingClient is null ----");
+			}		
+			
+			// lineMessagingClient.pushMessage(new PushMessage(userID, message));
 			lineMessagingClient.pushMessage(new PushMessage(userID, message));
+			// System.out.println("Sent messages: {}", apiResponse);
 		}
 	}
 }

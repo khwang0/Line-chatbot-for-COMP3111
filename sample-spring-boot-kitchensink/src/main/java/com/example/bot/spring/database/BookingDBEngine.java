@@ -807,7 +807,7 @@ public class BookingDBEngine extends DBEngine {
 		try {
 			nstmt = connection.prepareStatement(
 					"SELECT registerednum"
-					+ " FROM "+BOOKTABLE+" b, "+CUSTOMER+" c, "+LINEUSER+" l"
+					+ " FROM "+ BOOKTABLE+" b, "+ CUSTOMER+" c, "+ LINEUSER+" l"
 					+ " WHERE c.customername = l.name "
 					+ " AND l.userID = ?"
 					+ " AND c.bootableid = l.tourids");
