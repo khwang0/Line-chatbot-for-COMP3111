@@ -95,6 +95,8 @@ public class CouponWarehouse{
     if (isCouponRemaining()){
       couponsRemaining--;
       coupons.get(coupons.indexOf(code)).setInvitee(invitee);
+      if( ! isNewUser(coupons.get(coupons.indexOf(code)).getInviter()) )
+      couponsRemaining--;
     }
     return coupons.get(coupons.indexOf(code));
   }
