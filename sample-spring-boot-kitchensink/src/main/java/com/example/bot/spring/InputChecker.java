@@ -258,8 +258,6 @@ public class InputChecker {
 	}
 
 
-
-
 	public boolean foodAdd(String text, FoodInput foodInput, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
@@ -270,10 +268,6 @@ public class InputChecker {
 			return false;
 		}catch(NumberFormatException ne){return false;}
 	}
-
-
-
-
 
 
 	public boolean amountAdd(String text,FoodInput foodInput, SQLDatabaseEngine database) {
@@ -298,8 +292,6 @@ public class InputChecker {
 			return false;
 		}catch(NumberFormatException ne){return false;}
 	}
-
-
 
 
 	public boolean dateCheck(String text) {
