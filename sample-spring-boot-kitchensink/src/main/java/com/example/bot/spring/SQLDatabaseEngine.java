@@ -546,7 +546,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
-<<<<<<< HEAD
 	
 	ArrayList<String> findallusers() {
 		ArrayList<String> answer = new ArrayList<String>();
