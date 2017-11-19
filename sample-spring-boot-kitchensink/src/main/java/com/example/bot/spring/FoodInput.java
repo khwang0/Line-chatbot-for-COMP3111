@@ -1,27 +1,30 @@
 package com.example.bot.spring;
 
-public class foodInput{
-	
+public class FoodInput{
+
 	private final String key;  //key is the combination of userID and time
 	protected String UID;
 	protected String currentTime;
 	protected int amount;
 	protected String foodName;
-	protected float price;
-	
-	public foodInput(String UID,String time) {
+	protected double price;
+
+	public FoodInput(String UID,String time) {
 		this.UID = UID;
 		currentTime = time;
 		key = UID+time;
+		foodName = "N/A";
+		amount = 0;
+		price = 0;
 	}
 	public String getKey() {return key;}
 	public String getId() {return UID;}
 	public String getTime() {return currentTime;}
-	public float getPrice() {return price;}
+	public double getPrice() {return price;}
 	public int getAmount() {return amount;}
 	public String getFoodName() {return foodName;}
-	public void setFood(String food) {foodName = food;}
+	public void setFoodName(String foodname) {foodName = foodname;}
 	public void setAmount(int n) {amount = n;}
-	public void setPrice(float price) {this.price = price;}
-	
+	public void setPrice(double price) {this.price = price;}
+
 }

@@ -2,6 +2,7 @@ package com.example.bot.spring;
 
 public class HealthSearch {
 	private SearchWeb searchweb;
+	private SQLDatabaseEngine database;
 	private boolean isFound;
 	private String foodName;
 	private String energy;
@@ -18,6 +19,7 @@ public class HealthSearch {
 
 	public HealthSearch()
 	{
+		database = new SQLDatabaseEngine();
 		this.foodName = "N/A";
 		this.energy = "N/A";
 		this.protein = "N/A";
@@ -35,8 +37,19 @@ public class HealthSearch {
 
 	public void setKeyword(String keyword) {
 		this.searchweb.setKeyword(keyword);
+		this.foodName = keyword;
 	}
-	public boolean search() {
+	public boolean searchInOwnDatabase(){
+		FoodInfo foodInfo = database.searchFoodInfo(this.foodName);
+		if (foodInfo!=null) {
+			this.protein = Double.toString(foodInfo.getProtein());
+			this.energy = Double.toString(foodInfo.getEnergy());
+			this.fiber = Double.toString(foodInfo.getFiber());
+			return true;
+		}
+		return false;
+	}
+	public boolean searchInWeb() {
 		String url = "";
 
 		url = "https://ndb.nal.usda.gov/ndb/search/list?ds=Standard+Reference&&&qlookup=";
@@ -71,12 +84,21 @@ public class HealthSearch {
 			this.calcium = searchweb.RegexStringProperty(result,"Sodium, Na");
 
 			this.sodium = searchweb.RegexStringProperty(result,"Calcium, Ca");
+
 			this.fiber = searchweb.RegexStringProperty(result,"Fiber");
 		}
 		else {
 			this.isFound=false;
 		}
 		return this.isFound;
+	}
+
+
+	public boolean search(){
+		if (searchInOwnDatabase()) {
+			return true;
+		}
+		return searchInWeb();
 	}
 	public boolean getStatus() {
 		return this.isFound;
