@@ -306,10 +306,8 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+40);
 		}break;
 		case 42:{
-			Date date = new Date();
-			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
-			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-			time = ft.format(date);
+			Data data;
+			SimpleDateFormat ft;
 			menuReader.readFromText(text,database);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
@@ -326,28 +324,32 @@ public class StageHandler {
 				amount = 100;
 				realPrice = 10;
 			}
-			for (int i =0; i<ingredients[0].length; i++) {
-				foodInput = new FoodInput(event.getSource().getUserId(),time);
-				foodInput.setFoodName(ingredients[0][i]);
-				healthSearcher.setKeyword(ingredients[0][i]);
-				if (healthSearcher.search()) {
-					foodInput.setAmount(amount);
-					foodInput.setPrice(realPrice);
-					database.pushTest(i);
-					database.pushDietRecord(foodInput);
-					inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
-					try{
-						Thread.sleep(1000);
-					}catch (InterruptedException e) {
+			if (price[0]!=0) {
+				for (int i =0; i<ingredients[0].length; i++) {
+					date = new Date();
+					ft = new SimpleDateFormat("yyyyMMddHHmmss");
+					ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+					time = ft.format(date);
+					foodInput = new FoodInput(event.getSource().getUserId(),time);
+					foodInput.setFoodName(ingredients[0][i]);
+					healthSearcher.setKeyword(ingredients[0][i]);
+					if (healthSearcher.search()) {
+						foodInput.setAmount(amount);
+						foodInput.setPrice(realPrice);
+						database.pushTest(i);
+						database.pushDietRecord(foodInput);
+						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+						try{
+							Thread.sleep(1000);
+						}catch (InterruptedException e) {
 
-					}
-					finally{
-						
+						}
+						finally{
+
+						}
 					}
 				}
 			}
-			foodInput = new FoodInput(event.getSource().getUserId(),time);
-			database.pushDietRecord(foodInput);
 			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 			currentUser.setSubStage(0) ;
 		}break;

@@ -13,6 +13,10 @@ public class MenuReader {
 	//private SQLDatabaseEngine database;
 
 	public MenuReader(){
+		nameList = new String[1];
+		priceList = new int[1];
+		nameList[0] = "N/A";
+		priceList[0] = 0;
 	}
 	private String readJSONFile(String url) {
 		File file = new File(url);
