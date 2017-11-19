@@ -310,6 +310,7 @@ public class StageHandler {
 			SimpleDateFormat ft;
 			menuReader = new MenuReader();
 			boolean fi = menuReader.readFromText(text,database);
+			database.pushTest(100);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			//foodInput = new FoodInput(event.getSource().getUserId(),time);
@@ -318,14 +319,6 @@ public class StageHandler {
 			int amount;
 			int realPrice;
 			boolean check = true;
-			if (ingredients[0].length!=0) {
-				amount = (100/ingredients[0].length);
-				realPrice = (price[0]/ingredients[0].length);
-			}
-			else{
-				amount = 100;
-				realPrice = 10;
-			}
 			if(!fi){
 				replymsg= "Please write in the right format(Food name + price)";
 			}
@@ -339,6 +332,9 @@ public class StageHandler {
 				if(check) {
 					for (int i = 0;i<ingredients.length; i++) {
 						for (int j =0; j<ingredients[i].length; j++) {
+							amount = (100/ingredients[i].length);
+							realPrice = (price[i]/ingredients[i].length);
+
 							date = new Date();
 							ft = new SimpleDateFormat("yyyyMMddHHmmss");
 							ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
