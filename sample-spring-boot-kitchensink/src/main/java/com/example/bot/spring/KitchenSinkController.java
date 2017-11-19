@@ -78,9 +78,9 @@ public class KitchenSinkController {
 		log.info("This is your entry point:");
 		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		TextMessageContent message = event.getMessage();
-		PushMessage pushMessage = new PushMessage(event.getSource().getUserId(),new TextMessage("aaaaaa"));
-		lineMessagingClient.pushMessage(pushMessage);
-		//handleTextContent(event.getReplyToken(), event, message);
+		//PushMessage pushMessage = new PushMessage(event.getSource().getUserId(),new TextMessage("aaaaaa"));
+		//lineMessagingClient.pushMessage(pushMessage);
+		handleTextContent(event.getReplyToken(), event, message);
 	}
 
 	@EventMapping

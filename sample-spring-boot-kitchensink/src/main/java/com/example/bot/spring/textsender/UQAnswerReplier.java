@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import javax.annotation.PostConstruct;
+
 //import java.util.GregorianCalendar;
 //import java.util.List;
 //import java.util.Set;
@@ -29,6 +31,7 @@ public class UQAnswerReplier implements Broadcaster{
 	}
 
 	@Override
+	@PostConstruct
 	public void broadcast() throws Exception {
 		System.out.println("You are here in the UQAnswerReplier");
 		UQDBEngine searchEngine = new UQDBEngine();
