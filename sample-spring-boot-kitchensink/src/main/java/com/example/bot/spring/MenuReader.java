@@ -29,7 +29,7 @@ public class MenuReader {
 			 }
 			 bf.close();
 		}catch(IOException ioexception){
-			
+
 		}
 		return sb.toString();
 	}
@@ -62,25 +62,31 @@ public class MenuReader {
 
 	public boolean readFromJSON(String url) {
 		String JSONString = readJSONFile(url);
-		JSONArray jsonArray = new JSONArray(JSONString);
-		nameList = new String[jsonArray.length()];
-		priceList = new int[jsonArray.length()];
-		ingredientList = new String[jsonArray.length()][];
-		for (int i = 0; i < jsonArray.length(); i++)
-		{
-			nameList[i]=jsonArray.getJSONObject(i).getString("name");
-		    priceList[i] = jsonArray.getJSONObject(i).getInt("price");
-		    JSONArray ingreArray = jsonArray.getJSONObject(i).getJSONArray("ingredients");
-		    ingredientList[i] = new String[ingreArray.length()];
-		    for(int j = 0; j < ingreArray.length();j++)
-		    {
-		    		System.out.println(ingreArray.getString(j));
-		    		ingredientList[i][j] = ingreArray.getString(j);
-		    }
+		try{
+			JSONArray jsonArray = new JSONArray(JSONString);
+			nameList = new String[jsonArray.length()];
+			priceList = new int[jsonArray.length()];
+			ingredientList = new String[jsonArray.length()][];
+			for (int i = 0; i < jsonArray.length(); i++)
+			{
+				nameList[i]=jsonArray.getJSONObject(i).getString("name");
+			    priceList[i] = jsonArray.getJSONObject(i).getInt("price");
+			    JSONArray ingreArray = jsonArray.getJSONObject(i).getJSONArray("ingredients");
+			    ingredientList[i] = new String[ingreArray.length()];
+			    for(int j = 0; j < ingreArray.length();j++)
+			    {
+			    		System.out.println(ingreArray.getString(j));
+			    		ingredientList[i][j] = ingreArray.getString(j);
+			    }
+			}
+		}catch(JSONException exception){
+
+		}finally{
+			
 		}
 		return true;
 	}
-	
+
 	public String[] getName() {
 		return nameList;
 	}
