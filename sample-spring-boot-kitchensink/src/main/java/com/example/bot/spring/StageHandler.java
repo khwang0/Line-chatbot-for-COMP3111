@@ -931,7 +931,7 @@ public class StageHandler {
         		}
 			else
 				replymsg = "Please enter reasonable numbers!";
-
+				
 		}break;
 		// }break;
 		// case 2:{
