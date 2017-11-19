@@ -1085,7 +1085,9 @@ public class StageHandler {
 									+"@@" + newCoupon.getCoupon();
 				}
 				else
+				log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 					replymsg = newCoupon.getCoupon();
+					log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used.";
