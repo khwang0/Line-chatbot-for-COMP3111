@@ -19,11 +19,12 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 
 public class UQAnswerReplier implements Broadcaster{
 	
-	@Autowired
+	//@Autowired
 	LineMessagingClient lineMessagingClient;
 
 	public UQAnswerReplier() {
 		// TODO Auto-generated constructor stub
+		lineMessagingClient = new LineMessagingClientImpl();
 	}
 
 	@Override
