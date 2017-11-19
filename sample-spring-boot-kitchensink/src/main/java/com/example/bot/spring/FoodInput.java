@@ -13,7 +13,7 @@ public class FoodInput{
 		this.UID = UID;
 		currentTime = time;
 		key = UID+time;
-		foodName = "N/A"
+		foodName = "N/A";
 		amount = 0;
 		price = 0;
 	}
