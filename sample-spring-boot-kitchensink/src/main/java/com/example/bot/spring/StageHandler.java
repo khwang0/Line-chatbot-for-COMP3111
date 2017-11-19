@@ -78,16 +78,16 @@ public class StageHandler {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
-			if(text.equals("1")) {
+			//if(!text.equals("")) {
         		replymsg = "Please enter your name: (1-32 characters)";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
-        	}
-        	else {
-        		replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
-        		currentUser.setStage("");
-        		currentUser.setSubStage(0);
-        		currentUser = null;
-        	}
+        	//}
+        	// else {
+        	// 	replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
+        	// 	currentUser.setStage("");
+        	// 	currentUser.setSubStage(0);
+        	// 	currentUser = null;
+        	// }
 		}break;
 		case 1:{
 			if(inputChecker.NameEditting(text,currentUser,database,"set")) {
@@ -125,7 +125,7 @@ public class StageHandler {
 		case 5:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-				database.pushUser(currentUser);
+				//database.pushUser(currentUser);
        			currentUser.setStage("Main");
        			currentUser.setSubStage(0);
 			}
@@ -136,6 +136,8 @@ public class StageHandler {
 				//log.info("Stage error.");
 			}
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -220,6 +222,8 @@ public class StageHandler {
 			//replymsg= msg);
 		}break;
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 	public String dietPlannerHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -590,6 +594,7 @@ public class StageHandler {
 		}break;
 		}
 
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 
 	}
@@ -782,6 +787,8 @@ public class StageHandler {
 			currentUser.setSubStage(0);
 		}break;
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -921,6 +928,8 @@ public class StageHandler {
 		default:
 			break;
 		}
+
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -993,6 +1002,7 @@ public class StageHandler {
 		}break;
 		default:break;
 		}
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -1001,6 +1011,7 @@ public class StageHandler {
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 	public String userGuideHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -1008,6 +1019,7 @@ public class StageHandler {
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
 
@@ -1103,15 +1115,34 @@ public class StageHandler {
 //		}
 //		return replymsg;
 //	}
-	public void unfollowHandler(Users currentUser){
+	public void unfollowHandler(Users currentUser , SQLDatabaseEngine database){
 		currentUser.setStage("Init");
 		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
 
-	public String followHandler(Users currentUser){
-		String msg = "User data reloaded. Type anything to continue...";
-		currentUser.setStage("Main");
-		currentUser.setSubStage(0);
+	public String followHandler(String replyToken, Event event, Users currentUser , SQLDatabaseEngine database){
+		String msg = "";
+		try{
+			currentUser = database.searchUser(event.getSource().getUserId());
+			if (currentUser.getAge()==0) {
+				currentUser.setStage("Init");
+				currentUser.setSubStage(0);
+				msg = "User data reloaded. Type anything to continue...";
+			}
+			else{
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+				msg = "User data reloaded. Type anything to continue...";
+			}
+		}catch(Exception e){
+			msg = "Welcome!!\nTo start using our Personal Diet services, please follow the instructions below.\n\n"
+					+ "Please first tell us some of your personal information: type anything to continue";
+			currentUser = new Users(event.getSource().getUserId());
+			database.pushUser(currentUser); // push new user  
+		}finally {
+			database.updateUser(currentUser);//update user stage when the stage has been changed
+		}
 		return msg;
 	}
 
