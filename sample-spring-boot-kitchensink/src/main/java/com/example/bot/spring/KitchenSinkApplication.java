@@ -40,6 +40,7 @@ public class KitchenSinkApplication {
     
     public static void main(String[] args) throws IOException {
     	//LineListener listener = new LineListener();
+    	System.out.println("------------- in main --------------");
     	listener.start();
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
