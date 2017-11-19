@@ -248,10 +248,13 @@ public class KitchenSinkController {
 
 
 	
-
-
+	@Autowired
+	LineListener ll;
+	
+	//static boolean newT=false;
 	public KitchenSinkController() {
 		processor = new TextProcessor();
+		ll.start();
 	}
 
 	private TextProcessor processor;
