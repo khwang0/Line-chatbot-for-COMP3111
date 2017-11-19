@@ -42,8 +42,10 @@ import java.net.URI;
 public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
-	private foodInput foodinput = null;
-	private foodinfo food = null;
+	private FoodInput foodInput = null;
+	private FoodInfo foodInfo = null;
+	private MenuReader menuReader = new MenuReader();
+
 	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n",
 								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n",
 								"Q3: You believe in eating what you want but in moderation\n",
@@ -232,7 +234,9 @@ public class StageHandler {
 		case 0:{
 			replymsg="Welcome to Diet Planner!\n"
 					+"Please type the function choice you wish to use as below.\n\n"
-									  +"1 Input daily diet\n"
+									  +"1 Input daily diet by answering the questions\n"
+									  +"2 Input daily diet by menu(formatted plain text)\n"
+									  +"3 Input daily diet by menu(URL of JSON doc)\n"
 									  +"2 Visualize your diet consumption in a specific day\n"
 									  +"3 Design My Diet Plan\n"
 									  +"4 Reminder\n"
@@ -265,14 +269,14 @@ public class StageHandler {
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
 			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 			time = ft.format(date);
-			foodinput = new foodInput(event.getSource().getUserId(),time);
+			foodInput = new FoodInput(event.getSource().getUserId(),time);
 			replymsg= "Please enter the food name: ";
 			currentUser.setSubStage(currentUser.getSubStage()+10);
 		}break;
 		case 11:{
 			healthSearcher.setKeyword(text);
 			if(healthSearcher.search()) {
-				inputChecker.foodAdd(text, foodinput, database);
+				inputChecker.foodAdd(text, foodInput, database);
 				replymsg= "Please enter the amount you intake(in g):";
 				currentUser.setSubStage(currentUser.getSubStage()+1) ;
 				}
@@ -280,7 +284,7 @@ public class StageHandler {
 				replymsg= "Please enter a reasonable name!";
 		}break;
 		case 12:{
-			if(inputChecker.amountAdd(text, foodinput, database)) {
+			if(inputChecker.amountAdd(text, foodInput, database)) {
 				replymsg= "Please enter the price it roughly costs:";
 				currentUser.setSubStage(currentUser.getSubStage()+1) ;
 				}
@@ -288,8 +292,8 @@ public class StageHandler {
 				replymsg= "Please enter a reasonable number!";
 		}break;
 		case 13:{
-			if(inputChecker.priceAdd(text, foodinput, database)) {
-				inputChecker.consumptionUpdate(healthSearcher,database,foodinput.getAmount(),event.getSource().getUserId(),time,Float.valueOf(text));
+			if(inputChecker.priceAdd(text, foodInput, database)) {
+				inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Float.valueOf(text));
 				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0) ;
 				}
@@ -469,12 +473,12 @@ public class StageHandler {
 		
 		//subStage6 : insert user-defined data
 		case 6:{
-			food = new foodinfo();
+			foodInfo = new FoodInfo();
 			replymsg= "Please enter the food name: ";
 			currentUser.setSubStage(currentUser.getSubStage()+10);
 		}break;
 		case 16:{			
-			if(inputChecker.foodAdd(text,food,database)) {
+			if(inputChecker.foodAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough energy in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -482,7 +486,7 @@ public class StageHandler {
 		}break;
 		case 17:{
 			
-			if(inputChecker.energyAdd(text,food,database)) {
+			if(inputChecker.energyAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough protein in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
 			}
@@ -490,7 +494,7 @@ public class StageHandler {
 		}break;
 		case 18:{
 			
-			if(inputChecker.proteinAdd(text,food,database)) {
+			if(inputChecker.proteinAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough fiber in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);				
 			}
@@ -500,7 +504,7 @@ public class StageHandler {
 		}break;
 		case 19:{
 			
-			if(inputChecker.fiberAdd(text,food,database)) {
+			if(inputChecker.fiberAdd(text,foodInfo,database)) {
 				replymsg= "Please enter rough price in 100g: ";
 				currentUser.setSubStage(currentUser.getSubStage()+1);	
 			}
@@ -508,7 +512,7 @@ public class StageHandler {
 		}break;
 		case 20:{
 			
-			if(inputChecker.priceAdd(text,food,database)) {
+			if(inputChecker.priceAdd(text,foodInfo,database)) {
 				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
 				currentUser.setSubStage(0);	
 			}

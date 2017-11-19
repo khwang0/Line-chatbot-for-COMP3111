@@ -546,18 +546,18 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
-	boolean pushDietRecord(foodInput foodinput){
+	boolean pushDietRecord(FoodInput foodInput){
 		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
 					"INSERT INTO dietrecord VALUES(?,?,?,?,?,?)");
-			stmt.setString(1,foodinput.getKey());
-			stmt.setString(2,foodinput.getId());
-			stmt.setString(3,foodinput.getFoodName());
-			stmt.setInt(4,foodinput.getAmount());
-			stmt.setString(5,foodinput.getTime());
-			stmt.setDouble(6,foodinput.getPrice());
+			stmt.setString(1,foodInput.getKey());
+			stmt.setString(2,foodInput.getId());
+			stmt.setString(3,foodInput.getFoodName());
+			stmt.setInt(4,foodInput.getAmount());
+			stmt.setString(5,foodInput.getTime());
+			stmt.setDouble(6,foodInput.getPrice());
 			result = stmt.execute();
 			stmt.close();
 			connection.close();
@@ -567,13 +567,13 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;
 	}
-	boolean pushfoodinfo(foodinfo food) {
+	boolean pushFoodInfo(FoodInfo food) {
 		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
 					"INSERT INTO foodinfo VALUES(?,?,?,?,?)");
-			stmt.setString(1,food.getFood());
+			stmt.setString(1,food.getFoodName());
 			stmt.setDouble(2,food.getEnergy());
 			stmt.setDouble(3,food.getProtein());
 			stmt.setDouble(4,food.getFiber());
@@ -587,7 +587,67 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;
 	}
-	
+
+
+	FoodInfo searchFoodInfo(String foodname){
+		//boolean result = false;
+		FoodInfo foodInfo = null;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM foodinfo WHERE foodname=(?)");
+			stmt.setString(1,foodname);
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				foodInfo = new FoodInfo();
+				foodInfo.setFoodName(rs.getString(1));
+				foodInfo.setEnergy(rs.getDouble(2));
+				foodInfo.setProtein(rs.getDouble(3));
+				foodInfo.setFiber(rs.getDouble(4));
+				foodInfo.setPrice(rs.getInt(5));
+			}
+			rs.close();
+			stmt.close();
+			connection.close();			
+			
+
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		finally {
+
+		}
+		return foodInfo;
+	}
+
+
+	String[] getFoodInfo(){
+		ArrayList<String> foodNamesArray = new ArrayList<String>();
+		String[] foodNames;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM foodinfo WHERE foodname=(?)");
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				foodNamesArray.add(rs.getString(1));
+			}
+			rs.close();
+			stmt.close();
+			connection.close();			
+			
+
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		finally {
+
+		}
+		foodNames = foodNamesArray.toArray(new String[0]);
+		return foodNames;
+
+	}
 	
 	
 	

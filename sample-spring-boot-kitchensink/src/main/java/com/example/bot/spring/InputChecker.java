@@ -200,10 +200,10 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	/* added by ZK*/
-	public boolean foodAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+	public boolean foodAdd(String text, FoodInfo food, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
-    		food.setFood(text);
+    		food.setFoodName(text);
     		return true;
     	}
 		else
@@ -212,7 +212,7 @@ public class InputChecker {
 	}
 
 	
-	public boolean energyAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+	public boolean energyAdd(String text, FoodInfo food, SQLDatabaseEngine database) {
 		try {
 		if(ValidCarbs(text)) {
     		food.setEnergy(Float.valueOf(text));
@@ -223,7 +223,7 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}		
 	}
 	
-	public boolean proteinAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+	public boolean proteinAdd(String text, FoodInfo food, SQLDatabaseEngine database) {
 		try {
 			if(ValidCarbs(text)) {
 	    		food.setProtein(Float.valueOf(text));
@@ -234,7 +234,7 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}	
 	}
 	
-	public boolean fiberAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+	public boolean fiberAdd(String text, FoodInfo food, SQLDatabaseEngine database) {
 		try {
 			if(ValidCarbs(text)) {
 	    		food.setFiber(Float.valueOf(text));
@@ -245,11 +245,11 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}	
 	}
 	
-	public boolean priceAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+	public boolean priceAdd(String text, FoodInfo food, SQLDatabaseEngine database) {
 		try {
 			if(ValidCarbs(text)) {
 	    		food.setPrice(Integer.valueOf(text));
-	    		database.pushfoodinfo(food);
+	    		database.pushFoodInfo(food);
 	    		return true;
 	    	}
 			else
@@ -260,10 +260,10 @@ public class InputChecker {
 	
 	
 	
-	public boolean foodAdd(String text, foodInput foodinput, SQLDatabaseEngine database) {
+	public boolean foodAdd(String text, FoodInput foodInput, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
-    		foodinput.setFood(text);
+    		foodInput.setFoodName(text);
     		return true;
     	}
 		else
@@ -276,10 +276,10 @@ public class InputChecker {
 	
 	
 	
-	public boolean amountAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
+	public boolean amountAdd(String text,FoodInput foodInput, SQLDatabaseEngine database) {
 		try {
 		if(ValidAmount(text)) {
-			foodinput.setAmount(Integer.parseInt(text));
+			foodInput.setAmount(Integer.parseInt(text));
     		return true;
     	}
 		else
@@ -287,11 +287,11 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	
-	public boolean priceAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
+	public boolean priceAdd(String text,FoodInput foodInput, SQLDatabaseEngine database) {
 		try {
 		if(ValidAmount(text)) {
-			foodinput.setPrice(Float.valueOf(text));
-			database.pushDietRecord(foodinput);
+			foodInput.setPrice(Float.valueOf(text));
+			database.pushDietRecord(foodInput);
     		return true;
     	}
 		else
