@@ -29,7 +29,11 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -245,13 +249,18 @@ public class KitchenSinkController {
 		tempFile.toFile().deleteOnExit();
 		return new DownloadedContent(tempFile, createUri("/downloaded/" + tempFile.getFileName()));
 	}
-
-
 	
+	@Autowired
+	LineListener ll;
 
 
 	public KitchenSinkController() {
 		processor = new TextProcessor();
+	}
+	
+	@PostConstruct
+	private void startUpListener() {
+		ll.start();
 	}
 
 	private TextProcessor processor;
