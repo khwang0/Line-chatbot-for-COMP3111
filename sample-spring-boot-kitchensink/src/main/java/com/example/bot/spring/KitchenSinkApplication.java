@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
     //@Autowired
-    //static LineListener listener;
+    static LineListener listener;
     
     
     @Autowired
