@@ -297,7 +297,7 @@ public class StageHandler {
 		}break;
 		case 13:{
 			if(inputChecker.priceAdd(text, foodInput, database)) {
-				inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Float.valueOf(text));
+				inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Double.valueOf(text));
 				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0) ;
 				}
@@ -739,13 +739,13 @@ public class StageHandler {
 											+ "3 Edit Weight\n"
 											+ "4 Edit Height\n"
 											+ "5 Edit Bodyfat\n"
-											+ "6 Edit Exercise Amount\n"
-											+ "7 Edit Calories Consumption\n"
-											+ "8 Edit Carbohydrate Consumption\n"
-											+ "9 Edit Protein Consumption\n"
-											+ "10 Edit Vegtable/Fruit Consumption \n"
-											+ "11 Edit Other Information about you\n"
-											+ "12 Show all your states \n"
+											// + "6 Edit Exercise Amount\n"
+											// + "7 Edit Calories Consumption\n"
+											// + "8 Edit Carbohydrate Consumption\n"
+											// + "9 Edit Protein Consumption\n"
+											// + "10 Edit Vegtable/Fruit Consumption \n"
+											// + "11 Edit Other Information about you\n"
+											+ "6 Show all your states \n"
 											+ "(type other things to back to menu)";
 			currentUser.setSubStage(-1);
 		}break;
@@ -790,31 +790,31 @@ public class StageHandler {
 			replymsg="Please enter the bodyfat(%) you wish to change to:";
 			currentUser.setSubStage(currentUser.getSubStage()+20) ;
 		}break;
+		// case 6:{
+		// 	replymsg="Please enter the hours of excercise per day you wish to change:";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+20) ;
+		// }break;
+		// case 7:{
+		// 	replymsg="Please enter the calories consumption(kcal) per day you wish to change to:";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+20) ;
+		// }break;
+		// case 8:{
+		// 	replymsg="Please enter the carbohydrates consumption(g) per day you wish to change to:";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+20) ;
+		// }break;
+		// case 9:{
+		// 	replymsg="Please enter the protein consumption(g) per day you wish to change to:";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+20) ;
+		// }break;
+		// case 10:{
+		// 	replymsg="Please enter the veg/fruit consumption(servings) per day you wish to change to:";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+20) ;
+		// }break;
+		// case 11:{
+		// 	replymsg="Please enter other information about yourself that you wish to change to:";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+20) ;
+		// }break;
 		case 6:{
-			replymsg="Please enter the hours of excercise per day you wish to change:";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
-		}break;
-		case 7:{
-			replymsg="Please enter the calories consumption(kcal) per day you wish to change to:";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
-		}break;
-		case 8:{
-			replymsg="Please enter the carbohydrates consumption(g) per day you wish to change to:";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
-		}break;
-		case 9:{
-			replymsg="Please enter the protein consumption(g) per day you wish to change to:";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
-		}break;
-		case 10:{
-			replymsg="Please enter the veg/fruit consumption(servings) per day you wish to change to:";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
-		}break;
-		case 11:{
-			replymsg="Please enter other information about yourself that you wish to change to:";
-			currentUser.setSubStage(currentUser.getSubStage()+20) ;
-		}break;
-		case 12:{
 			replymsg="These are all about your body:\n\n" 	+ currentUser.toString()+"\nType any to continue.";
 			currentUser.setSubStage(0);
 		}break;
@@ -858,54 +858,54 @@ public class StageHandler {
 			else
 				replymsg="Please enter reasonable numbers!";
 		}break;
-		case 26:{
-			if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
-	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		currentUser.setSubStage(0);
-        		}
-			else
-				replymsg="Please enter reasonable numbers!";
-		}break;
-		case 27:{
-			if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
-	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		currentUser.setSubStage(0);
-        		}
-			else
-				replymsg="Please enter reasonable numbers!";
-		}break;
-		case 28:{
-			if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
-	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		currentUser.setSubStage(0);
-        		}
-			else
-				replymsg="Please enter reasonable numbers!";
-		}break;
-		case 29:{
-			if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
-	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		currentUser.setSubStage(0);
-        		}
-			else
-				replymsg="Please enter reasonable numbers!";
-		}break;
-		case 30:{
-			if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
-	       		replymsg="Your data has been recorded.\nInput anything to conitnue.";
-	       		currentUser.setSubStage(0);
-        		}
-			else
-				replymsg="Please enter reasonable numbers!";
-		}break;
-		case 31:{
-			if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
-       			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-       			currentUser.setSubStage(0);
-			}
-			else
-				replymsg="Please enter some with characters less then 1000!";
-		}break;
+		// case 26:{
+		// 	if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
+	    //    		replymsg="Your data has been recorded.\nInput anything to conitnue.";
+	    //    		currentUser.setSubStage(0);
+        // 		}
+		// 	else
+		// 		replymsg="Please enter reasonable numbers!";
+		// }break;
+		// case 27:{
+		// 	if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
+	    //    		replymsg="Your data has been recorded.\nInput anything to conitnue.";
+	    //    		currentUser.setSubStage(0);
+        // 		}
+		// 	else
+		// 		replymsg="Please enter reasonable numbers!";
+		// }break;
+		// case 28:{
+		// 	if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
+	    //    		replymsg="Your data has been recorded.\nInput anything to conitnue.";
+	    //    		currentUser.setSubStage(0);
+        // 		}
+		// 	else
+		// 		replymsg="Please enter reasonable numbers!";
+		// }break;
+		// case 29:{
+		// 	if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
+	    //    		replymsg="Your data has been recorded.\nInput anything to conitnue.";
+	    //    		currentUser.setSubStage(0);
+        // 		}
+		// 	else
+		// 		replymsg="Please enter reasonable numbers!";
+		// }break;
+		// case 30:{
+		// 	if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
+	    //    		replymsg="Your data has been recorded.\nInput anything to conitnue.";
+	    //    		currentUser.setSubStage(0);
+        // 		}
+		// 	else
+		// 		replymsg="Please enter reasonable numbers!";
+		// }break;
+		// case 31:{
+		// 	if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
+       	// 		replymsg="Your data has been recorded.\nInput anything to conitnue.";
+       	// 		currentUser.setSubStage(0);
+		// 	}
+		// 	else
+		// 		replymsg="Please enter some with characters less then 1000!";
+		// }break;
 		default:{
 			replymsg="Some problem occurs.Type any key to return to main menu.";
 			//log.info("Stage Error!!");
@@ -918,7 +918,6 @@ public class StageHandler {
 		return replymsg;
 	}
 
-
 	public String livingHabitCollectorHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()){
@@ -929,127 +928,130 @@ public class StageHandler {
 		}break;
 		case 1:{
 			if(inputChecker.BodyfatEditting(text, currentUser, database, "update")) {
-        		replymsg = "Please tell us your average daily calories consumption(in kcal):";
-        		currentUser.setSubStage(currentUser.getSubStage()+1);
-        		}
-			else
-				replymsg = "Please enter reasonable numbers!";
-
-		}break;
-		case 2:{
-			if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
-        		replymsg = "Please tell us your average daily carbohydrates consumption(roughly in g):";
-        		currentUser.setSubStage(currentUser.getSubStage()+1);
-        		}
-			else
-				replymsg = "Please enter reasonable numbers!";
-		}break;
-		case 3:{
-			if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
-        			replymsg = "Please tell us your average daily protein consumption(roughly in g):";
-        			currentUser.setSubStage(currentUser.getSubStage()+1);
-        			}
-				else {
-					replymsg = "Please enter reasonable numbers!";
-				}
-		}break;
-		case 4:{
-			if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
-        			replymsg = "Please tell us your average daily vegetable/fruit consumption(in serving):";
-        			currentUser.setSubStage(currentUser.getSubStage()+1);
-        			}
-				else {
-					replymsg = "Please enter reasonable numbers!";
-				}
-		}break;
-		case 5:{
-			if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
-        			replymsg = "Do you eat breakfast?(y/n)";
-        			currentUser.setSubStage(currentUser.getSubStage()+1);
-        			}
-				else {
-					replymsg = "Please enter reasonable numbers!";
-				}
-		}break;
-		case 6:{
-			boolean input = false;
-			if (text.charAt(0)=='y' || text.charAt(0)=='Y') input = true;
-			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat breakfast?(y/n)"; return replymsg;}
-
-			(currentUser).setEatingHabits(input,0);
-			replymsg = "Do you eat lunch?(y/n)";
-			currentUser.setSubStage(currentUser.getSubStage()+1);
-		}break;
-		case 7:{
-			boolean input = false;
-			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
-			else if( text.charAt(0)=='n'|| text.charAt(0)=='n') input = false;
-			else { replymsg = "Do you eat lunch?(y/n)"; return replymsg;}
-
-			(currentUser).setEatingHabits(input,1);
-			replymsg = "Do you eat afternoon tea?(y/n)";
-			currentUser.setSubStage(currentUser.getSubStage()+1);
-		}break;
-		case 8:{
-			boolean input = false;
-			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
-			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat afternoon tea?(y/n)"; return replymsg;}
-
-			(currentUser).setEatingHabits(input,2);
-			replymsg = "Do you eat dinner?(y/n)";
-			currentUser.setSubStage(currentUser.getSubStage()+1);
-		}break;
-		case 9:{
-			boolean input = false;
-			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
-			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat dinner?(y/n)"; return replymsg;}
-
-			(currentUser).setEatingHabits(input,3);
-			replymsg = "Do you eat midnight snacks?(y/n)";
-			currentUser.setSubStage(currentUser.getSubStage()+1);
-		}break;
-		case 10:{
-			boolean input = false;
-			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
-			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat midnight snacks?(y/n)"; return replymsg;}
-
-			(currentUser).setEatingHabits(input,4);
-			replymsg = "Do you eat any extra meals?(y/n)";
-			currentUser.setSubStage(currentUser.getSubStage()+1);
-		}break;
-		case 11:{
-			boolean input = false;
-			if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
-			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
-			else { replymsg = "Do you eat any extra meals?(y/n)"; return replymsg;}
-
-			(currentUser).setEatingHabits(input,5);
-			replymsg = "How many hours per day do you exercise in a weekly average?";
-			currentUser.setSubStage(currentUser.getSubStage()+1);
-		}break;
-		case 12:{
-			if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
-				replymsg = "Any other infomation about your body you wish to let us know?(in 1000 characters)";
-				currentUser.setSubStage(currentUser.getSubStage()+1);
-        		}
-			else
-				replymsg = "Please enter reasonable numbers!";
-
-		}break;
-		case 13:{
-			if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
 				replymsg = "All set and recorded. Type anything to return to main menu.";
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
 				database.updateUser(currentUser);
-			}
+        		}
 			else
-				replymsg = "Please enter something in 1000 characters!!";
+				replymsg = "Please enter reasonable numbers!";
+				
 		}break;
+		// }break;
+		// case 2:{
+		// 	if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
+        // 		replymsg = "Please tell us your average daily carbohydrates consumption(roughly in g):";
+        // 		currentUser.setSubStage(currentUser.getSubStage()+1);
+        // 		}
+		// 	else
+		// 		replymsg = "Please enter reasonable numbers!";
+		// }break;
+		// case 3:{
+		// 	if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
+        // 			replymsg = "Please tell us your average daily protein consumption(roughly in g):";
+        // 			currentUser.setSubStage(currentUser.getSubStage()+1);
+        // 			}
+		// 		else {
+		// 			replymsg = "Please enter reasonable numbers!";
+		// 		}
+		// }break;
+		// case 4:{
+		// 	if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
+        // 			replymsg = "Please tell us your average daily vegetable/fruit consumption(in serving):";
+        // 			currentUser.setSubStage(currentUser.getSubStage()+1);
+        // 			}
+		// 		else {
+		// 			replymsg = "Please enter reasonable numbers!";
+		// 		}
+		// }break;
+		// case 5:{
+		// 	if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
+        // 			replymsg = "Do you eat breakfast?(y/n)";
+        // 			currentUser.setSubStage(currentUser.getSubStage()+1);
+        // 			}
+		// 		else {
+		// 			replymsg = "Please enter reasonable numbers!";
+		// 		}
+		// }break;
+		// case 6:{
+		// 	boolean input = false;
+		// 	if (text.charAt(0)=='y' || text.charAt(0)=='Y') input = true;
+		// 	else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
+		// 	else { replymsg = "Do you eat breakfast?(y/n)"; return replymsg;}
+        //
+		// 	(currentUser).setEatingHabits(input,0);
+		// 	replymsg = "Do you eat lunch?(y/n)";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+1);
+		// }break;
+		// case 7:{
+		// 	boolean input = false;
+		// 	if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
+		// 	else if( text.charAt(0)=='n'|| text.charAt(0)=='n') input = false;
+		// 	else { replymsg = "Do you eat lunch?(y/n)"; return replymsg;}
+        //
+		// 	(currentUser).setEatingHabits(input,1);
+		// 	replymsg = "Do you eat afternoon tea?(y/n)";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+1);
+		// }break;
+		// case 8:{
+		// 	boolean input = false;
+		// 	if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
+		// 	else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
+		// 	else { replymsg = "Do you eat afternoon tea?(y/n)"; return replymsg;}
+        //
+		// 	(currentUser).setEatingHabits(input,2);
+		// 	replymsg = "Do you eat dinner?(y/n)";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+1);
+		// }break;
+		// case 9:{
+		// 	boolean input = false;
+		// 	if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
+		// 	else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
+		// 	else { replymsg = "Do you eat dinner?(y/n)"; return replymsg;}
+        //
+		// 	(currentUser).setEatingHabits(input,3);
+		// 	replymsg = "Do you eat midnight snacks?(y/n)";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+1);
+		// }break;
+		// case 10:{
+		// 	boolean input = false;
+		// 	if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
+		// 	else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
+		// 	else { replymsg = "Do you eat midnight snacks?(y/n)"; return replymsg;}
+        //
+		// 	(currentUser).setEatingHabits(input,4);
+		// 	replymsg = "Do you eat any extra meals?(y/n)";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+1);
+		// }break;
+		// case 11:{
+		// 	boolean input = false;
+		// 	if (text.charAt(0)=='y' ||  text.charAt(0)=='Y') input = true;
+		// 	else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
+		// 	else { replymsg = "Do you eat any extra meals?(y/n)"; return replymsg;}
+        //
+		// 	(currentUser).setEatingHabits(input,5);
+		// 	replymsg = "How many hours per day do you exercise in a weekly average?";
+		// 	currentUser.setSubStage(currentUser.getSubStage()+1);
+		// }break;
+		// case 12:{
+		// 	if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
+		// 		replymsg = "Any other infomation about your body you wish to let us know?(in 1000 characters)";
+		// 		currentUser.setSubStage(currentUser.getSubStage()+1);
+        // 		}
+		// 	else
+		// 		replymsg = "Please enter reasonable numbers!";
+        //
+		// }break;
+		// case 13:{
+		// 	if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
+		// 		replymsg = "All set and recorded. Type anything to return to main menu.";
+		// 		currentUser.setStage("Main");//back to main
+		// 		currentUser.setSubStage(0);
+		// 		database.updateUser(currentUser);
+		// 	}
+		// 	else
+		// 		replymsg = "Please enter something in 1000 characters!!";
+		// }break;
 
 		default:
 			break;
