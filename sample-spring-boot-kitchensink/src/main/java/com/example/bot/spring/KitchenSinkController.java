@@ -29,6 +29,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
@@ -257,9 +259,13 @@ public class KitchenSinkController {
 
 
 	public KitchenSinkController() {
+		processor = new TextProcessor();
+	}
+	
+	@PostConstruct
+	private void startUpListener() {
         LineListener ll = applicationContext.getBean(LineListener.class);
         taskExecutor.execute(ll);
-		processor = new TextProcessor();
 	}
 
 	private TextProcessor processor;
