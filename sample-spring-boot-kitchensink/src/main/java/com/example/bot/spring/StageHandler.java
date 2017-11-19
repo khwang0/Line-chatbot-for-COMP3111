@@ -43,6 +43,7 @@ public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
 	private foodInput foodinput = null;
+	private foodinfo food = null;
 	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n",
 								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n",
 								"Q3: You believe in eating what you want but in moderation\n",
@@ -124,7 +125,7 @@ public class StageHandler {
 		case 5:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-				database.updateUser(currentUser);
+				database.pushUser(currentUser);
        			currentUser.setStage("Main");
        			currentUser.setSubStage(0);
 			}
@@ -142,7 +143,7 @@ public class StageHandler {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
-			if(! (currentUser instanceof DetailedUser)) {
+			if(currentUser.getBodyFat()==0) {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 				+ "We provide serveral functions for you to keep your fitness."
 				+ "Please type the number of function you wish to use. :)\n\n"
@@ -176,7 +177,7 @@ public class StageHandler {
 				replymsg = "Wellcome to Living Habit Collector! You can edit or input more detailed information"
 						+ "about yourself. This can help us make a more precise suggestion for you!\n"
 						+ "please follow the instructions below (type any to continue)";
-				if(!(currentUser instanceof DetailedUser)) {
+				if(currentUser.getBodyFat()==0) {
 					currentUser.setStage("LivingHabitCollector");
 					currentUser.setSubStage(0);
 				}else {
@@ -232,13 +233,14 @@ public class StageHandler {
 									  +"3 Design My Diet Plan\n"
 									  +"4 Reminder\n"
 									  +"5 Self-Assessment\n"
+									  +"6 Insert user-defined food\n"
 									  +"(type other things to back to menu)";
 			currentUser.setSubStage(-1);
 		}break;
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 5) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 6) {
 					replymsg= REDIRECT;
 				}
 				else {
@@ -275,13 +277,21 @@ public class StageHandler {
 		}break;
 		case 12:{
 			if(inputChecker.amountAdd(text, foodinput, database)) {
-				inputChecker.consumptionUpdate(healthSearcher,database,Integer.parseInt(text),event.getSource().getUserId(),time);
-				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-				currentUser.setSubStage(0) ;
+				replymsg= "Please enter the price it roughly costs:";
+				currentUser.setSubStage(currentUser.getSubStage()+1) ;
 				}
 			else
 				replymsg= "Please enter a reasonable number!";
 		}break;
+		case 13:{
+			if(inputChecker.priceAdd(text, foodinput, database)) {
+				inputChecker.consumptionUpdate(healthSearcher,database,foodinput.getAmount(),event.getSource().getUserId(),time,Float.valueOf(text));
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+				currentUser.setSubStage(0) ;
+				}
+			else
+				replymsg= "Please enter a reasonable number!";				
+		}break;	
 		case 2:{
 			replymsg= "Please enter the date(yyyymmdd): ";
 			currentUser.setSubStage(currentUser.getSubStage()+20) ;
@@ -438,12 +448,63 @@ public class StageHandler {
 		//subStage5: self Assessment;
 		case 5:{
 			suggestion = "";
-			((DetailedUser)currentUser).setAssessmentScore(0);
+			(currentUser).setAssessmentScore(0);
 			replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 					+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
 					+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
 			currentUser.setSubStage(-2);
 		}break;
+		
+		
+		
+		//subStage6 : insert user-defined data
+		case 6:{
+			food = new foodinfo();
+			replymsg= "Please enter the food name: ";
+			currentUser.setSubStage(currentUser.getSubStage()+10);
+		}break;
+		case 16:{			
+			if(inputChecker.foodAdd(text,food,database)) {
+				replymsg= "Please enter rough energy in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else replymsg= "Please enter valid food name: ";
+		}break;
+		case 17:{
+			
+			if(inputChecker.energyAdd(text,food,database)) {
+				replymsg= "Please enter rough protein in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else replymsg= "Please enter valid number: ";
+		}break;
+		case 18:{
+			
+			if(inputChecker.proteinAdd(text,food,database)) {
+				replymsg= "Please enter rough fiber in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);				
+			}
+			else replymsg= "Please enter valid number: ";
+			
+			
+		}break;
+		case 19:{
+			
+			if(inputChecker.fiberAdd(text,food,database)) {
+				replymsg= "Please enter rough price in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);	
+			}
+			else replymsg= "Please enter valid number: ";	
+		}break;
+		case 20:{
+			
+			if(inputChecker.priceAdd(text,food,database)) {
+				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				currentUser.setSubStage(0);	
+			}
+			else replymsg= "Please enter valid number: ";
+						
+		}break;	
 		case -2:{
 			if(text.equalsIgnoreCase("q")) {
 				currentUser.setStage("Main");
@@ -457,7 +518,7 @@ public class StageHandler {
 				currentUser.setSubStage(501);
 		}break;
 		case 511:{
-			int score = ((DetailedUser)currentUser).getAssessmentScore();
+			int score = (currentUser).getAssessmentScore();
 			if(score >= 90) {
 				replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
 						+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
@@ -496,7 +557,7 @@ public class StageHandler {
 
 		default:{
 			if(text.equalsIgnoreCase("T")) {
-				((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+				(currentUser).setAssessmentScore((currentUser).getAssessmentScore()+10);
 				suggestion = suggestion + feedback[currentUser.getSubStage()-501][1];
 			}
 			else if(text.equalsIgnoreCase("F")){
@@ -562,12 +623,14 @@ public class StageHandler {
 					//updata db
 					currentUser.setStage("Main");//back to main
 					currentUser.setSubStage(0);
+					database.updateUser(currentUser);
 				}
 			}catch(Exception e) {
 				replymsg="All changed recorded. Type anything to return to main menu.";
 				//update db
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
+				database.updateUser(currentUser);
 			}
 		}break;
 		case 1:{
@@ -726,7 +789,7 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 1:{
-			if(inputChecker.BodyfatEditting(text, currentUser, database, "set")) {
+			if(inputChecker.BodyfatEditting(text, currentUser, database, "update")) {
         		replymsg = "Please tell us your average daily calories consumption(in kcal):";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -735,7 +798,7 @@ public class StageHandler {
 
 		}break;
 		case 2:{
-			if(inputChecker.CaloriesEditting(text, currentUser, database, "set")) {
+			if(inputChecker.CaloriesEditting(text, currentUser, database, "update")) {
         		replymsg = "Please tell us your average daily carbohydrates consumption(roughly in g):";
         		currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -743,7 +806,7 @@ public class StageHandler {
 				replymsg = "Please enter reasonable numbers!";
 		}break;
 		case 3:{
-			if(inputChecker.CarbsEditting(text, currentUser, database, "set")) {
+			if(inputChecker.CarbsEditting(text, currentUser, database, "update")) {
         			replymsg = "Please tell us your average daily protein consumption(roughly in g):";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -752,7 +815,7 @@ public class StageHandler {
 				}
 		}break;
 		case 4:{
-			if(inputChecker.ProteinEditting(text, currentUser, database, "set")) {
+			if(inputChecker.ProteinEditting(text, currentUser, database, "update")) {
         			replymsg = "Please tell us your average daily vegetable/fruit consumption(in serving):";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -761,7 +824,7 @@ public class StageHandler {
 				}
 		}break;
 		case 5:{
-			if(inputChecker.VegfruitEditting(text, currentUser, database, "set")) {
+			if(inputChecker.VegfruitEditting(text, currentUser, database, "update")) {
         			replymsg = "Do you eat breakfast?(y/n)";
         			currentUser.setSubStage(currentUser.getSubStage()+1);
         			}
@@ -775,7 +838,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat breakfast?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,0);
+			(currentUser).setEatingHabits(input,0);
 			replymsg = "Do you eat lunch?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -785,7 +848,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='n') input = false;
 			else { replymsg = "Do you eat lunch?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,1);
+			(currentUser).setEatingHabits(input,1);
 			replymsg = "Do you eat afternoon tea?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -795,7 +858,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat afternoon tea?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,2);
+			(currentUser).setEatingHabits(input,2);
 			replymsg = "Do you eat dinner?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -805,7 +868,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat dinner?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,3);
+			(currentUser).setEatingHabits(input,3);
 			replymsg = "Do you eat midnight snacks?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -815,7 +878,7 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat midnight snacks?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,4);
+			(currentUser).setEatingHabits(input,4);
 			replymsg = "Do you eat any extra meals?(y/n)";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -825,12 +888,12 @@ public class StageHandler {
 			else if( text.charAt(0)=='n'|| text.charAt(0)=='N') input = false;
 			else { replymsg = "Do you eat any extra meals?(y/n)"; return replymsg;}
 
-			((DetailedUser)currentUser).setEatingHabits(input,5);
+			(currentUser).setEatingHabits(input,5);
 			replymsg = "How many hours per day do you exercise in a weekly average?";
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 12:{
-			if(inputChecker.ExerciseEditting(text, currentUser, database, "set")) {
+			if(inputChecker.ExerciseEditting(text, currentUser, database, "update")) {
 				replymsg = "Any other infomation about your body you wish to let us know?(in 1000 characters)";
 				currentUser.setSubStage(currentUser.getSubStage()+1);
         		}
@@ -839,11 +902,11 @@ public class StageHandler {
 
 		}break;
 		case 13:{
-			if(inputChecker.OtherinfoEditting(text, currentUser, database, "set")) {
+			if(inputChecker.OtherinfoEditting(text, currentUser, database, "update")) {
 				replymsg = "All set and recorded. Type anything to return to main menu.";
-				database.pushUser(currentUser);
 				currentUser.setStage("Main");//back to main
 				currentUser.setSubStage(0);
+				database.updateUser(currentUser);
 			}
 			else
 				replymsg = "Please enter something in 1000 characters!!";
@@ -948,7 +1011,7 @@ public class StageHandler {
 //		switch (currentUser.getSubStage()) {
 //			case 0:{
 //				suggestion = "";
-//				((DetailedUser)currentUser).setAssessmentScore(0);
+//				(currentUser).setAssessmentScore(0);
 //				replymsg = replymsg + "This quiz will reveal about the your eating habits by answering 10 true or false questions. "
 //						+ "\nPlease reply 'T' as ture and 'F' as false according your eating habits."
 //						+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
@@ -967,7 +1030,7 @@ public class StageHandler {
 //					currentUser.setSubStage(1);
 //			}break;
 //			case 11:{
-//				int score = ((DetailedUser)currentUser).getAssessmentScore();
+//				int score = (currentUser).getAssessmentScore();
 //				if(score >= 90) {
 //					replymsg = replymsg + "The healthy level of your eating habit is: A \n Congratulations! "
 //							+ "You have achieve a deep understanding about the healthy diet and attach great importance to it.";
@@ -1005,7 +1068,7 @@ public class StageHandler {
 //			}break;
 //			default:{
 //				if(text.equalsIgnoreCase("T")) {
-//					((DetailedUser)currentUser).setAssessmentScore(((DetailedUser)currentUser).getAssessmentScore()+10);
+//					(currentUser).setAssessmentScore((currentUser).getAssessmentScore()+10);
 //					suggestion = suggestion + feedback[currentUser.getSubStage()-1][1];
 //				}
 //				else if(text.equalsIgnoreCase("F")){

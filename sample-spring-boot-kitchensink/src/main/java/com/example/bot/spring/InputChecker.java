@@ -117,7 +117,7 @@ public class InputChecker {
 	public boolean BodyfatEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidBodyfat(text)) {
-				((DetailedUser)currentUser).setBodyFat(Double.parseDouble(text)); 
+				(currentUser).setBodyFat(Double.parseDouble(text)); 
 				ModeSwitcher(currentUser, database, mode);
 				return true;
 				}
@@ -129,7 +129,7 @@ public class InputChecker {
 	public boolean ExerciseEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidExercise(text)) {
-				((DetailedUser)currentUser).setExercise(Integer.parseInt(text)); 
+				(currentUser).setExercise(Integer.parseInt(text)); 
 				ModeSwitcher(currentUser, database, mode);
 				return true;
 				}
@@ -141,7 +141,7 @@ public class InputChecker {
 	public boolean CaloriesEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidCalories(text)) {
-				((DetailedUser)currentUser).setCalories(Integer.parseInt(text)); 
+				(currentUser).setCalories(Integer.parseInt(text)); 
 				ModeSwitcher(currentUser, database, mode);
 				return true;
 				}
@@ -153,7 +153,7 @@ public class InputChecker {
 	public boolean CarbsEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidCarbs(text)) {
-				((DetailedUser)currentUser).setCarbs(Double.parseDouble(text)); 
+				(currentUser).setCarbs(Double.parseDouble(text)); 
 				ModeSwitcher(currentUser, database, mode);
 				return true;
 				}
@@ -165,7 +165,7 @@ public class InputChecker {
 	public boolean ProteinEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidProtein(text)) {
-				((DetailedUser)currentUser).setProtein(Double.parseDouble(text)); 
+				(currentUser).setProtein(Double.parseDouble(text)); 
 				ModeSwitcher(currentUser, database, mode);
 				return true;
 				}
@@ -177,7 +177,7 @@ public class InputChecker {
 	public boolean VegfruitEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 			if( ValidVegfruit(text)) {
-				((DetailedUser)currentUser).setVegfruit(Double.parseDouble(text)); 
+				(currentUser).setVegfruit(Double.parseDouble(text)); 
 				ModeSwitcher(currentUser, database, mode);
 				return true;
 				}
@@ -192,7 +192,7 @@ public class InputChecker {
 	public boolean OtherinfoEditting(String text, Users currentUser, SQLDatabaseEngine database, String mode) {
 		try {
 		if(ValidOtherinfo(text)) {
-    		((DetailedUser)currentUser).setOtherInfo(text);
+    		(currentUser).setOtherInfo(text);
     		return true;
     	}
 		else
@@ -200,6 +200,66 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	/* added by ZK*/
+	public boolean foodAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+		if(ValidOtherinfo(text)) {
+    		food.setFood(text);
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+
+	
+	public boolean energyAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+		if(ValidCarbs(text)) {
+    		food.setEnergy(Float.valueOf(text));
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}		
+	}
+	
+	public boolean proteinAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+			if(ValidCarbs(text)) {
+	    		food.setProtein(Float.valueOf(text));
+	    		return true;
+	    	}
+			else
+				return false;
+		}catch(NumberFormatException ne){return false;}	
+	}
+	
+	public boolean fiberAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+			if(ValidCarbs(text)) {
+	    		food.setFiber(Float.valueOf(text));
+	    		return true;
+	    	}
+			else
+				return false;
+		}catch(NumberFormatException ne){return false;}	
+	}
+	
+	public boolean priceAdd(String text, foodinfo food, SQLDatabaseEngine database) {
+		try {
+			if(ValidCarbs(text)) {
+	    		food.setPrice(Integer.valueOf(text));
+	    		database.pushfoodinfo(food);
+	    		return true;
+	    	}
+			else
+				return false;
+		}catch(NumberFormatException ne){return false;}	
+	}
+	
+	
+	
+	
 	public boolean foodAdd(String text, foodInput foodinput, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
@@ -211,10 +271,26 @@ public class InputChecker {
 		}catch(NumberFormatException ne){return false;}
 	}
 	
+
+	
+	
+	
+	
 	public boolean amountAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
 		try {
 		if(ValidAmount(text)) {
 			foodinput.setAmount(Integer.parseInt(text));
+    		return true;
+    	}
+		else
+			return false;
+		}catch(NumberFormatException ne){return false;}
+	}
+	
+	public boolean priceAdd(String text,foodInput foodinput, SQLDatabaseEngine database) {
+		try {
+		if(ValidAmount(text)) {
+			foodinput.setPrice(Float.valueOf(text));
 			database.pushDietRecord(foodinput);
     		return true;
     	}
@@ -222,6 +298,10 @@ public class InputChecker {
 			return false;
 		}catch(NumberFormatException ne){return false;}
 	}
+	
+	
+	
+	
 	public boolean dateCheck(String text) {
 		try {
 			if(ValidDate(text)) {
@@ -234,8 +314,7 @@ public class InputChecker {
 	public String dietsearch(String text, SQLDatabaseEngine database, String id ) {
 		return database.reportDiet(text,id);
 	}
-	public void consumptionUpdate(HealthSearch healthSearcher,SQLDatabaseEngine database,int amount,String id,String time) {
-		database.updateconsumption(healthSearcher,amount,id,time);
-		
+	public void consumptionUpdate(HealthSearch healthSearcher,SQLDatabaseEngine database,int amount,String id,String time,float price) {
+		database.updateconsumption(healthSearcher,amount,id,time,price);	
 	}
 }
