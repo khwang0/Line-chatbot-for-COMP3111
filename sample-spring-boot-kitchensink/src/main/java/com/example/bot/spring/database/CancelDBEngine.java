@@ -16,7 +16,8 @@ public class CancelDBEngine extends DBEngine {
 		return CDB.getAllUnconfirmedTours(false);
 	}
 	public Set<String> getAllContactors(String booktableid){
-		return CDB.getAllContactors(booktableid);
+		boolean paid = true;
+		return CDB.getAllContactors(booktableid, paid);
 	}
 	public void updateCanceledTours(String booktableid) throws Exception{	
 		PreparedStatement stmt;	

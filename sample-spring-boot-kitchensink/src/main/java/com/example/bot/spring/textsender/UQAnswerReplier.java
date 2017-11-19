@@ -39,8 +39,18 @@ public class UQAnswerReplier implements Broadcaster{
 			userID=temp[0];
 			question=temp[1];
 			answer=temp[2];
+			
+			// testing 
+			System.out.println("--------- userid: " + userID);
+			System.out.println("--------- question: " + question);
+			System.out.println("--------- answer" + answer);
+			
+			// end testing			
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
-			lineMessagingClient.pushMessage(new PushMessage(userID, message));
+			
+			//lineMessagingClient.pushMessage(new PushMessage(userID, message));
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(userID, message)).get();
+			//System.out.println("Sent messages: {}", apiResponse);
 		}
 	}
 }
