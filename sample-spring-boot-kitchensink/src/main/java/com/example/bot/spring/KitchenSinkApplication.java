@@ -34,6 +34,7 @@ public class KitchenSinkApplication {
     
     @Autowired
     public void setLineListener(LineListener listener) {
+    	System.out.println("------------- trying to find linelistener --------------");
     	KitchenSinkApplication.listener = listener;
     }
     
