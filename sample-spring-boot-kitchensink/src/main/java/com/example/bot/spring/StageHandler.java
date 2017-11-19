@@ -125,7 +125,7 @@ public class StageHandler {
 		case 5:{
 			if(inputChecker.AgeEditting(text, currentUser, database, "set")) {
        			replymsg="Your data has been recorded.\nInput anything to conitnue.";
-				database.pushUser(currentUser);
+				//database.pushUser(currentUser);
        			currentUser.setStage("Main");
        			currentUser.setSubStage(0);
 			}
@@ -1121,11 +1121,28 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
 
-	public String followHandler(Users currentUser , SQLDatabaseEngine database){
-		String msg = "User data reloaded. Type anything to continue...";
-		currentUser.setStage("Main");
-		currentUser.setSubStage(0);
-		database.updateUser(currentUser);//update user stage when the stage has been changed
+	public String followHandler(String replyToken, Event event, Users currentUser , SQLDatabaseEngine database){
+		String msg = "";
+		try{
+			currentUser = database.searchUser(event.getSource().getUserId());
+			if (currentUser.getAge()==0) {
+				currentUser.setStage("Init");
+				currentUser.setSubStage(0);
+			}
+			else{
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+			}
+			msg = "User data reloaded. Type anything to continue...";
+		}catch(Exception e){
+			msg = "Welcome!!\nTo start using our services, please follow the instructions below.\n\n"
+					+ "Create Personal Diet Tracker: type \'1\'\n\n"
+					+ "Say goodbye to me: type any\n";
+			currentUser = new Users(event.getSource().getUserId());
+			database.pushUser(currentUser); // push new user  
+		}finally {
+			database.updateUser(currentUser);//update user stage when the stage has been changed
+		}
 		return msg;
 	}
 
