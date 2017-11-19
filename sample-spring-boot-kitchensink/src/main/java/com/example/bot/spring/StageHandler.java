@@ -224,8 +224,8 @@ public class StageHandler {
 			case "code" :{
 				if(CouponWarehouse.isCampaignStarted()){
 					//if(currentUser.registerTime after compaign starting time)
-					if(CouponWarehouse.getInstance().isCouponRemaining() &&
-						CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+					if(CouponWarehouse.getInstance().isCouponRemaining() ){
+					   //&&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
 						//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
 						replymsg = "Please input your invitation code:";
 
