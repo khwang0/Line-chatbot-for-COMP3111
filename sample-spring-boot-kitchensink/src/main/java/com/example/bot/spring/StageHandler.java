@@ -243,7 +243,7 @@ public class StageHandler {
 				}
 			}break;
 			case "6" :{
-				if(CouponWarehouse.isCampaignStarted()){
+				if(!CouponWarehouse.isCampaignStarted()){
 					MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
 					replymsg = replyinfo.getMsg();
 				}
