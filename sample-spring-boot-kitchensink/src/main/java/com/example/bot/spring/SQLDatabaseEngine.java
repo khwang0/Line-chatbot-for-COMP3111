@@ -195,62 +195,81 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 		try {
 			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
-			//String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
 			String gender =Character.toString(currentUser.getGender());
 			
 			if(search_intake_reference(gender,currentUser.getAge())) {
+				ArrayList<Double> plan = new ArrayList<Double>();
 				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age <= ? AND max_age >= ?" );
-				
 				ref.setString(1, gender);
 				ref.setInt(2, currentUser.getAge());
 				ref.setInt(3, currentUser.getAge());
 				ResultSet result = ref.executeQuery();
-				ref.close();
+				while (result.next()) {
+					plan.add(result.getDouble(8));//fiber0
+					plan.add(result.getDouble(9));//energy1
+					plan.add(result.getDouble(10));//protein2
+					
+					plan.add(result.getDouble(4));//fiber_serve3
+					plan.add(result.getDouble(5));//energy_serve4
+					plan.add(result.getDouble(6));//meat_serve5
+					plan.add(10, result.getDouble(7));//milk_serve6
+				}
 				
+				ref.close();
+				result.close();
+				
+				PreparedStatement stmt = connection.prepareStatement(
+						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+				//String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
 
 				stmt.setString(1, currentUser.getID());
-//				result.next();
-					stmt.setDouble(2, result.getDouble(8));//fiber
-//					stmt.setDouble(3, result.getDouble(9));//energy
-//					stmt.setDouble(4, result.getDouble(10));//protein
-//					stmt.setDouble(2, 0.5);//fiber
-					stmt.setDouble(3, 0.5);//energy
-					stmt.setDouble(4, 0.5);//protein
-					//set the food_name
-		//			stmt.setString(5,"default");//default value
-		//			//set the food_amount
-					//set the food_name
-				   String[] food_name = new String[2];
-				   food_name[0] = "apple";
-				   food_name[1] = "milk";
-				   Array sqlArray1 = connection.createArrayOf("text",food_name);
-				   stmt.setArray(5,sqlArray1);
-				   //set the food_amount
-				   //int[] food_amount = new int[2];
-				   Integer[] food_amount = new Integer[2];
-				   food_amount[0] = 10;
-				   food_amount[1] = 5;
-				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
-				   stmt.setArray(6,sqlArray2);
-		//			String[] food_name = new String[2];
-		//			int[] food_amount = new int[2];
-		//			stmt.setArray(5, food_name);//fiber_serve
-		//			stmt.setArray(6, food_amount);//energy_serve
-		//			stmt.setString(6,"default");//default value
-					stmt.setDouble(7, 0.5);//fiber_serve
-					stmt.setDouble(8, 0.5);//energy_serve
-					stmt.setDouble(9, 0.5);//meat_serve
-					stmt.setDouble(10, 0.5);//milk_serve
-//					stmt.setDouble(7, result.getDouble(4));//fiber_serve
-//					stmt.setDouble(8, result.getDouble(5));//energy_serve
-//					stmt.setDouble(9, result.getDouble(6));//meat_serve
-//					stmt.setDouble(10, result.getDouble(7));//milk_serve
-				result.close();
+				
+				stmt.setDouble(2, plan.get(0));//fiber
+				stmt.setDouble(3, plan.get(1));//energy
+				stmt.setDouble(4, plan.get(2));//protein
+//				stmt.setDouble(2, 0.5);//fiber
+//				stmt.setDouble(3, 0.5);//energy
+//				stmt.setDouble(4, 0.5);//protein
+				
+				//set the food_name
+	//			stmt.setString(5,"default");//default value
+	//			//set the food_amount
+				//set the food_name
+			    String[] food_name = new String[2];
+			    food_name[0] = "apple";
+			    food_name[1] = "milk";
+			    Array sqlArray1 = connection.createArrayOf("text",food_name);
+			    stmt.setArray(5,sqlArray1);
+			    //set the food_amount
+			    //int[] food_amount = new int[2];
+			    Integer[] food_amount = new Integer[2];
+			    food_amount[0] = 10;
+			    food_amount[1] = 5;
+			    Array sqlArray2 = connection.createArrayOf("integer",food_amount);
+			    stmt.setArray(6,sqlArray2);
+	//			String[] food_name = new String[2];
+	//			int[] food_amount = new int[2];
+	//			stmt.setArray(5, food_name);//fiber_serve
+	//			stmt.setArray(6, food_amount);//energy_serve
+	//			stmt.setString(6,"default");//default value
+//				stmt.setDouble(7, 0.5);//fiber_serve
+//				stmt.setDouble(8, 0.5);//energy_serve
+//				stmt.setDouble(9, 0.5);//meat_serve
+//				stmt.setDouble(10, 0.5);//milk_serve
+				stmt.setDouble(7, plan.get(3));//fiber_serve
+				stmt.setDouble(8, plan.get(4));//energy_serve
+				stmt.setDouble(9, plan.get(5));//meat_serve
+				stmt.setDouble(10, plan.get(6));//milk_serve
+				
+				stmt.execute();
+				stmt.close();
+				connection.close();
 
 			}
 			else {
+				PreparedStatement stmt = connection.prepareStatement(
+						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+				
 				stmt.setString(1, currentUser.getID());
 				stmt.setDouble(2, 40);//fiber
 				stmt.setDouble(3, 717);//energy
@@ -280,10 +299,12 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				stmt.setDouble(8, 6);//energy_serve
 				stmt.setDouble(9, 3);//meat_serve
 				stmt.setDouble(10, 2.5);//milk_serve
+				
+				stmt.execute();
+				stmt.close();
+				connection.close();
 			}
-			stmt.execute();
-			stmt.close();
-			connection.close();
+
 		} catch (Exception e) {
 			
 			return false; 
