@@ -81,14 +81,22 @@ public class ConfirmDBEngine extends DBEngine {
 		return unconfirmed_tours;
 	}
 
-	public Set<String> getAllContactors(String booktableid){
+	public Set<String> getAllContactors(String booktableid, boolean paid_filter){
 		Set<String> customers = new HashSet<String>();
 		PreparedStatement nstmt = null;	
 		openConnection();
 		
-		String statement = "SELECT L.userid "
-				+ "FROM customer_info as C, line_user_info as L "
-				+ "WHERE C.paidamount >= C.tourfee AND C.customername = L.name AND C.bootableid = ?";
+		String statement = "";
+		if (!paid_filter) {
+			statement = "SELECT L.userid "
+					+ "FROM customer_info as C, line_user_info as L "
+					+ "WHERE C.customername = L.name AND C.bootableid = ?";			
+		}else {
+			statement = "SELECT L.userid "
+					+ "FROM customer_info as C, line_user_info as L "
+					+ "WHERE C.paidamount > 0 AND C.customername = L.name AND C.bootableid = ?";
+		}
+
 		// only announce the tourist who paid the full tour fee; 
 		try {
 			nstmt = connection.prepareStatement(statement);			
