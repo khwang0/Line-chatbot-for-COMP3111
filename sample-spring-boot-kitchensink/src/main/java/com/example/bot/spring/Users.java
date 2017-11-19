@@ -1,4 +1,5 @@
 package com.example.bot.spring;
+import java.util.*;
 
 public class Users {
 	final private String UID;
@@ -18,16 +19,22 @@ public class Users {
     private double vegfruitConsump = 0; // in servings
     private boolean[] eatingHabits = {false,false,false,false,false,false};//eatBF,eatLunch,eatAFT,eatDinner,eatMS, eatMore
     private String otherInfo  = "Default";
-
+		private double budget = 0;
+		//private String registerTime;
    // modified user's assessment scores
     private int assessmentScore = -1;
 
+
 	public Users(String UID) {
 		this.UID = UID;
+	//	Date now = new Date();
+	//	registerTime = now.toString();
 	}
 	public Users(String UID, String name) {
 		this.UID = UID;
 		this.name = name;
+	//	Date now = new Date();
+	//	registerTime = now.toString();
 	}
 	public Users(String UID, String name, char gender, double weight, double height, int age, int subStage, String stage) {
 		this.UID = UID;
@@ -38,6 +45,8 @@ public class Users {
 		this.age = age;
 		this.subStage = subStage;
 		this.stage = stage;
+	//	Date now = new Date();
+		//registerTime = now.toString();
 	}
 	public Users(Users u) {
 		this.UID = u.UID;
@@ -48,6 +57,8 @@ public class Users {
 		this.age = u.age;
 		this.subStage = u.subStage;
 		this.stage = u.stage;
+	//	Date now = new Date();
+	//	registerTime = now.toString();
 	}
 
 	public boolean setName(String n) {this.name = n; return true;}
@@ -75,9 +86,10 @@ public class Users {
 		}
 	}
 	public void setOtherInfo(String s) {otherInfo = s;}
+	public void setBudget(double b) {budget = b;}
 	public void setAssessmentScore(int s){assessmentScore = s;}
-
-	//assume inputs are always valid
+	//public void setRegisterTime(String s){registerTime = s;}
+	//assume inputs are always validx
 	public String getID() {return UID;}
 	public String getName() {return name;}
 	public char getGender() {return gender;}
@@ -87,6 +99,7 @@ public class Users {
 	public int getSubStage() {return subStage;}
 	public String getStage() {return stage;}
 
+
 	public int getExercise() {return amountOfExercise;}
 	public double getBodyFat() {return bodyFat;}
 	public int getCalories() {return caloriesConsump;}
@@ -95,7 +108,8 @@ public class Users {
 	public double getVegfruit() {return vegfruitConsump;}
 	public boolean[] getEatingHabits() {return eatingHabits;}
 	public String getOtherInfo() {return otherInfo;}
-
+	public double getBudget() {return budget;}
+	//public String getRegisterTime(){return registerTime;}
 	// modified user's assessment scores
 	public int getAssessmentScore(){return assessmentScore;}
 
