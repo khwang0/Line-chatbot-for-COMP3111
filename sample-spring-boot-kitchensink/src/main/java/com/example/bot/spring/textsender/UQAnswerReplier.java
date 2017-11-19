@@ -47,6 +47,13 @@ public class UQAnswerReplier implements Broadcaster{
 			
 			// end testing			
 			Message message = new TextMessage("For your question "+question+", the answer is "+answer);
+			if(message == null) {
+				System.out.println("--------- message is null ----");
+			}
+			if(lineMessagingClient == null) {
+				System.out.println("--------- lineMessagingClient is null ----");
+			}
+			
 			
 			//lineMessagingClient.pushMessage(new PushMessage(userID, message));
 			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(userID, message)).get();
