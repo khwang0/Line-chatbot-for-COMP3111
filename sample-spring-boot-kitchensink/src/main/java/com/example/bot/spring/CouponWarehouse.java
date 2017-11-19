@@ -192,7 +192,7 @@ public class CouponWarehouse{
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {
         if(c.getInvitee() != "")
-          return ture;
+          return true;
       }
     }
     return false;
