@@ -220,17 +220,24 @@ public class StageHandler {
 //			}break
 
 			case "code" :{
-				//if(currentUser.registerTime after compaign starting time)
-				if(CouponWarehouse.getInstance().isCouponRemaining()){// &&
-					//CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
-					//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
-					replymsg = "Please input your invitation code:";
+				if(CouponWarehouse.isCampaignStarted()){
+					//if(currentUser.registerTime after compaign starting time)
+					if(CouponWarehouse.getInstance().isCouponRemaining()){// &&
+						//CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+						//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
+						replymsg = "Please input your invitation code:";
 
-					currentUser.setStage("Coupon");
-					currentUser.setSubStage(0);
+						currentUser.setStage("Coupon");
+						currentUser.setSubStage(0);
+					}
+					else{
+						replymsg = "You are not either qualified nor there is no coupons remaining.";
+						currentUser.setStage("Main");
+						currentUser.setSubStage(0);
+					}
 				}
 				else{
-					replymsg = "You are not either qualified nor there is no coupons remaining.";
+					replymsg = "Invalid input! Please input numbers from 1 to 5!!";
 					currentUser.setStage("Main");
 					currentUser.setSubStage(0);
 				}
@@ -245,11 +252,17 @@ public class StageHandler {
 				currentUser.setSubStage(0);
 			}break;
 			case "friend" :{
-				//if(currentUser.registerTime after compaign starting time)
-				replymsg = "This is your code for campaign:"
-				 + CouponWarehouse.getInstance().issueCode(currentUser.getID());
+				if(CouponWarehouse.isCampaignStarted()){
+					//if(currentUser.registerTime after compaign starting time)
+					replymsg = "This is your code for campaign:"
+				 		+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
+			 	}
+				else{
+					replymsg = "Invalid input! Please input numbers from 1 to 5!!";
+				}
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
+
 			}break;
 			default:{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 			}
