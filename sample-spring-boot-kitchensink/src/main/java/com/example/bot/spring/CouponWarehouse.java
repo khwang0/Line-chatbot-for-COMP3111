@@ -5,7 +5,7 @@ import java.util.*;
 
 public class CouponWarehouse{
   final private static int NUMOFCOUPONS = 5000;
-  final private static int NUMOFCODES = 100000000;
+  final private static int NUMOFCODES = 1000000;
   private static ArrayList<String> existingUids;
   private static ArrayList<String> newUids = new ArrayList<String>();
   private static ArrayList<String> codes = new ArrayList<String>();
@@ -30,7 +30,6 @@ public class CouponWarehouse{
           }
           code += (char)n;
         }
-        System.out.println("");
       }while(codes.contains(code));
       codes.add(code);
     }
