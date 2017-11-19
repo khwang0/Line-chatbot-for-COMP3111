@@ -5,7 +5,7 @@ import java.util.*;
 
 public class CouponWarehouse{
   final private static int NUMOFCOUPONS = 5000;
-  final private static int NUMOFCODES = 1000000;
+  final private static int NUMOFCODES = 5000;
   private static ArrayList<String> existingUids;
   private static ArrayList<String> newUids = new ArrayList<String>();
   private static ArrayList<String> codes = new ArrayList<String>();
