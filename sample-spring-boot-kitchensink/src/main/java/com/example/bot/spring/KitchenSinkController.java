@@ -183,7 +183,7 @@ public class KitchenSinkController {
 		try{
 			currentUser = database.searchUser(event.getSource().getUserId());
 			try {
-				currentUser = database.searchDetailedUser(currentUser);
+				currentUser = database.searchUser(event.getSource().getUserId());
 
 				//load other data from db
 			}catch(Exception e) {
@@ -196,7 +196,7 @@ public class KitchenSinkController {
 					+ "Create Personal Diet Tracker: type \'1\'\n\n"
 					+ "Say goodbye to me: type any\n";
 			currentUser = new Users(event.getSource().getUserId());
-			database.pushUser(currentUser);
+			//database.pushUser(currentUser);
 
 		}finally {
 			this.replyText(replyToken, msgbuffer);
@@ -294,7 +294,7 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
-//		currentUser = getSourceUser(event);
+		//currentUser = getSourceUser(event);
         switch(currentUser.getStage()) {
         	case "Init":
         		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
@@ -303,9 +303,9 @@ public class KitchenSinkController {
         		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
         		break;
         	case "LivingHabitCollector":{
-				if(!(currentUser instanceof DetailedUser)){
-					currentUser = new DetailedUser(currentUser);
-				}
+				//if(!(currentUser instanceof DetailedUser)){
+				//	currentUser = new DetailedUser(currentUser);
+				//}
         		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
         	}	break;
         	case "LivingHabitEditor":
