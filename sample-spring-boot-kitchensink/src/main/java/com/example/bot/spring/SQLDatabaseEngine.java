@@ -177,9 +177,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			ref.setInt(2, currentUser.getAge());
 			ref.setInt(3, currentUser.getAge());
 			ResultSet rs = ref.executeQuery();
+			ref.close();
+
 			PreparedStatement stmt = connection.prepareStatement(
 					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
-					"INSERT INTO diet_plan VALUES(?,?,?,?,,,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+					"INSERT INTO diet_plan (id, fiber, energy, protein, fiber_serve, energy_serve, meat_serve, milk_serve) VALUES (?,?,?,?,,,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			stmt.setString(1, currentUser.getID());
 			stmt.setDouble(2, rs.getDouble(8));//fiber
 			stmt.setDouble(3, rs.getDouble(9));//energy
@@ -196,7 +198,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 			
 			stmt.execute();
-			ref.close();
 			rs.close();
 			stmt.close();
 			connection.close();
