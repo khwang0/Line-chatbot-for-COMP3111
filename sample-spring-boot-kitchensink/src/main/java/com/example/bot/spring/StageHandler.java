@@ -313,7 +313,7 @@ public class StageHandler {
 			menuReader.readFromText(text,database);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
-			fooInput = new FoodInput(event.getSource().getUserId(),time);
+			foodInput = new FoodInput(event.getSource().getUserId(),time);
 			database.pushDietRecord(foodInput);
 			int amount = (100/ingredients[0].length);
 			int realPrice = (price[0]/ingredients[0].length);
