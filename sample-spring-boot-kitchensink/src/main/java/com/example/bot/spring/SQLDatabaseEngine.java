@@ -239,14 +239,14 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		//			stmt.setArray(5, food_name);//fiber_serve
 		//			stmt.setArray(6, food_amount);//energy_serve
 		//			stmt.setString(6,"default");//default value
-					stmt.setDouble(7, 0.5);//fiber_serve
-					stmt.setDouble(8, 0.5);//energy_serve
-					stmt.setDouble(9, 0.5);//meat_serve
-					stmt.setDouble(10, 0.5);//milk_serve
-//					stmt.setDouble(7, result.getDouble(4));//fiber_serve
-//					stmt.setDouble(8, result.getDouble(5));//energy_serve
-//					stmt.setDouble(9, result.getDouble(6));//meat_serve
-//					stmt.setDouble(10, result.getDouble(7));//milk_serve
+//					stmt.setDouble(7, 0.5);//fiber_serve
+//					stmt.setDouble(8, 0.5);//energy_serve
+//					stmt.setDouble(9, 0.5);//meat_serve
+//					stmt.setDouble(10, 0.5);//milk_serve
+					stmt.setDouble(7, result.getDouble(4));//fiber_serve
+					stmt.setDouble(8, result.getDouble(5));//energy_serve
+					stmt.setDouble(9, result.getDouble(6));//meat_serve
+					stmt.setDouble(10, result.getDouble(7));//milk_serve
 				}
 				result.close();
 
