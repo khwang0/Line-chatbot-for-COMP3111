@@ -318,7 +318,7 @@ public class StageHandler {
 			database.pushDietRecord(foodInput);
 			int amount;
 			int realPrice;
-			if (ingredientsp[0].length!=0) {
+			if (ingredients[0].length!=0) {
 				amount = (100/ingredients[0].length);
 				realPrice = (price[0]/ingredients[0].length);
 			}
