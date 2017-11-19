@@ -235,7 +235,7 @@ public class StageHandler {
 			case "friend" :{
 				//if(currentUser.registerTime after compaign starting time)
 				replymsg = "This is your code for campaign:"
-				 + CouponWarehouse.getInstance().issueCode(currentUser.getID());
+				 //+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 			}break;
