@@ -67,6 +67,11 @@ public class StageHandler {
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
+	
+	// used for serve-weight conversion
+	private float VF_weight_per_serve = 75;//75g Vegetable&Fruit
+	private float Grain_weight_per_serve = 500;//500kj Grain
+	private float MM_weight_per_serve = 100; 
 
 
 	public String initStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -304,17 +309,21 @@ public class StageHandler {
 		//substage 3: Diet plan genereator
 		case 3:{
 			/*
-			 * TODO:Update corresponding user's "diet_plan" table based on his/her information - will be done in Milestone 3
-			 * For now just manually input data
+			 * Update corresponding user's "diet_plan" table based on his/her information 
 			 * */
 			String user_id = currentUser.getID();
+			//double budget = currentUser.getBudget();
+			double budget = 100;
 			if (database.search_diet_plan(user_id)) {
-				replymsg = "You've already generated a diet plan!\n";
+				replymsg = "You've already generated a diet plan:\n\n";
+				replymsg += database.display_diet_plan(user_id, budget);
+				// TODO: allow user to change it
 			}
 			else {
-				boolean result = database.gen_plan(currentUser);//tempory
-				if (result) {
-					replymsg = "We have successfully generated a diet plan for you!\n";
+				boolean result = database.gen_plan(currentUser);
+				if (result) {					
+					replymsg = "We have successfully generated a diet plan for you:\n\n";
+					replymsg += database.display_diet_plan(user_id, budget);							
 				}
 				else {
 					replymsg  = "Since your personal information is not completed, we have genereated a default one for you.\n";
@@ -331,6 +340,10 @@ public class StageHandler {
 			replymsg = "Reminder List:\n";
 			try {
 				String user_id = currentUser.getID();
+				//double budget = currentUser.getBudget();
+				
+				double budget = 100;
+				
 				// Instantiate a Date object
 				Date dNow = new Date();
 				SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd");
@@ -338,46 +351,90 @@ public class StageHandler {
 				String date = ft.format(dNow);//20171102
 
 				ArrayList<Double> plan_info = database.search_plan(user_id);
+				if(plan_info.size()==0) {
+					replymsg += "We can not find your diet plan, please design your own diet plan first!\n";
+				}
+				
+				double meat_serve = plan_info.get(5);
+				double milk_serve = plan_info.get(6);
+				
 				//ArrayList<Integer> current_info = new ArrayList<Integer>();
 				ArrayList<Double> current_info = database.search_current(user_id, date); // diet current status
-				for (int i = 0; i < plan_info.size(); i++) {
-					//current_info.add(50);
-					double diff = plan_info.get(i) - current_info.get(i);
-					//protein
-					if (i==0) {
-						replymsg += "Protein: ";
-						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff);
-						}
-						else
-							replymsg += "Finish!\n";
-					}
-					//fat
-					else if (i== 1){
-						replymsg += "Fat: ";
-						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff);
-						}
-						else
-							replymsg += "Finish!\n";
-					}
-					//sugar
-					else if (i== 2){
-						replymsg += "Sugar: ";
-						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff);
-						}
-						else
-							replymsg += "Finish!\n";
-					}
-					//other nutrient
-					else{
-						replymsg += "Not yet set for this type.\n";
+				
+				//User hasn't input any diet consumption
+				if(current_info.size() == 0) {
+					double zero = 0;
+					for (int i = 0; i<4; i++) {
+						current_info.add(zero);				
 					}
 				}
+				
+				for (int i = 0; i < 3/*plan_info.size()*/; i++) {
+					//fiber|energy|protein
+					double diff = plan_info.get(i) - current_info.get(i);
+					//fiber
+					if (i==0) {
+						replymsg += "######\n";
+						replymsg += "Fiber: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							replymsg += String.format("You still need to consume %.2f g more", diff);
+							replymsg = replymsg + ", try to eat more vegetables & legumes/beans or fruit!\n";
+						}
+						else
+							replymsg += "Finish!\n";
+					}
+					//energy
+					else if (i== 1){
+						replymsg += "######\n";
+						replymsg += "Energy: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							replymsg += String.format("You still need to consume %.2f kcal", diff);
+							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";			
+						}
+						else
+							replymsg += "Finish!\n";
+					}
+					//protein: Meat + Milk
+					else{
+						replymsg += "######\n";
+						replymsg += "Meat: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							replymsg += String.format("You still need to consume %.2f g", diff*meat_serve/(meat_serve+milk_serve));
+							replymsg += ", try to eat more Lean meat and poultry, fish, eggs, nuts and seeds!\n";
+						}
+						else
+							replymsg += "Finish!\n";
+						
+						replymsg += "######\n";
+						replymsg += "Milk: ";
+						if (plan_info.get(i) > current_info.get(i)) {
+							replymsg += String.format("You still need to consume %.2f g", diff*milk_serve/(meat_serve+milk_serve));
+							replymsg += ", try to consume more milk, yoghurt, cheese and/or alternatives!\n\n";
+						}
+						else
+							replymsg += "Finish!\n\n";
+					}
+				}
+				
+				//generate plan based on budget
+				//expensive
+				if (current_info.get(3) < budget*2/3){
+					replymsg = replymsg + "Budget ~="
+							+ String.format("%.2f", budget*1/3) + "!\n";
+				}
+				//cheap
+				else if(budget-current_info.get(3) > 0) {
+					replymsg = replymsg + "Budget < "
+							+ Double.toString(budget-current_info.get(3))+ "!\n";
+				}
+				//over budget
+				else {
+					replymsg = replymsg + "You are OVER budget now!\n";
+				}		
+				
 			} catch (Exception e) {
 				//log.info("plan not found: {}", e.toString());
-				replymsg += "We can not find your diet plan, please design your own diet plan first!\n";
+				replymsg += "Exception!\n";
 			}
 			replymsg += "Type 1 to go back to Diet Planner...\nType other things to return to main menu...\n";
 			currentUser.setSubStage(currentUser.getSubStage()+10);

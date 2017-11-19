@@ -194,7 +194,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Connection connection = this.getConnection();
 			
 			PreparedStatement stmt = connection.prepareStatement(
-					//"INSERT INTO diet_plan VALUES(?,?,?,?,'{\"apple\"}','{10}')");//id | protein | fat | sugar | food_name | food_amount
 					"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 			String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
 			
@@ -289,7 +288,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setInt(3, age);
 
 			ResultSet rs = stmt.executeQuery();
-
 			if (rs.next() ) {
 				rs.close();
 				stmt.close();
@@ -302,32 +300,69 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return false;
 	}
 	
-	//generate a default plan for user
-//	public void gen_plan_default(Users currentUser) throws Exception {
-//		Connection connection = this.getConnection();
-//		PreparedStatement stmt = connection.prepareStatement("INSERT INTO diet_plan (id, fiber, energy, protein, fiber_serve, energy_serve, meat_serve, milk_serve) VALUES (?,40,717,57,8,6,3,2.5)");//id | fiber | energy | protein | food_name | food_amount
-//		stmt.setString(1, currentUser.getID());
-//		stmt.execute();
-//		stmt.close();
-//		connection.close();
-//		return;
-//		
-//	}
+	
+	
+	//Display function for the diet plan to return a String
+	String display_diet_plan(String user_id, double budget) {
+		String result = "(DAILY BASIS)\n";
+
+		
+		try {
+			ArrayList<Double> plan_info = search_plan(user_id);
+			double fiber = plan_info.get(0);
+			double energy = plan_info.get(1);
+			double protein = plan_info.get(2);
+			double meat_serve = plan_info.get(5);
+			double milk_serve = plan_info.get(6);
+			
+			double protein_meat = protein*meat_serve/(meat_serve+milk_serve);
+			double protein_milk = protein*milk_serve/(meat_serve+milk_serve);
+			
+			result = result + "Vegetables & Fruit: " + Double.toString(fiber) + "\n";
+			result = result + "Grain (cereal) foods: " + Double.toString(energy) + "\n";
+			result = result + "Meat: " + Double.toString(protein_meat) + "\n";
+			result = result + "Milk: " + Double.toString(protein_milk) + "\n";
+			result = result + "Budget: " + Double.toString(budget) + "\n";
+			
+//			Connection connection = this.getConnection();
+//
+//			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein FROM diet_plan WHERE id = ?");
+//			stmt.setString(1, user_id);
+//
+//			ResultSet rs = stmt.executeQuery();
+//
+//			if(rs.next()) {
+//				
+//			}
+//
+//			stmt.close();
+//			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return result;
+	}
 	
 	//Query the target diet plan info from "diet_plan" table and return
-	ArrayList<Double> search_plan(String user_id) throws Exception {
+	ArrayList<Double> search_plan(String user_id) {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table
 		try {
 			//connect to the database with table: diet_plan
 			Connection connection = this.getConnection();
 			//prepare a SQL statement while leaving some parameters
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_plan where id = ? ");
+			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
+			//PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein, budget, fiber_serve,  energy_serve,  meat_serve, milk_serve FROM diet_plan where id = ? ");
 			stmt.setString(1, user_id);//1 is the param location/index
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				plan_info.add(rs.getDouble(1));//protein
-				plan_info.add(rs.getDouble(2));//fat 
-				plan_info.add(rs.getDouble(3));//sugar
+				plan_info.add(rs.getDouble(1));//fiber
+				plan_info.add(rs.getDouble(2));//energy
+				plan_info.add(rs.getDouble(3));//protein
+				//plan.info.add(rs.getDouble(4));//budget
+				plan_info.add(rs.getDouble(4));//fiber_serve
+				plan_info.add(rs.getDouble(5));//energy_serve 
+				plan_info.add(rs.getDouble(6));//meat_serve
+				plan_info.add(rs.getDouble(7));//milk_serve
 			}
 			rs.close();
 			stmt.close();
@@ -336,26 +371,27 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			log.info("query error for search_plan: {}", e.toString());
 			//System.out.println(e);
 		}
-		if (plan_info.size() != 0)
-			return plan_info;
+		//if (plan_info.size() != 0)
+		return plan_info;
 
-		throw new Exception("NOT FOUND");
+		//throw new Exception("NOT FOUND");
 	}
 
 	//Query the current diet status info from "diet_conclusion" table and return
-	ArrayList<Double> search_current(String user_id, String date) throws Exception {
+	ArrayList<Double> search_current(String user_id, String date) {
 		ArrayList<Double> current_info = new ArrayList<Double>(); // store the query result from current table
 		try {
 			//connect
 			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement("SELECT protein, fat, sugar FROM diet_conclusion where id = ? AND date = ?");
+			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber, price FROM diet_conclusion where id = ? AND date = ?");
 			stmt.setString(1, user_id);
 			stmt.setString(2, date);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
+				current_info.add(rs.getDouble(3));//fiber
+				current_info.add(rs.getDouble(2));//energy
 				current_info.add(rs.getDouble(1));//protein
-				current_info.add(rs.getDouble(2));//fat
-				current_info.add(rs.getDouble(3));//sugar
+				current_info.add(rs.getDouble(4));//price
 			}
 			rs.close();
 			stmt.close();
@@ -363,10 +399,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} catch (Exception e) {
 			log.info("query error for search_current: {}", e.toString());
 		}
-		if (current_info.size() != 0)
-			return current_info;
+			
+		return current_info;//can be null
 
-		throw new Exception("NOT FOUND");
 	}
 
 	/*  Function added by ZK*/
@@ -420,7 +455,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				
 				
 				PreparedStatement stmt2 = connection.prepareStatement(
-						"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
+				"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
 				stmt2.setDouble(1, current_protein);
 				stmt2.setDouble(2, current_energy);
