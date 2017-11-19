@@ -97,14 +97,25 @@ public class CouponWarehouse{
     if (isCouponRemaining()){
       couponsRemaining--;
 
-      coupons.get(coupons.indexOf(new Coupon("",code))).setInvitee(invitee);
-      if( ! isNewUser(coupons.get(coupons.indexOf(new Coupon("",code))).getInviter()) )
-        couponsRemaining--;
+      int i = 0;
+      boolean found = false;
+      for(Coupon c : coupons){
+        if(c.getCode().equals(code)) {found = true; break;}
+        else i++;
+      }
+      if(found){
+       coupons.get(i).setInvitee(invitee);
+       if( ! isNewUser(coupons.get(i).getInviter()) ) couponsRemaining--;
+     }
+      return coupons.get(i);
     }
-    return coupons.get(coupons.indexOf(code));
+    return null;
   }
   public boolean isCodeValid(String code){
-    return coupons.contains(new Coupon("",code)); //dummy comparable coupon
+    for(Coupon c : coupons){
+      if(c.getCode().equals(code)) {return true;}
+    }
+    return false; //dummy comparable coupon
   }
   public boolean isCouponRemaining(){
     return (couponsRemaining > 0);
