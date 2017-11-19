@@ -308,7 +308,7 @@ public class StageHandler {
 		case 42:{
 			Date date;
 			SimpleDateFormat ft;
-			menuReader.readFromText(text,database);
+			boolean fi = menuReader.readFromText(text,database);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			//foodInput = new FoodInput(event.getSource().getUserId(),time);
@@ -324,7 +324,10 @@ public class StageHandler {
 				amount = 100;
 				realPrice = 10;
 			}
-			if (price[0]!=0) {
+			if(!fi){
+				replymsg= "Please write in the right format(Food name + price)";
+			}
+			else if(ingredients[0].length!=0) {
 				for (int i =0; i<ingredients[0].length; i++) {
 					date = new Date();
 					ft = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -349,9 +352,13 @@ public class StageHandler {
 						}
 					}
 				}
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+				currentUser.setSubStage(0);
 			}
-			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-			currentUser.setSubStage(0) ;
+			else{
+				replymsg = "Sorry, we could not find your food data in our database\nIf you want, please help us to complete the database togather\nby typing 8 in Diet Planner\nInput anything to conitnue.";
+				currentUser.setSubStage(0);
+			}
 		}break;
 
 		case 3:{
@@ -359,32 +366,48 @@ public class StageHandler {
 			currentUser.setSubStage(currentUser.getSubStage()+40);
 		}break;
 		case 43:{
-			Date date = new Date();
-			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
-			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-			time = ft.format(date);
+			Date date;
+			SimpleDateFormat ft;
 			menuReader.readFromJSON(text);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			int amount;
 			int realPrice;
-			for (int i =0; i<ingredients.length; i++) {
-				for(int j =0; j<ingredients[i].length;j++){
-					foodInput = new FoodInput(event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i*ingredients[i].length+j));
-					foodInput.setFoodName(ingredients[i][j]);
-					healthSearcher.setKeyword(ingredients[i][j]);
-					if (healthSearcher.search()) {
-						amount = (100/ingredients[i].length);
-						realPrice = (price[i]/ingredients[i].length);
-						foodInput.setAmount(amount);
-						foodInput.setPrice(realPrice);
-						database.pushDietRecord(foodInput);
-						inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),String.valueOf(Double.valueOf(time)+(double)i*ingredients[i].length+j),(double)realPrice);
+			if (price[0]!=0) {
+				for (int i =0; i<ingredients.length; i++) {
+					for(int j =0; j<ingredients[i].length;j++){
+						date = new Date();
+						ft = new SimpleDateFormat("yyyyMMddHHmmss");
+						ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+						time = ft.format(date);
+						foodInput = new FoodInput(event.getSource().getUserId(),time);
+						foodInput.setFoodName(ingredients[i][j]);
+						healthSearcher.setKeyword(ingredients[i][j]);
+						if (healthSearcher.search()) {
+							amount = (100/ingredients[i].length);
+							realPrice = (price[i]/ingredients[i].length);
+							foodInput.setAmount(amount);
+							foodInput.setPrice(realPrice);
+							database.pushDietRecord(foodInput);
+							inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+							try{
+								Thread.sleep(1000);
+							}catch (InterruptedException e) {
+
+							}
+							finally{
+
+							}
+						}
 					}
 				}
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+				currentUser.setSubStage(0);
 			}
-			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-			currentUser.setSubStage(0) ;
+			else{
+				replymsg= "Please make sure you enter the right url of JSON file!\nInput anything to conitnue.";
+				currentUser.setSubStage(0);
+			}
 		}break;
 
 		case 4:{

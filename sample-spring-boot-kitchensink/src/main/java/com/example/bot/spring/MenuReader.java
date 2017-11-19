@@ -69,8 +69,9 @@ public class MenuReader {
 
 
 	public boolean readFromJSON(String url) {
-		String JSONString = readJSONFile(url);
+		boolean fi = true;
 		try{
+			String JSONString = readJSONFile(url);
 			JSONArray jsonArray = new JSONArray(JSONString);
 			nameList = new String[jsonArray.length()];
 			priceList = new int[jsonArray.length()];
@@ -92,7 +93,7 @@ public class MenuReader {
 		}finally{
 
 		}
-		return true;
+		return fi;
 	}
 
 	public String[] getName() {
