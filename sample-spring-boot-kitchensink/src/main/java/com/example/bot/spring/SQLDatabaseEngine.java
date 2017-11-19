@@ -211,11 +211,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				
 
 				stmt.setString(1, currentUser.getID());
-				result.next();
-//					stmt.setDouble(2, result.getDouble(8));//fiber
+//				result.next();
+					stmt.setDouble(2, result.getDouble(8));//fiber
 //					stmt.setDouble(3, result.getDouble(9));//energy
 //					stmt.setDouble(4, result.getDouble(10));//protein
-					stmt.setDouble(2, 0.5);//fiber
+//					stmt.setDouble(2, 0.5);//fiber
 					stmt.setDouble(3, 0.5);//energy
 					stmt.setDouble(4, 0.5);//protein
 					//set the food_name
