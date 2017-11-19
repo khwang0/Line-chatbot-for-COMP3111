@@ -237,11 +237,10 @@ public class StageHandler {
 									  +"1 Input daily diet by answering the questions\n"
 									  +"2 Input daily diet by menu(formatted plain text)\n"
 									  +"3 Input daily diet by menu(URL of JSON doc)\n"
-									  +"3 Visualize your diet consumption in a specific day\n"
-									  +"4 Design My Diet Plan\n"
-									  +"5 Reminder\n"
-									  +"6 Self-Assessment\n"
-									  +"7 Insert user-defined food\n"
+									  +"4 Visualize your diet consumption in a specific day\n"
+									  +"5 Design My Diet Plan\n"
+									  +"6 Reminder\n"
+									  +"7 Self-Assessment\n"
 									  +"8 Insert food you what(which you find that is not in our database)\n"
 									  +"(type other things to back to menu)";
 			currentUser.setSubStage(-1);
@@ -328,7 +327,7 @@ public class StageHandler {
 				}
 			}
 			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-			currentUser.setSubStage(0) ;
+			currentUser.setSubStage(-1) ;
 		}break;
 
 		case 3:{
@@ -361,7 +360,7 @@ public class StageHandler {
 				}
 			}
 			replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-			currentUser.setSubStage(0) ;
+			currentUser.setSubStage(-1) ;
 		}break;
 
 		case 4:{
