@@ -192,7 +192,7 @@ public class CouponWarehouse{
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {return true;}
     }
-    return false; //dummy comparable coupon
+    return false;
   }
   public boolean isCouponRemaining(){
     return (couponsRemaining > 0);
@@ -209,6 +209,12 @@ public class CouponWarehouse{
       return haveNotGotCouponYet(user);
     }
     else return false;
+  }
+  public boolean checkSelf(String uid){
+    for(Coupon c : coupons){
+      if(c.getInviter().equals(uid)) return false;
+    }
+    return true;
   }
   public static boolean isCampaignStarted(){
     return started;

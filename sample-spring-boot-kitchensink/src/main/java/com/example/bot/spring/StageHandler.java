@@ -1074,7 +1074,7 @@ public class StageHandler {
 	}
 	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
-		if(CouponWarehouse.getInstance().isCodeValid(text)){
+		if(CouponWarehouse.getInstance().isCodeValid(text) || !CouponWarehouse.getInstance().checkSelf(currentUSer.getID) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
 
@@ -1091,7 +1091,7 @@ public class StageHandler {
 					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 		else{
-			replymsg = "oops! Your code is either invalid or used.";
+			replymsg = "oops! Your code is either invalid or used. (You can not get coupon by the code issued to yourself)";
 		}
 		currentUser.setStage("Main");//back to main
 		currentUser.setSubStage(0);
