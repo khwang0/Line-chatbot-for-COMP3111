@@ -87,7 +87,7 @@ public class DBEngine {
 	public String getTextType(String text) {	
 		if(text == null || text.equals("")) {
 			return "";
-		}		
+		}
 		
 		Connection connection = null; 
 		PreparedStatement stmt  = null;

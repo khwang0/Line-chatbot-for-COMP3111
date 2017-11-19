@@ -1,5 +1,5 @@
 package com.example.bot.spring;
-
+/*
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -35,3 +35,4 @@ public class BookingTextSenderTester {
 		
 	}
 }
+*/
