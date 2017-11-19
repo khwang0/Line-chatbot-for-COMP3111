@@ -375,7 +375,7 @@ public class StageHandler {
 						replymsg += "######\n";
 						replymsg += "Fiber: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g more\n", diff);
+							replymsg += String.format("You still need to consume %.2f g more", diff);
 							replymsg = replymsg + ", try to eat more vegetables & legumes/beans or fruit!\n";
 						}
 						else
@@ -386,7 +386,7 @@ public class StageHandler {
 						replymsg += "######\n";
 						replymsg += "Energy: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f kcal\n", diff);
+							replymsg += String.format("You still need to consume %.2f kcal", diff);
 							replymsg += ", try to eat more Grain (cereal) foods, mostly wholegrain!\n";			
 						}
 						else
@@ -397,7 +397,7 @@ public class StageHandler {
 						replymsg += "######\n";
 						replymsg += "Meat: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff*meat_serve/(meat_serve+milk_serve));
+							replymsg += String.format("You still need to consume %.2f g", diff*meat_serve/(meat_serve+milk_serve));
 							replymsg += ", try to eat more Lean meat and poultry, fish, eggs, nuts and seeds!\n";
 						}
 						else
@@ -406,7 +406,7 @@ public class StageHandler {
 						replymsg += "######\n";
 						replymsg += "Milk: ";
 						if (plan_info.get(i) > current_info.get(i)) {
-							replymsg += String.format("You still need to consume %.2f g\n", diff*milk_serve/(meat_serve+milk_serve));
+							replymsg += String.format("You still need to consume %.2f g", diff*milk_serve/(meat_serve+milk_serve));
 							replymsg += ", try to consume more milk, yoghurt, cheese and/or alternatives!\n\n";
 						}
 						else
