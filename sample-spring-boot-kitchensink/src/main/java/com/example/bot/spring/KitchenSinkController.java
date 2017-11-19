@@ -78,7 +78,9 @@ public class KitchenSinkController {
 		log.info("This is your entry point:");
 		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		TextMessageContent message = event.getMessage();
-		handleTextContent(event.getReplyToken(), event, message);
+		PushMessage pushMessage = new PushMessage(event.getSource().getUserId(),new TextMessage("aaaaaa"));
+		lineMessagingClient.pushMessage(pushMessage);
+		//handleTextContent(event.getReplyToken(), event, message);
 	}
 
 	@EventMapping
@@ -248,13 +250,13 @@ public class KitchenSinkController {
 
 
 	
-	@Autowired
-	LineListener ll;
+	//@Autowired
+	//LineListener ll;
 	
 	//static boolean newT=false;
 	public KitchenSinkController() {
 		processor = new TextProcessor();
-		ll.start();
+		//ll.start();
 	}
 
 	private TextProcessor processor;
