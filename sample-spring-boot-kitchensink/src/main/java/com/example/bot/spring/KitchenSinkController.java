@@ -321,7 +321,7 @@ public class KitchenSinkController {
 			log.info(replymsg);
 			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			String[] replyinfo = replymsg.split("@@");
-			for(int i = 0 ; i < 3 ; i ++){
+			for(int i = 0 ; i < replyinfo.size() ; i ++){
 				log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 				log.info(replyinfo[i]);
 				log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
