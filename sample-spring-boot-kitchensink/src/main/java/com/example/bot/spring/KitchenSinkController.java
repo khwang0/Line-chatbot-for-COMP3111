@@ -318,10 +318,16 @@ public class KitchenSinkController {
 		//database.updateUser(currentUser);
 		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
 			String[] replyinfo = replymsg.split("@@");
+			for(int i = 0 ; i < 3 ; i ++){
+				log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+				log.info(replyinfo[i]);
+				log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			}
 			this.pushText(replyinfo[0],replyinfo[2]);
 			this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[2]);
 		}
-		this.replyText(replyToken,replymsg);
+		else
+			this.replyText(replyToken,replymsg);
 
 	}
 
