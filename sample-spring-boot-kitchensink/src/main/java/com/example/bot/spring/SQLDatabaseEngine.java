@@ -204,7 +204,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				ref.setInt(2, currentUser.getAge());
 				ref.setInt(3, currentUser.getAge());
 				ResultSet result = ref.executeQuery();
-				while (result.next()) {
+//				while (result.next()) {
 					plan.add(result.getDouble(8));//fiber0
 					plan.add(result.getDouble(9));//energy1
 					plan.add(result.getDouble(10));//protein2
@@ -213,7 +213,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 					plan.add(result.getDouble(5));//energy_serve4
 					plan.add(result.getDouble(6));//meat_serve5
 					plan.add(10, result.getDouble(7));//milk_serve6
-				}
+//				}
 				
 				ref.close();
 				result.close();
