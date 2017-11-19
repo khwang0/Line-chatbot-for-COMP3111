@@ -49,6 +49,7 @@ public class DoubleElevDBEngine extends DBEngine {
 		PreparedStatement nstmt = null;
 		
 		openConnection();
+		
 		String statement = "SELECT bootableid FROM double11 "
 				+ "WHERE status = 'released' ";
 		// choose the tours that haven't been broadcasted;  
@@ -69,13 +70,39 @@ public class DoubleElevDBEngine extends DBEngine {
 		return discount_tours;
 	}
 
+	public boolean ifTourFull(String booktableid) {
+		PreparedStatement nstm = null;
+		int remaining_seat = 0; 
+		
+		openConnection();
+		String statement = "SELECT remaining_seat FROM double11 WHERE status = ? ";
+		
+		try {
+			nstm = connection.prepareStatement(statement);
+			nstm.setString(1, booktableid);
+			
+			ResultSet rs = this.query(nstm);			
+			if(rs.next()) {
+				remaining_seat = rs.getInt(1);
+			}
+			nstm.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		close();
+		
+		if(remaining_seat > 0) {return true; }
+		else return false; 		
+	}
+	
 	public Set<String> getAllClient(){
 		Set<String> clients = new HashSet<String>();
 		PreparedStatement nstmt = null;	
 		openConnection();
 		
-		String statement = "SELECT userid FROM line_user_info"
-						 + " WHERE categorization = 'book'";
+		String statement = "SELECT userid FROM line_user_info "
+						 + "WHERE categorization <> 'book'";
 
 		try {
 			nstmt = connection.prepareStatement(statement);			

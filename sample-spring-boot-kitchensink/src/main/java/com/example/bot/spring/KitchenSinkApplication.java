@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SpringBootApplication
 public class KitchenSinkApplication {
     static Path downloadedContentDir;
+
+	/*
     //@Autowired
     static LineListener listener;    
     
@@ -49,6 +51,11 @@ public class KitchenSinkApplication {
     	//LineListener listener = new LineListener();
     	System.out.println("------------- in main --------------"); 
     	// listener.start();
+     */
+
+    public static void main(String[] args) throws IOException {
+    	//LineListener listener=new LineListener();
+    	//listener.start();
         downloadedContentDir = Files.createTempDirectory("line-bot");
         SpringApplication.run(KitchenSinkApplication.class, args);
     }

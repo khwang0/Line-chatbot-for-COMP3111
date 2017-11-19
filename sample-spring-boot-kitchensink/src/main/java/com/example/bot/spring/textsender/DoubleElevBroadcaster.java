@@ -27,6 +27,8 @@ public class DoubleElevBroadcaster implements Broadcaster {
 			
 			// extract all contactor info into a Set<String> to;
 			// extract tourid into String tourid;
+			
+			// get tour name, tourid;
 			String broadcast_content = "START COMPETE FOR TOUR " + tourid + " AT 50% DISCOUNT!! \n Wanna Grab one? "; // later if reply yes, then jump to booking, else, do nothing
 
 			Set<String> tourist = doubledb.getAllClient();				

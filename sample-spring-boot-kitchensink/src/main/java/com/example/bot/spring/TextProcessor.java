@@ -27,16 +27,10 @@ public class TextProcessor {
 		try {			
 			String tag = DBE.getLineUserInfo(userId,"categorization"); // from database; 
 			String label = DBE.getTextType(text);					   // by analysis input 
-			
-			 reply = "tag: " + tag + " label: " + label;
-			
-			if ((tag == null || tag == "" || tag == "default" || tag == "none") && 
-				(label == null || label == "" || label == "default" || label == "none")){
-				// reply += "tag: " + tag + " label: " + label;
-				SQTextSender sqsender = new SQTextSender();
-				reply = sqsender.process(userId, text)+"\n";
-			}
-			
+						
+			SQTextSender sqsender = new SQTextSender();
+			reply = sqsender.process(userId, text)+"\n";
+						
 			if(tag.equals("book")) {
 				BookingTextSender bsender = new BookingTextSender();
 				reply += bsender.process(userId, text);	
@@ -180,14 +174,31 @@ public class TextProcessor {
 			return false; 
 	}
 
+	/**
+	 * @param 
+	 * userId: the user who reply msg
+	 * message: the message sent by user; 
+	 * 
+	 * special handler for double 11 event; 
+	 * after a double11 message is broadcast, check user reply;
+	 * if reply yes: 
+	 * */
 	private String double_elev_handler(String userId, String message) throws Exception {
 		assert (message.equals("yes")|| message.equals("no"));
 		String reply = "";
-		if (message.equals("yes")) {			
-			DBE.updateLineUserInfo(userId,"categorization", "booking"); 			// update line_user_info.categorization into "booking"			
-			String discount_tourid = DEDBE.getDiscountBookid(); 					// check double11 table, get available tour's id; id =  DEDBE.getDiscountBookid()			
-			DBE.updateLineUserInfo(userId,"discount_tour_id", "discount_tourid"); 	// update line_user_info.discount_tour_id = id; 
-			reply = "Congratulations! You Got A Discount Ticket! Now you can continue booking!";
+		if (message.equals("yes")) {
+			// get current discount tour
+			String discount_tourid = DEDBE.getDiscountBookid(); 					// check double11 table, get available tour's id; id =  DEDBE.getDiscountBookid()	
+			// check if there are still ticket:
+			if(DEDBE.ifTourFull(discount_tourid)) {
+				DBE.updateLineUserInfo(userId,"categorization", "booking"); 			// update line_user_info.categorization into "booking"	
+				DBE.updateLineUserInfo(userId,"status", "double11"); 			// update line_user_info.categorization into "booking"	
+				DBE.updateLineUserInfo(userId,"tourids", discount_tourid); 	// update line_user_info.discount_tour_id = id;
+				DBE.updateLineUserInfo(userId,"discount", "true"); 	// update line_user_info.discount_tour_id = id;
+				reply = "Congratulations! You Got A Discount Ticket! Now you can continue booking!";
+			}else {
+				reply = "Sorry ticket sold out";
+			}		
 		}
 		else {
 			reply = "Sure =) Have a nice days."; 
