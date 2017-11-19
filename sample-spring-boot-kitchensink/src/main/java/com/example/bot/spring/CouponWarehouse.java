@@ -81,7 +81,8 @@ public class CouponWarehouse{
   final private static int NUMOFCOUPONS = 5000;
   final private static int NUMOFCODES = 5000;
   private static ArrayList<String> existingUids;
-  private static HashMap<String, ArrayList<String>> inviteeOfExistingUsers = new HashMap<String,ArratList<String>>();
+//  private static HashMap<String, ArrayList<String>> inviteeOfExistingUsers = new HashMap<String,ArrayList<String>>();
+  private static ArrayList<String> gotCouponNewUsers = new ArrayList<String>;
   private static ArrayList<String> newUids = new ArrayList<String>();
   private static ArrayList<String> codes = new ArrayList<String>();
   private static ArrayList<Coupon> coupons = new ArrayList<Coupon>();
@@ -180,14 +181,11 @@ public class CouponWarehouse{
         else i++;
       }
       if(found){
-       coupons.get(i).setInvitee(invitee);
-       if( ! isNewUser(coupons.get(i).getInviter()) ){
-          ArrayList<String> invitees = inviteeOfExistingUsers.get(coupons.get(i).getInviter());
-          invitees.add(invitee);
-          inviteeOfExistingUsers.put(coupons.get(i).getInviter(), invitees );
-          couponsRemaining--;
-        }
-       return coupons.get(i);
+        coupons.get(i).setInvitee(invitee);
+        if( ! isNewUser(coupons.get(i).getInviter()) ) couponsRemaining--;
+        else gotCouponNewUsers.add(coupons.get(i).getInviter());
+        gotCouponNewUsers.add(invitee);
+        return coupons.get(i);
      }
      return null;
     }
@@ -197,7 +195,7 @@ public class CouponWarehouse{
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {
         if(!isNewUser(c.getInviter()))
-          if(! inviteeOfExistingUsers.get(c.getInviter()).contains(invitee)) return true;
+          if(!gotCouponNewUsers.contains(invitee)) return true;
         else if(c.getInvitee() == null) // no invitees
           return true;
       }
@@ -216,7 +214,7 @@ public class CouponWarehouse{
   }
   public boolean canGetCouponFromCode(Users user){
     if (isNewUser(user)){
-      return haveNotGotCouponYet(user);
+      return gotCouponNewUsers.contains(user.getID());
     }
     else return false;
   }
@@ -231,12 +229,5 @@ public class CouponWarehouse{
   public static boolean isCampaignStarted(){
     return started;
   }
-  public boolean haveNotGotCouponYet(Users user){
-    String uid = user.getID();
-    for(Coupon c:coupons){
-      if (c.getInvitee() == uid) return false;
-      else if(c.getInviter() == uid && c.getInvitee() != null) return false;
-    }
-    return true;
-  }
+
 }
