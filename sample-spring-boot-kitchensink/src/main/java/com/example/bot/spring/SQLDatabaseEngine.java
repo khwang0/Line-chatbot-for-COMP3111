@@ -644,7 +644,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		finally {
 
 		}
-		foodNames = foodNamesArray.toArray(new String[0]);
+		foodNames = foodNamesArray.toArray(new String[foodNamesArray.size()]);
 		return foodNames;
 
 	}
