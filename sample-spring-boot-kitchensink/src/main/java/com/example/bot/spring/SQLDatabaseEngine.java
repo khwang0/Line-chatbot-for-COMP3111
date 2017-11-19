@@ -15,6 +15,26 @@ import java.net.URI;
 @Slf4j
 public class SQLDatabaseEngine extends DatabaseEngine {
 
+	ArrayList<String> fetchUIDs(){
+		ArrayList<String> UIDs = new ArrayList<String>();
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM users");
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				UIDs.add(rs.getString(1));
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		return UIDs;
+	}
+
 	Users searchUser(String uidkey) throws Exception {
 		Users user = null;
 		try {
@@ -44,6 +64,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 		user.setEatingHabits(b);
 		 		user.setOtherInfo(rs.getString(16));
 		 		user.setAssessmentScore(rs.getInt(17));
+				user.setBudget(rs.getDouble(18));
+				//user.setRegisterTime(rs.getString(19));
 			}
 			rs.close();
 			stmt.close();
@@ -106,7 +128,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
 			String temp = ""+user.getGender();
@@ -130,9 +152,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 	stmt.setArray(15,sqlArray);
 		 	stmt.setString(16,(user).getOtherInfo());
 		 	stmt.setInt(17,(user).getAssessmentScore());
+			stmt.setDouble(18,(user).getBudget());
+			//stmt.setString(19,(user).getRegisterTime());
 
-
-		    result = stmt.execute();
+		  result = stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
@@ -197,7 +220,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			Connection connection = this.getConnection();
 			String gender =Character.toString(currentUser.getGender());
 
-			if(search_intake_reference(gender,currentUser.getAge())) {
+//			if(search_intake_reference(gender,currentUser.getAge())) {
 				ArrayList<Double> plan = new ArrayList<Double>();
 				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age <= ? AND max_age >= ?" );
 				ref.setString(1, gender);
@@ -265,45 +288,45 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				stmt.close();
 				connection.close();
 
-			}
-			else {
-				PreparedStatement stmt = connection.prepareStatement(
-						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
-
-				stmt.setString(1, currentUser.getID());
-				stmt.setDouble(2, 40);//fiber
-				stmt.setDouble(3, 717);//energy
-				stmt.setDouble(4, 57);//protein
-				//set the food_name
-//				stmt.setString(5,"default");//default value
-//				//set the food_amount
-				//set the food_name
-				   String[] food_name = new String[2];
-				   food_name[0] = "apple";
-				   food_name[1] = "milk";
-				   Array sqlArray1 = connection.createArrayOf("text",food_name);
-				   stmt.setArray(5,sqlArray1);
-				   //set the food_amount
-				   //int[] food_amount = new int[2];
-				   Integer[] food_amount = new Integer[2];
-				   food_amount[0] = 10;
-				   food_amount[1] = 5;
-				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
-				   stmt.setArray(6,sqlArray2);
-//				String[] food_name = new String[2];
-//				int[] food_amount = new int[2];
-//				stmt.setArray(5, food_name);//fiber_serve
-//				stmt.setArray(6, food_amount);//energy_serve
-//				stmt.setString(6,"default");//default value
-				stmt.setDouble(7, 8);//fiber_serve
-				stmt.setDouble(8, 6);//energy_serve
-				stmt.setDouble(9, 3);//meat_serve
-				stmt.setDouble(10, 2.5);//milk_serve
-
-				stmt.execute();
-				stmt.close();
-				connection.close();
-			}
+//			}
+//			else {
+//				PreparedStatement stmt = connection.prepareStatement(
+//						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
+//
+//				stmt.setString(1, currentUser.getID());
+//				stmt.setDouble(2, 40);//fiber
+//				stmt.setDouble(3, 717);//energy
+//				stmt.setDouble(4, 57);//protein
+//				//set the food_name
+////				stmt.setString(5,"default");//default value
+////				//set the food_amount
+//				//set the food_name
+//				   String[] food_name = new String[2];
+//				   food_name[0] = "apple";
+//				   food_name[1] = "milk";
+//				   Array sqlArray1 = connection.createArrayOf("text",food_name);
+//				   stmt.setArray(5,sqlArray1);
+//				   //set the food_amount
+//				   //int[] food_amount = new int[2];
+//				   Integer[] food_amount = new Integer[2];
+//				   food_amount[0] = 10;
+//				   food_amount[1] = 5;
+//				   Array sqlArray2 = connection.createArrayOf("integer",food_amount);
+//				   stmt.setArray(6,sqlArray2);
+////				String[] food_name = new String[2];
+////				int[] food_amount = new int[2];
+////				stmt.setArray(5, food_name);//fiber_serve
+////				stmt.setArray(6, food_amount);//energy_serve
+////				stmt.setString(6,"default");//default value
+//				stmt.setDouble(7, 8);//fiber_serve
+//				stmt.setDouble(8, 6);//energy_serve
+//				stmt.setDouble(9, 3);//meat_serve
+//				stmt.setDouble(10, 2.5);//milk_serve
+//
+//				stmt.execute();
+//				stmt.close();
+//				connection.close();
+//			}
 
 		} catch (Exception e) {
 
@@ -462,20 +485,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				current_price = price + previous_price;
 
 
-				if( !healthSearcher.getProtein().equals("N/A")) {
+				if( !healthSearcher.getProtein().equals("0")) {
 					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
 				}
 				else {
 					current_protein = previous_protein;
 
 				}
-				if( !healthSearcher.getEnergy().equals("N/A")) {
+				if( !healthSearcher.getEnergy().equals("0")) {
 					current_energy = previous_energy + Double.parseDouble(healthSearcher.getEnergy())*amount/100.0;
 				}
 				else {
 					current_energy = previous_energy;
 				}
-				if( !healthSearcher.getFiber().equals("N/A")) {
+				if( !healthSearcher.getFiber().equals("0")) {
 					current_fiber = previous_fiber + Double.parseDouble(healthSearcher.getFiber())*amount/100.0;
 				}
 				else {
@@ -546,6 +569,33 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
+
+	ArrayList<String> findallusers() {
+		ArrayList<String> answer = new ArrayList<String>();
+		try {
+
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM users ");
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				answer.add(rs.getString(1));
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return answer;
+	}
+
+
+
+
 	boolean pushDietRecord(FoodInput foodInput){
 		boolean result = false;
 		try {
@@ -658,8 +708,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=? WHERE id = ?");
-			stmt.setString(17, user.getID());
+					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=?, budget = ? WHERE id = ?");
+			stmt.setString(18, user.getID());
 			stmt.setString(1, user.getName());
 			String temp = ""+user.getGender();
 			stmt.setString(2, temp) ;
@@ -681,7 +731,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setArray(14,sqlArray);
 			stmt.setString(15,user.getOtherInfo());
 			stmt.setInt(16,user.getAssessmentScore());
-
+			stmt.setDouble(17,user.getBudget());
+			//stmt.setString(18,user.getRegisterTime());
 		    result = stmt.execute();
 			stmt.close();
 			connection.close();

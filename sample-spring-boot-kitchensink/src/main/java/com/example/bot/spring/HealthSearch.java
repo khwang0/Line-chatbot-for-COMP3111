@@ -34,17 +34,17 @@ public class HealthSearch {
 	public HealthSearch()
 	{
 		database = new SQLDatabaseEngine();
-		this.foodName = "N/A";
-		this.energy = "N/A";
-		this.protein = "N/A";
-		this.fat = "N/A";
-		this.carbohydrate = "N/A";
-		this.sugar = "N/A";
-		this.water = "N/A";
-		this.calcium = "N/A";
-		this.sodium = "N/A";
-		this.unit = "N/A";
-		this.fiber = "N/A";
+		this.foodName = "0";//"N/A";
+		this.energy = "0";//"N/A";
+		this.protein = "0";//"N/A";
+		this.fat = "0";//"N/A";
+		this.carbohydrate = "0";//"N/A";
+		this.sugar = "0";//"N/A";
+		this.water = "0";//"N/A";
+		this.calcium = "0";//"N/A";
+		this.sodium = "0";//"N/A";
+		this.unit = "0";//"N/A";
+		this.fiber = "0";//"N/A";
 		this.searchweb = new SearchWeb();
 		this.isFound = false;
 	}

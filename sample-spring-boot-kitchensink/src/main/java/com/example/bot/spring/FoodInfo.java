@@ -2,11 +2,19 @@ package com.example.bot.spring;
 
 public class FoodInfo{
 	protected String foodName;
+<<<<<<< HEAD
 	protected double energy;
 	protected double protein;
 	protected double fiber;
 	protected int price;
 
+=======
+	protected double energy = 0;
+	protected double protein = 0;
+	protected double fiber = 0;
+	protected int price = 0;
+	
+>>>>>>> upstream/master
 	public FoodInfo() {}
 	public void setFoodName(String foodname) {
 		this.foodName = foodName;

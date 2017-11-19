@@ -2,6 +2,7 @@ package com.example.bot.spring;
 
 import java.io.IOException;
 
+
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -39,6 +40,9 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+
+
+@Slf4j
 public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
@@ -157,7 +161,7 @@ public class StageHandler {
 				+ "4 Feedback \n"
 				+ "5 User Guide(recommended for first-time users)\n"
 //				+ "6 Self Assessment(recommened for first-time users)\n\n"
-				+ "Please enter your choice:(1-5)";
+				+ "Please enter your choice:(1-5)\n";
 			}else {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
@@ -218,8 +222,53 @@ public class StageHandler {
 //				currentUser.setStage("SelfAssessment");
 //				currentUser.setSubStage(0);
 //				//move to self assessment
-//			}break;
-			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
+//			}break
+
+			case "code" :{
+				if(CouponWarehouse.isCampaignStarted()){
+					//if(currentUser.registerTime after compaign starting time)
+					if(CouponWarehouse.getInstance().isCouponRemaining() &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+						//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
+						replymsg = "Please input your invitation code:";
+
+						currentUser.setStage("Coupon");
+						currentUser.setSubStage(0);
+					}
+					else{
+						replymsg = "You are not either qualified nor there is no coupons remaining.";
+						currentUser.setStage("Main");
+						currentUser.setSubStage(0);
+					}
+				}
+				else{
+					replymsg = "Invalid input! Please input numbers from 1 to 5!!";
+					currentUser.setStage("Main");
+					currentUser.setSubStage(0);
+				}
+			}break;
+			case "6" :{
+				if(!CouponWarehouse.isCampaignStarted()){
+					MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
+					replymsg = replyinfo.getMsg();
+				}
+				else{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+			}break;
+			case "friend" :{
+				if(CouponWarehouse.isCampaignStarted()){
+					//if(currentUser.registerTime after compaign starting time)
+					replymsg = "This is your code for campaign:"
+				 		+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
+			 	}
+				else{
+					replymsg = "Invalid input! Please input numbers from 1 to 5!!";
+				}
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
+
+			}break;
+			default:{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 			}
 			//replymsg= msg);
 		}break;
@@ -931,7 +980,7 @@ public class StageHandler {
         		}
 			else
 				replymsg = "Please enter reasonable numbers!";
-				
+
 		}break;
 		// }break;
 		// case 2:{
@@ -1146,6 +1195,32 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
+	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+		String replymsg = "";
+		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
+			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
+			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
+			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
+				else replymsg = "@@" + "nowhere";
+
+			 	replymsg += "@@" + newCoupon.getInvitee() +"@@" + newCoupon.getCoupon();
+									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+									log.info(replymsg);
+									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+				//}
+				//else
+
+				//	replymsg = newCoupon.getCoupon();
+					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		}
+		else{
+			replymsg = "oops! Your code is either invalid or used. (You can not get coupon by the code issued to yourself)";
+		}
+		currentUser.setStage("Main");//back to main
+		currentUser.setSubStage(0);
+		database.updateUser(currentUser);//update user stage when the stage has been changed
+		return replymsg;
+	}
 
 	// this is self assessment Handler function
 //	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
@@ -1264,6 +1339,7 @@ public class StageHandler {
 					+ "Please first tell us some of your personal information: type anything to continue";
 			currentUser = new Users(event.getSource().getUserId());
 			database.pushUser(currentUser); // push new user
+			CouponWarehouse.getInstance().register(currentUser);
 		}finally {
 			database.updateUser(currentUser);//update user stage when the stage has been changed
 		}

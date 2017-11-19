@@ -1,4 +1,6 @@
 package com.example.bot.spring;
+<<<<<<< HEAD
+import java.util.*;
 /**
 * Users will store the basic variable and get/set/display function that a chatbot user need to has.
 *
@@ -71,7 +73,8 @@ public class Users {
 	* the other information that Users want us know
 	*/
     private String otherInfo  = "Default";
-
+		private double budget = 0;
+		//private String registerTime;
    // modified user's assessment scores
     /**
 	* the assessment score of the Users, default is -1 if they do not take the self-assessment
@@ -84,6 +87,8 @@ public class Users {
      */
 	public Users(String UID) {
 		this.UID = UID;
+	//	Date now = new Date();
+	//	registerTime = now.toString();
 	}
 
 	/**
@@ -94,6 +99,8 @@ public class Users {
 	public Users(String UID, String name) {
 		this.UID = UID;
 		this.name = name;
+	//	Date now = new Date();
+	//	registerTime = now.toString();
 	}
 
 	/**
@@ -116,6 +123,8 @@ public class Users {
 		this.age = age;
 		this.subStage = subStage;
 		this.stage = stage;
+	//	Date now = new Date();
+		//registerTime = now.toString();
 	}
 	/**
      * Copy constructor
@@ -130,6 +139,8 @@ public class Users {
 		this.age = u.age;
 		this.subStage = u.subStage;
 		this.stage = u.stage;
+	//	Date now = new Date();
+	//	registerTime = now.toString();
 	}
 
 	/**
@@ -241,7 +252,7 @@ public class Users {
      * @param s This is the other infomations that will be change to
      */
 	public void setOtherInfo(String s) {otherInfo = s;}
-
+	public void setBudget(double b) {budget = b;}
 	/**
      * This method is to change the assessment score of the Users
      * @param s This is the assessment score that will be change to
@@ -344,7 +355,8 @@ public class Users {
 	 * @return String this is the other information of the Users
      */
 	public String getOtherInfo() {return otherInfo;}
-
+	public double getBudget() {return budget;}
+	//public String getRegisterTime(){return registerTime;}
 	// modified user's assessment scores
 	/**
      * This method will return the assessmentScore of the Users

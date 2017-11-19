@@ -539,6 +539,7 @@ public class InputChecker {
 	}
 
 
+<<<<<<< HEAD
 
 	/**
 	* This method will check the input text(catch exception if it is not in correct format)
@@ -549,6 +550,8 @@ public class InputChecker {
 	* @see FoodInput
 	* @return boolean return whether the input text is in correct format
 	*/
+=======
+>>>>>>> upstream/master
 	public boolean foodAdd(String text, FoodInput foodInput, SQLDatabaseEngine database) {
 		try {
 		if(ValidOtherinfo(text)) {
@@ -561,6 +564,7 @@ public class InputChecker {
 	}
 
 
+<<<<<<< HEAD
 
 
 
@@ -573,6 +577,8 @@ public class InputChecker {
 	* @see FoodInput
 	* @return boolean return whether the input text is in correct format
 	*/
+=======
+>>>>>>> upstream/master
 	public boolean amountAdd(String text,FoodInput foodInput, SQLDatabaseEngine database) {
 		try {
 		if(ValidAmount(text)) {
@@ -606,6 +612,7 @@ public class InputChecker {
 	}
 
 
+<<<<<<< HEAD
 
 	/**
 	* This method will check the date of the FoodInput(catch exception if it is not in correct format)
@@ -613,6 +620,8 @@ public class InputChecker {
 	* @see FoodInput
 	* @return boolean return whether the input text is in correct format
 	*/
+=======
+>>>>>>> upstream/master
 	public boolean dateCheck(String text) {
 		try {
 			if(ValidDate(text)) {

@@ -94,7 +94,50 @@ import java.net.URI;
 @LineMessageHandler
 public class KitchenSinkController {
 
-
+	private String[] links = {
+				"http://www.health.com/food/thanksgiving-dairy-gluten-food-intolerances",
+				"http://www.health.com/food/brussels-sprout-recipes",
+				"http://www.health.com/syndication/whole-foods-amazon-turkey-deal",
+				"http://www.health.com/syndication/drinks-order-bar-unhealthy",
+				"http://www.health.com/food/keto-recipes",
+				"http://www.health.com/syndication/stove-top-stuffing-thanksgiving-dinner-pants",
+				"http://www.health.com/syndication/best-olive-oil-taste-test",
+				"http://www.health.com/syndication/guac-lock-keep-guacamole-fresh",
+				"http://www.health.com/syndication/halo-top-scoop-shop-los-angeles",
+				"http://www.health.com/food/infused-water-recipes",
+				"http://www.health.com/syndication/world-health-organization-antibiotics-animals",
+				"http://www.health.com/syndication/whole-foods-top-ten-food-trends",
+				"http://www.health.com/food/best-matcha-gifts",
+				"http://www.health.com/syndication/coffee-add-ins",
+				"http://www.health.com/syndication/what-to-do-after-eating-too-much-sugar",
+				"http://www.health.com/food/spicy-food-character",
+				"http://www.health.com/food/vegan-bacon-recipes-tempeh-bacon-eggplant-bacon",
+				"http://www.health.com/syndication/whole-foods-new-ahimi-vegan-tuna-sushi",
+				"http://www.health.com/food/mashed-potatoes-recipes",
+				"http://www.health.com/food/celebrity-healthy-snacks",
+				"http://www.health.com/syndication/new-trader-joes-products",
+				"http://www.health.com/food/foods-fight-fat-video",
+				"http://www.health.com/syndication/halo-top-non-dairy-flavors-ranked",
+				"http://www.health.com/food/how-to-use-instant-pot",
+				"http://www.health.com/food/buffalo-cauliflower-tacos-recipe-video",
+				"http://www.health.com/health/gallery/0,,20345806,00.html",
+				"http://www.health.com/health/gallery/0,,20350502,00.html",
+				"http://www.health.com/food/healthy-taco-recipes-video",
+				"http://www.health.com/food/broccoli-recipes",
+				"http://www.health.com/food/peanut-butter-dessert-recipes-video",
+				"http://www.health.com/food/stir-fry-recipes-turkey-thai-beef-shrimp",
+				"http://www.health.com/syndication/vegan-hollandaise-edgy-veg",
+				"http://www.health.com/food/candy-corn-ingredients-video",
+				"http://www.health.com/food/stop-food-guilt",
+				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",
+				"http://www.health.com/food/quinoa-recipes-burger-salad-muffin",
+				"http://www.health.com/food/slow-cooker-recipes-chicken-tarragon-chickpea-cumin",
+				"http://www.health.com/food/spaghetti-squash-recipes",
+				"http://www.health.com/food/valerie-bertinelli-cookbook-recipes",
+				"http://www.health.com/food/best-healthy-cookbooks-gifts-2017",
+				"http://www.health.com/food/best-gifts-breakfast-lovers",
+				"http://www.health.com/syndication/halo-top-dairy-free-vegan-flavors"
+	};
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
@@ -106,7 +149,7 @@ public class KitchenSinkController {
 	private String itscLOGIN;
 	private String replymsg;
 	private StageHandler stageHandler = new StageHandler();
-
+	private int number = 0; // No. of links
 
 
 	public KitchenSinkController() {
@@ -209,12 +252,12 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
-	
+
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
-	
+
 	private void push(@NonNull String to, @NonNull Message message) {
         push(to,  Collections.singletonList(message));
     }
@@ -245,7 +288,7 @@ public class KitchenSinkController {
 		}
 		this.reply(replyToken, new TextMessage(message));
 	}
-	
+
 	private void pushText(@NonNull String to, @NonNull String message) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("to must not be empty");
@@ -277,65 +320,90 @@ public class KitchenSinkController {
             throws Exception {
         String text = content.getText();
 		currentUser = getSourceUser(event);
-        switch(currentUser.getStage()) {
-        	case "Init":
-        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "Main":
-        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "LivingHabitCollector":{
-				//if(!(currentUser instanceof DetailedUser)){
-				//	currentUser = new DetailedUser(currentUser);
-				//}
-        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
-        	}	break;
-        	case "LivingHabitEditor":
-        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
-        		break;
-        	case "DietPlanner":
-        		replymsg = stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "HealthPedia":
-        		replymsg = stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "FeedBack":
-        		replymsg = stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
-        		break;
-        	case "UserGuide":
-        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
-        		break;
-//        	case "SelfAssessment":{
-//				if(!(currentUser instanceof DetailedUser)){
-//					currentUser = new DetailedUser(currentUser);
-//				}
-//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-//        	}break;
-        	default:
-        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
-        		break;
-        }
-		//database.updateUser(currentUser);
-		this.replyText(replyToken,replymsg);
 
-    }
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {
+			ArrayList<String> usersid= database.findallusers();
+			number++;
+			if(number > links.length-1) {
+				number = 0;
+			}
+			for (int i=0;i<usersid.size();i++) {
+				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
+			}
+		}
+
+		else {
+	        switch(currentUser.getStage()) {
+	        	case "Init":
+	        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "Main":
+	        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "LivingHabitCollector":{
+	        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
+	        	}	break;
+	        	case "LivingHabitEditor":
+	        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "DietPlanner":
+	        		replymsg = stageHandler.dietPlannerHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "HealthPedia":
+	        		replymsg = stageHandler.healthPediaHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "FeedBack":
+	        		replymsg = stageHandler.feedBackHandler(replyToken, event, text, currentUser, database);
+	        		break;
+	        	case "UserGuide":
+	        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
+	        		break;
+						case "Coupon":
+							replymsg = stageHandler.couponHandler(replyToken, event, text, currentUser, database);
+							break;
+	//        	case "SelfAssessment":{
+	//				if(!(currentUser instanceof DetailedUser)){
+	//					currentUser = new DetailedUser(currentUser);
+	//				}
+	//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
+	//        	}break;
+	        	default:
+	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
+	        		break;
+	        }
+	}
+
+
+		//database.updateUser(currentUser);
+		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
+			String[] replyinfo = replymsg.split("@@");
+			this.pushText(replyinfo[2], replyinfo[3]);
+			this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[3]);
+		}
+		else
+			this.replyText(replyToken,replymsg);
+
+	}
 
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
 
 	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
+		//Thread chatbotThread = new Thread(() -> {
+			ProcessBuilder processBuilder = new ProcessBuilder(args);
+			try {
+				Process start = processBuilder.start();
+				int i = start.waitFor();
+				log.info("result: {} =>  {}", Arrays.toString(args), i);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			} catch (InterruptedException e) {
+				log.info("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+		//});
+		//chatbotThread.start();
 	}
 
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
