@@ -13,23 +13,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+apply plugin: "jacoco"
+ jacocoTestReport {
+     reports {
+         xml.enabled false
+         csv.enabled false
+         html.destination file("${buildDir}/jacocoHtml")
+} 
+}
 
 apply plugin: 'org.springframework.boot'
 
 dependencies {
     compile project(':line-bot-spring-boot')
     compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20090211'
 }
 
 test {
-    environment "DATABASE_URL", "postgres://paocphmcxhpjre:585982fcc538481f5faa1335693c5bfdbbecbccd68942ccf7ed34e6db9c47e6e@ec2-54-221-212-208.compute-1.amazonaws.com:5432/d1ep77ar19hb0j" 
-}
-
-apply plugin: "jacoco"
-jacocoTestReport {
-reports {
-xml.enabled false
-csv.enabled false
-html.destination file("${buildDir}/jacocoHtml")
-}
+    environment "DATABASE_URL", "postgres://paocphmcxhpjre:585982fcc538481f5faa1335693c5bfdbbecbccd68942ccf7ed34e6db9c47e6e@ec2-54-221-212-208.compute-1.amazonaws.com:5432/d1ep77ar19hb0j"
 }
