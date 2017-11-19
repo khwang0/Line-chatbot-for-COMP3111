@@ -276,7 +276,7 @@ public class KitchenSinkController {
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
-		currentUser = getSourceUser(event);
+		    currentUser = getSourceUser(event);
         switch(currentUser.getStage()) {
         	case "Init":
         		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
@@ -316,9 +316,14 @@ public class KitchenSinkController {
         		break;
         }
 		//database.updateUser(currentUser);
+		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
+			String[] replyinfo = replymsg.split("@@");
+			this.pushText(replyinfo[0],replyinfo[2]);
+			this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[2]);
+		}
 		this.replyText(replyToken,replymsg);
 
-    }
+	}
 
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();

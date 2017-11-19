@@ -220,7 +220,9 @@ public class StageHandler {
 //			}break
 			case "code" :{
 				//if(currentUser.registerTime after compaign starting time)
-				if(CouponWarehouse.getInstance().isCouponRemaining()){
+				if(CouponWarehouse.getInstance().isCouponRemaining() &&
+					CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+					//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
 					replymsg = "Please input your invitation code:";
 
 					currentUser.setStage("Coupon");
@@ -232,14 +234,10 @@ public class StageHandler {
 			}break;
 			case "friend" :{
 				//if(currentUser.registerTime after compaign starting time)
-				if(CouponWarehouse.getInstance().isCouponRemaining()){
-					replymsg = "This is your code for campaign:" + CouponWarehouse.getInstance().issueCode();
-					currentUser.setStage("Main");
-					currentUser.setSubStage(0);
-				}
-				else{
-					replymsg = "You are not either qualified nor there is no coupons remaining.";
-				}
+				replymsg = "This is your code for campaign:"
+				 + CouponWarehouse.getInstance().issueCode(currentUser.getID());
+				currentUser.setStage("Main");
+				currentUser.setSubStage(0);
 			}break;
 			default:{replymsg = "Invalid input! Please input numbers from 1 to 4!!";}
 			}
@@ -1050,7 +1048,13 @@ public class StageHandler {
 	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(text)){
-			replymsg = CouponWarehouse.getInstance().issueCoupon(text);
+			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
+			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
+			 	replymsg = "@@" + newCoupon.getInviter()
+			 						+"@@" + newCoupon.getInvitee()
+									+"@@" + newCoupon.getCoupon();
+				else
+					replymsg = newCoupon.getCoupon();
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used.";

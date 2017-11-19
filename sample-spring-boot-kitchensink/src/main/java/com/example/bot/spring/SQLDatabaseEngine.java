@@ -15,6 +15,26 @@ import java.net.URI;
 @Slf4j
 public class SQLDatabaseEngine extends DatabaseEngine {
 
+	ArrayList<String> fetchUIDs(){
+		ArrayList<String> UIDs = new ArrayList<String>();
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM users");
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				UIDs.add(rs.getString(1));
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		return UIDs;
+	}
+
 	Users searchUser(String uidkey) throws Exception {
 		Users user = null;
 		try {
@@ -47,8 +67,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			}
 			rs.close();
 			stmt.close();
-			connection.close();			
-			
+			connection.close();
+
 
 		} catch (Exception e) {
 			log.info(e.getMessage());
@@ -56,8 +76,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		finally {
 
 		}
-		
-		
+
+
 		if(user != null)	{
 			return user;
 		}
@@ -196,7 +216,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			String gender =Character.toString(currentUser.getGender());
-			
+
 			if(search_intake_reference(gender,currentUser.getAge())) {
 				ArrayList<Double> plan = new ArrayList<Double>();
 				PreparedStatement ref = connection.prepareStatement("SELECT * FROM intake_reference WHERE gender = ? AND min_age <= ? AND max_age >= ?" );
@@ -208,29 +228,29 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 					plan.add(result.getDouble(8));//fiber0
 					plan.add(result.getDouble(9));//energy1
 					plan.add(result.getDouble(10));//protein2
-					
+
 					plan.add(result.getDouble(4));//fiber_serve3
 					plan.add(result.getDouble(5));//energy_serve4
 					plan.add(result.getDouble(6));//meat_serve5
 					plan.add(result.getDouble(7));//milk_serve6
 				}
-				
+
 				ref.close();
 				result.close();
-				
+
 				PreparedStatement stmt = connection.prepareStatement(
 						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
 				//String gender = new StringBuilder().append("").append(currentUser.getGender()).toString();
 
 				stmt.setString(1, currentUser.getID());
-				
+
 				stmt.setDouble(2, plan.get(0));//fiber
 				stmt.setDouble(3, plan.get(1));//energy
 				stmt.setDouble(4, plan.get(2));//protein
 //				stmt.setDouble(2, 0.5);//fiber
 //				stmt.setDouble(3, 0.5);//energy
 //				stmt.setDouble(4, 0.5);//protein
-				
+
 				//set the food_name
 	//			stmt.setString(5,"default");//default value
 	//			//set the food_amount
@@ -260,7 +280,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				stmt.setDouble(8, plan.get(4));//energy_serve
 				stmt.setDouble(9, plan.get(5));//meat_serve
 				stmt.setDouble(10, plan.get(6));//milk_serve
-				
+
 				stmt.execute();
 				stmt.close();
 				connection.close();
@@ -269,7 +289,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			else {
 				PreparedStatement stmt = connection.prepareStatement(
 						"INSERT INTO diet_plan VALUES (?,?,?,?,?,?,?,?,?,?)");//id | fiber | energy | protein | food_name | food_amount
-				
+
 				stmt.setString(1, currentUser.getID());
 				stmt.setDouble(2, 40);//fiber
 				stmt.setDouble(3, 717);//energy
@@ -299,19 +319,19 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				stmt.setDouble(8, 6);//energy_serve
 				stmt.setDouble(9, 3);//meat_serve
 				stmt.setDouble(10, 2.5);//milk_serve
-				
+
 				stmt.execute();
 				stmt.close();
 				connection.close();
 			}
 
 		} catch (Exception e) {
-			
-			return false; 
+
+			return false;
 		}
 		return true;
 	}
-	
+
 	boolean search_intake_reference(String gender, int age){
 		try {
 			Connection connection = this.getConnection();
@@ -332,14 +352,14 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return false;
 	}
-	
-	
-	
+
+
+
 	//Display function for the diet plan to return a String
 	String display_diet_plan(String user_id, double budget) {
 		String result = "(DAILY BASIS)\n";
 
-		
+
 		try {
 			ArrayList<Double> plan_info = search_plan(user_id);
 			double fiber = plan_info.get(0);
@@ -347,16 +367,16 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			double protein = plan_info.get(2);
 			double meat_serve = plan_info.get(5);
 			double milk_serve = plan_info.get(6);
-			
+
 			double protein_meat = protein*meat_serve/(meat_serve+milk_serve);
 			double protein_milk = protein*milk_serve/(meat_serve+milk_serve);
-			
+
 			result = result + "Vegetables & Fruit: " + Double.toString(fiber) + "\n";
 			result = result + "Grain (cereal) foods: " + Double.toString(energy) + "\n";
 			result = result + "Meat: " + String.format("%.2f", protein_meat) + "\n";
 			result = result + "Milk: " + String.format("%.2f", protein_milk) + "\n";
 			result = result + "Budget: " + Double.toString(budget) + "\n";
-			
+
 //			Connection connection = this.getConnection();
 //
 //			PreparedStatement stmt = connection.prepareStatement("SELECT fiber, energy, protein FROM diet_plan WHERE id = ?");
@@ -365,7 +385,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 //			ResultSet rs = stmt.executeQuery();
 //
 //			if(rs.next()) {
-//				
+//
 //			}
 //
 //			stmt.close();
@@ -375,7 +395,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;
 	}
-	
+
 	//Query the target diet plan info from "diet_plan" table and return
 	ArrayList<Double> search_plan(String user_id) {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table
@@ -393,7 +413,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				plan_info.add(rs.getDouble(3));//protein
 				//plan.info.add(rs.getDouble(4));//budget
 				plan_info.add(rs.getDouble(4));//fiber_serve
-				plan_info.add(rs.getDouble(5));//energy_serve 
+				plan_info.add(rs.getDouble(5));//energy_serve
 				plan_info.add(rs.getDouble(6));//meat_serve
 				plan_info.add(rs.getDouble(7));//milk_serve
 			}
@@ -432,7 +452,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} catch (Exception e) {
 			log.info("query error for search_current: {}", e.toString());
 		}
-			
+
 		return current_info;//can be null
 
 	}
@@ -456,37 +476,37 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				double current_price = 0;
 				previous_protein = rs.getDouble(1);
 				previous_energy = rs.getDouble(2);
-				previous_fiber = rs.getDouble(3);	
+				previous_fiber = rs.getDouble(3);
 				previous_price = rs.getDouble(4);
-				
+
 				current_price = price + previous_price;
-				
-				
+
+
 				if( !healthSearcher.getProtein().equals("N/A")) {
 					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
 				}
 				else {
 					current_protein = previous_protein;
-					
+
 				}
 				if( !healthSearcher.getEnergy().equals("N/A")) {
 					current_energy = previous_energy + Double.parseDouble(healthSearcher.getEnergy())*amount/100.0;
 				}
 				else {
 					current_energy = previous_energy;
-				}				
+				}
 				if( !healthSearcher.getFiber().equals("N/A")) {
 					current_fiber = previous_fiber + Double.parseDouble(healthSearcher.getFiber())*amount/100.0;
 				}
 				else {
 					current_fiber = previous_fiber;
-				}	
-				
-				
-				
-				
-				
-				
+				}
+
+
+
+
+
+
 				PreparedStatement stmt2 = connection.prepareStatement(
 				"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
@@ -517,9 +537,9 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-	} 
-	
-	
+	}
+
+
 	String reportDiet(String text, String id) {
 		String answer =" ";
 		try {
@@ -587,11 +607,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return result;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	boolean updateUser(Users user) {
 		boolean result = false;
 
@@ -605,7 +625,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setString(2, temp) ;
 			stmt.setDouble(3, user.getHeight());
 			stmt.setDouble(4, user.getWeight());
-			stmt.setInt(5, user.getAge()); 
+			stmt.setInt(5, user.getAge());
 			stmt.setString(6,user.getStage());
 			stmt.setInt(7,user.getSubStage());
 			stmt.setInt(8,user.getExercise());

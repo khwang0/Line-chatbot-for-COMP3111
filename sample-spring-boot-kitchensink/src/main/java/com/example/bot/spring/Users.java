@@ -24,13 +24,11 @@ public class Users {
    // modified user's assessment scores
     private int assessmentScore = -1;
 
-	private int couponsRemaining;
 
 	public Users(String UID) {
 		this.UID = UID;
 		Date now = new Date();
 		registerTime = now.toString();
-
 	}
 	public Users(String UID, String name) {
 		this.UID = UID;
@@ -114,9 +112,6 @@ public class Users {
 	// modified user's assessment scores
 	public int getAssessmentScore(){return assessmentScore;}
 
-	public void update(int couponsRemaining){
-		this. couponsRemaining = couponsRemaining;
-	}
 
 	@Override
 	public String toString() {
