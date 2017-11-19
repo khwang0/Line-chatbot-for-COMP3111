@@ -2,6 +2,7 @@ package com.example.bot.spring;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
 import java.io.*;
 import org.json.*;
 //import org.json.simple.parser.JSONParser;
@@ -9,10 +10,9 @@ public class MenuReader {
 	String[] nameList;
 	int[] priceList;
 	String [][] ingredientList;
-	private SQLDatabaseEngine database;
+	//private SQLDatabaseEngine database;
 
 	public MenuReader(){
-		database = new SQLDatabaseEngine();
 	}
 	private String readJSONFile(String url) {
 		File file = new File(url);
@@ -34,9 +34,10 @@ public class MenuReader {
 		return sb.toString();
 	}
 
-	public boolean readFromText(String plainText){
+	public boolean readFromText(String plainText,SQLDatabaseEngine database){
 		nameList = new String[1];
 		priceList = new int[1];
+		ingredientList = new String[1][];
 		String patternString = "(.+?)([0-9]+)";
 		Pattern pattern = Pattern.compile(patternString);
 		Matcher matcher = pattern.matcher(plainText);
@@ -46,12 +47,15 @@ public class MenuReader {
 		}
 		nameList[0] = matcher.group(1);
 		priceList[0] = Integer.parseInt(matcher.group(2));
-		String[] temp = plainText.split(" served with ");
-		if (temp.length==1) {
-			temp = plainText.split(" on ");
+		String[] temp = database.getFoodInfo();
+		ArrayList<String> tempList = new ArrayList<String>();
+		for (int i = 0; i<temp.length; i++ ) {
+			if (nameList[0].contains(temp[i])) {
+				tempList.add(temp[i]);
+			}
 		}
-		ingredientList = new String[1][temp.length];
-		ingredientList[0] = temp;
+		ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
+		ingredientList[0] = tempList.toArray(new String[0]);
 		return fi;
 	}
 
