@@ -81,7 +81,7 @@ public class CouponWarehouse{
   final private static int NUMOFCOUPONS = 5000;
   final private static int NUMOFCODES = 5000;
   private static ArrayList<String> existingUids;
-  private static HashMap<String, ArratList<String>> inviteeOfExistingUsers = new HashMap<String,ArratList<String>>();
+  private static HashMap<String, ArrayList<String>> inviteeOfExistingUsers = new HashMap<String,ArratList<String>>();
   private static ArrayList<String> newUids = new ArrayList<String>();
   private static ArrayList<String> codes = new ArrayList<String>();
   private static ArrayList<Coupon> coupons = new ArrayList<Coupon>();
