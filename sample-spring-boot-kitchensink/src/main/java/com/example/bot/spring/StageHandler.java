@@ -43,6 +43,7 @@ public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
 	private foodInput foodinput = null;
+	private foodinfo food = null;
 	private	String[] question = {"Q1: You limit your intake of high-fat or sugary foods to a minimum of one a day\n",
 								"Q2: You understand the difference between types of fat (saturated and unsaturated fat) and always opt for heart friendly options when cooking\n",
 								"Q3: You believe in eating what you want but in moderation\n",
@@ -227,13 +228,14 @@ public class StageHandler {
 									  +"3 Design My Diet Plan\n"
 									  +"4 Reminder\n"
 									  +"5 Self-Assessment\n"
+									  +"6 Insert user-defined food\n"
 									  +"(type other things to back to menu)";
 			currentUser.setSubStage(-1);
 		}break;
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 5) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 6) {
 					replymsg= REDIRECT;
 				}
 				else {
@@ -270,13 +272,21 @@ public class StageHandler {
 		}break;
 		case 12:{
 			if(inputChecker.amountAdd(text, foodinput, database)) {
-				inputChecker.consumptionUpdate(healthSearcher,database,Integer.parseInt(text),event.getSource().getUserId(),time);
-				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
-				currentUser.setSubStage(0) ;
+				replymsg= "Please enter the price it roughly costs:";
+				currentUser.setSubStage(currentUser.getSubStage()+1) ;
 				}
 			else
 				replymsg= "Please enter a reasonable number!";
 		}break;
+		case 13:{
+			if(inputChecker.priceAdd(text, foodinput, database)) {
+				inputChecker.consumptionUpdate(healthSearcher,database,foodinput.getAmount(),event.getSource().getUserId(),time,Float.valueOf(text));
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+				currentUser.setSubStage(0) ;
+				}
+			else
+				replymsg= "Please enter a reasonable number!";				
+		}break;	
 		case 2:{
 			replymsg= "Please enter the date(yyyymmdd): ";
 			currentUser.setSubStage(currentUser.getSubStage()+20) ;
@@ -392,6 +402,57 @@ public class StageHandler {
 					+ "\nReply anything to start or reply 'q' to reutrn to the main menu...";
 			currentUser.setSubStage(-2);
 		}break;
+		
+		
+		
+		//subStage6 : insert user-defined data
+		case 6:{
+			food = new foodinfo();
+			replymsg= "Please enter the food name: ";
+			currentUser.setSubStage(currentUser.getSubStage()+10);
+		}break;
+		case 16:{			
+			if(inputChecker.foodAdd(text,food,database)) {
+				replymsg= "Please enter rough energy in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else replymsg= "Please enter valid food name: ";
+		}break;
+		case 17:{
+			
+			if(inputChecker.energyAdd(text,food,database)) {
+				replymsg= "Please enter rough protein in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+			}
+			else replymsg= "Please enter valid number: ";
+		}break;
+		case 18:{
+			
+			if(inputChecker.proteinAdd(text,food,database)) {
+				replymsg= "Please enter rough fiber in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);				
+			}
+			else replymsg= "Please enter valid number: ";
+			
+			
+		}break;
+		case 19:{
+			
+			if(inputChecker.fiberAdd(text,food,database)) {
+				replymsg= "Please enter rough price in 100g: ";
+				currentUser.setSubStage(currentUser.getSubStage()+1);	
+			}
+			else replymsg= "Please enter valid number: ";	
+		}break;
+		case 20:{
+			
+			if(inputChecker.priceAdd(text,food,database)) {
+				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				currentUser.setSubStage(0);	
+			}
+			else replymsg= "Please enter valid number: ";
+						
+		}break;	
 		case -2:{
 			if(text.equalsIgnoreCase("q")) {
 				currentUser.setStage("Main");

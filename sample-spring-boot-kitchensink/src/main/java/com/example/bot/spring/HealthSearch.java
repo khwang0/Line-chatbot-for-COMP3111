@@ -13,10 +13,11 @@ public class HealthSearch {
 	private String calcium;
 	private String sodium;
 	private String unit;
+	private String fiber;
 	//private int mode;
 
 	public HealthSearch()
-		{
+	{
 		this.foodName = "N/A";
 		this.energy = "N/A";
 		this.protein = "N/A";
@@ -27,10 +28,9 @@ public class HealthSearch {
 		this.calcium = "N/A";
 		this.sodium = "N/A";
 		this.unit = "N/A";
+		this.fiber = "N/A";
 		this.searchweb = new SearchWeb();
 		this.isFound = false;
-
-
 	}
 
 	public void setKeyword(String keyword) {
@@ -71,6 +71,7 @@ public class HealthSearch {
 			this.calcium = searchweb.RegexStringProperty(result,"Sodium, Na");
 
 			this.sodium = searchweb.RegexStringProperty(result,"Calcium, Ca");
+			this.fiber = searchweb.RegexStringProperty(result,"Fiber");
 		}
 		else {
 			this.isFound=false;
@@ -110,6 +111,8 @@ public class HealthSearch {
 	public String getUnit(){
 		return this.unit;
 	}
-
+	public String getFiber() {
+		return this.fiber;
+	}
 
 }
