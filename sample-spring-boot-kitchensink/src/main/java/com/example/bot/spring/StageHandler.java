@@ -1074,7 +1074,7 @@ public class StageHandler {
 	}
 	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
-		if(CouponWarehouse.getInstance().isCodeValid(text) || !CouponWarehouse.getInstance().checkSelf(currentUSer.getID()) ){
+		if(CouponWarehouse.getInstance().isCodeValid(text) || !CouponWarehouse.getInstance().checkSelf(currentUser.getID()) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
 
