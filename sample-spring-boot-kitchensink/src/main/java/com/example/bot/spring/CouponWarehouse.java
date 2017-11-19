@@ -80,13 +80,13 @@ public class CouponWarehouse{
   }
 
   public String issueCode(String inviter) {
-  //  for(Coupon c:coupons){
-    //  if(c.getInviter().equals(inviter))  return c.getCode();
-    //}
+    for(Coupon c:coupons){
+      if(c.getInviter().equals(inviter))  return c.getCode();
+    }
 
 	  Random rand = new Random();
 	  int n = rand.nextInt(codes.size());
-	  assert(!(n >= 0 && n < codes.size()));
+	  //assert(!(n >= 0 && n < codes.size()));
 	  String code = codes.get(n);
     coupons.add(new Coupon(inviter,code));
     codes.remove(code);
