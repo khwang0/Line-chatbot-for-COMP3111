@@ -59,7 +59,7 @@ public class MenuReader {
 		//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
 		ingredientList = new String[1][tempList.size()];
 		ingredientList[0] = tempList.toArray(new String[tempList.size()]);
-		database.pushTest(ingredients[0].length);
+		database.pushTest(ingredientList[0].length);
 		return fi;
 	}
 
