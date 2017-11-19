@@ -155,12 +155,13 @@ public class SQLDatabaseEngineTester {
 	public void testUpdateconsumption() throws Exception {
 		boolean thrown = false;
 		HealthSearch healthSearcher = new HealthSearch();
+		HealthSearch healthSearcherNA = new HealthSearch();
 		//if case & null
 		Users user3 = new Users("1003test","HXH");
 		//else case
 		databaseEngine.updateconsumption(healthSearcher,100, "1003test", "20171119010101",30);
-		//if case && null
-		databaseEngine.updateconsumption(healthSearcher,100, "1003test", "20171119010122",30);
+		//if case -> user exist && null
+		databaseEngine.updateconsumption(healthSearcherNA,100, "1003test", "20171119010122",30);
 		
 		//if case & not null
 		healthSearcher.setKeyword("apple");
@@ -234,6 +235,11 @@ public class SQLDatabaseEngineTester {
 		if (answer.equals(" ")) {
 			thrown = true;
 		}
+		//else case 
+		String answer2 = databaseEngine.reportDiet("20171119", "100000test");
+		if (!answer2.equals(" ")) {
+			thrown = true;
+		}
 		
 		assertThat(!thrown).isEqualTo(true);	
 	}
@@ -247,6 +253,29 @@ public class SQLDatabaseEngineTester {
 		if (answer.length==0) {
 			thrown = true;
 		}		
+		assertThat(!thrown).isEqualTo(true);	
+	}
+	
+	//test findallusers()
+	@Test
+	public void testFindallusers() throws Exception {
+		boolean thrown =  false;
+		
+		ArrayList<String> answer = databaseEngine.findallusers();
+		if (answer.size()==0) {
+			thrown = true;
+		}		
+		assertThat(!thrown).isEqualTo(true);	
+	}
+	
+	//test updateUser
+	@Test
+	public void testUpdateUser() throws Exception {
+		boolean thrown =  false;
+		
+		Users user = new Users("1004test","HHH");
+		boolean answer = databaseEngine.updateUser(user);
+
 		assertThat(!thrown).isEqualTo(true);	
 	}
 	

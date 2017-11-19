@@ -462,20 +462,20 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 				current_price = price + previous_price;
 
 
-				if( !healthSearcher.getProtein().equals("N/A")) {
+				if( !healthSearcher.getProtein().equals("0")) {
 					 current_protein = previous_protein + Double.parseDouble(healthSearcher.getProtein())*amount/100.0;
 				}
 				else {
 					current_protein = previous_protein;
 
 				}
-				if( !healthSearcher.getEnergy().equals("N/A")) {
+				if( !healthSearcher.getEnergy().equals("0")) {
 					current_energy = previous_energy + Double.parseDouble(healthSearcher.getEnergy())*amount/100.0;
 				}
 				else {
 					current_energy = previous_energy;
 				}
-				if( !healthSearcher.getFiber().equals("N/A")) {
+				if( !healthSearcher.getFiber().equals("0")) {
 					current_fiber = previous_fiber + Double.parseDouble(healthSearcher.getFiber())*amount/100.0;
 				}
 				else {
@@ -546,7 +546,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
-<<<<<<< HEAD
 	
 	ArrayList<String> findallusers() {
 		ArrayList<String> answer = new ArrayList<String>();
