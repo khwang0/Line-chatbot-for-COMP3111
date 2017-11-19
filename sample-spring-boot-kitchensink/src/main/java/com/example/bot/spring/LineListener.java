@@ -4,6 +4,11 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+=======
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+>>>>>>> be34857748acf9bf28ab523e48002190ebdd375e
 import com.example.bot.spring.textsender.*;
 
 @Component
@@ -32,10 +37,10 @@ public class LineListener extends Thread{
 			//TODO: Add what ever function need to run
 			//execute 1 time per hour
 			try { 
-				//confirmBroadcaster.broadcast();
-				//cancelBroadcaster.broadcast();
+				confirmBroadcaster.broadcast();
+				cancelBroadcaster.broadcast();
 				uqAnswerReplier.broadcast();
-				//double11Broadcaster.broadcast();				
+				double11Broadcaster.broadcast();				
 			}catch(Exception e) {
 				e.printStackTrace();
 			}

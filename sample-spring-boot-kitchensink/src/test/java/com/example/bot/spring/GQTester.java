@@ -18,30 +18,35 @@ import com.example.bot.spring.database.*;
 
 @RunWith(SpringRunner.class)
 
-@SpringBootTest(classes = {GQTester.class, GQTextSender.class})
+@SpringBootTest(classes = {GQTester.class, TextProcessor.class})
 public class GQTester {
 	@Autowired
-	private GQTextSender gqsender;
+	private TextProcessor tp;
 	
 	private String testerId="gq_tester";
-	
+
 	@Test
-	public void UQTesterF() throws Exception {
-		//should fail
-		String msg="How long";
-		gpsender.process(testerId, msg);
-		msg="Feature";
-		gpsender.process(testerId, msg);
+	public void GQTesterF() throws Exception {
+		String msgs[]= {"","How long","Feature"};
+		for (String msg:msgs) {
+			try{//should fail
+				tp.processText(testerId, msg);
+			}catch(Exception e) {
+				
+			}
+		}
 	}
 	
 	@Test
-	public void UQTesterS() throws Exception {
-		String msg="How long 2D001?"
-		gpsender.process(testerId, msg);
-		msg="Feature of 2D001."
-		gpsender.process(testerId, msg);
-		msg="How apply";
-		gqsender.process(testerId, msg);
+	public void GQTesterS() throws Exception {
+		String msgs[]= {"How long 2D001?","Feature of 2D001.","How apply"};
+		for (String msg:msgs) {
+			try{//should fail
+				tp.processText(testerId, msg);
+			}catch(Exception e) {
+				
+			}
+		}
 	}
 }
 

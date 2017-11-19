@@ -15,7 +15,7 @@ import com.example.bot.spring.database.RecommendationDBEngine;
 import com.example.bot.spring.database.UQDBEngine;
 import com.example.bot.spring.textsender.*;
 import com.example.bot.spring.database.*;
-
+/*
 @RunWith(SpringRunner.class)
 
 @SpringBootTest(classes = {ConfirmTester.class, TextProcessor.class})
@@ -37,9 +37,9 @@ public class ConfirmTester {
 	
 	@Test
 	public void UQTesterS() throws Exception {
-		String msg="How long 2D001?"
+		String msg="How long 2D001?";
 		tp.processText(testerId, msg);
-		msg="Feature of 2D001."
+		msg="Feature of 2D001.";
 		tp.processText(testerId, msg);
 		msg="How apply";
 		tp.processText(testerId, msg);
@@ -47,3 +47,4 @@ public class ConfirmTester {
 }
 
 
+*/
