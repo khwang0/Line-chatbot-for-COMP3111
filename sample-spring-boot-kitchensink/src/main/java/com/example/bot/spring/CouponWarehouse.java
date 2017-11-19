@@ -71,9 +71,11 @@ public class CouponWarehouse{
 	  String code = codes.get(n);
     return code;
   }
-  public String issueCoupon(){
-    if (isCouponRemaining())
+  public String issueCoupon(String code){
+    if (isCouponRemaining()){
       couponsRemaining--;
+      codes.remove(code);
+    }
     return "This is your ice cream coupon(for 2 perons) :)";
   }
   public boolean isCodeValid(String code){
