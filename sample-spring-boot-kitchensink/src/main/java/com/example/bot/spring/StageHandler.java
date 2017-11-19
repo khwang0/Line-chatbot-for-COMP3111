@@ -1189,7 +1189,7 @@ public class StageHandler {
 //		return replymsg;
 //	}
 	public void unfollowHandler(Users currentUser , SQLDatabaseEngine database){
-		currentUser.setStage("Init");
+		currentUser.setStage("Main");
 		currentUser.setSubStage(0);
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
