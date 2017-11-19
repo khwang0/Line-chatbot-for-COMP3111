@@ -332,7 +332,7 @@ public class StageHandler {
 			else {
 				for (int k =0;k<ingredients.length; k++) {
 					if (ingredients[k].length==0) {
-						check == false;
+						check = false;
 						break;
 					}
 				}
