@@ -172,8 +172,8 @@ public class KitchenSinkController {
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
-		currenUser = getSourceUser(event);
-		stageHandler.unfollowHandler(currentUser);
+		currentUser = getSourceUser(event);
+		stageHandler.unfollowHandler(currentUser, database);
 		currentUser = null;
 	}
 
@@ -189,7 +189,7 @@ public class KitchenSinkController {
 			}catch(Exception e) {
 				log.info(e.getMessage());
 			}finally {
-				msgbuffer = stageHandler.followHandler(currentUser);
+				msgbuffer = stageHandler.followHandler(currentUser,database);
 			}
 		}catch(Exception e){
 			msgbuffer = "Welcome!!\nTo start using our services, please follow the instructions below.\n\n"
@@ -201,7 +201,7 @@ public class KitchenSinkController {
 		}finally {
 			this.replyText(replyToken, msgbuffer);
 			//this.pushText(currentUser.getID(),"FUCK");
-		//database.updateUser(currentUser);
+		database.updateUser(currentUser);
 		}
 	}
 

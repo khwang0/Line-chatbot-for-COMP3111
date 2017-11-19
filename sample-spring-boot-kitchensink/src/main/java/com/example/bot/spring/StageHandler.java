@@ -1115,13 +1115,13 @@ public class StageHandler {
 //		}
 //		return replymsg;
 //	}
-	public void unfollowHandler(Users currentUser){
+	public void unfollowHandler(Users currentUser , SQLDatabaseEngine database){
 		currentUser.setStage("Init");
 		currentUser.setSubStage(0);
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
 
-	public String followHandler(Users currentUser){
+	public String followHandler(Users currentUser , SQLDatabaseEngine database){
 		String msg = "User data reloaded. Type anything to continue...";
 		currentUser.setStage("Main");
 		currentUser.setSubStage(0);
