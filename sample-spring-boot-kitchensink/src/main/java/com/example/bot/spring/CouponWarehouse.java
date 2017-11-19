@@ -40,7 +40,7 @@ public class CouponWarehouse{
   }
   private CouponWarehouse(){
     generateRandomCode();
-    fetchUsers();
+    //fetchUsers();
   }
   static public CouponWarehouse getInstance(){
     return couponWarehouse;
@@ -79,9 +79,9 @@ public class CouponWarehouse{
   }
 
   public String issueCode(String inviter) {
-  //  for(Coupon c:coupons){
-  //    if(c.getInviter().equals(inviter))  return c.getCode();
-  //  }
+    for(Coupon c:coupons){
+      if(c.getInviter().equals(inviter))  return c.getCode();
+    }
 
 	  Random rand = new Random();
 	  int n = rand.nextInt(codes.size());
