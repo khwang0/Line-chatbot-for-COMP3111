@@ -182,7 +182,7 @@ public class CouponWarehouse{
       if(found){
        coupons.get(i).setInvitee(invitee);
        if( ! isNewUser(coupons.get(i).getInviter()) ){
-          ArrayList<String> invitees = inviteeOfExistingUsers.get(coupons.get(i).getInviter())
+          ArrayList<String> invitees = inviteeOfExistingUsers.get(coupons.get(i).getInviter());
           invitees.add(invitee);
           inviteeOfExistingUsers.put(coupons.get(i).getInviter(), invitees );
           couponsRemaining--;
