@@ -73,17 +73,7 @@ public class StageHandler {
 	private String suggestion = "";
 	private HealthSearch healthSearcher = new HealthSearch();
 	private String REDIRECT = "Redirecting...type anything to continue.";
-<<<<<<< HEAD
-	
-	
-	
-	
-	
-	
-	
-=======
 
->>>>>>> upstream/master
 	// used for serve-weight conversion
 	private float VF_weight_per_serve = 75;//75g Vegetable&Fruit
 	private float Grain_weight_per_serve = 500;//500kj Grain
