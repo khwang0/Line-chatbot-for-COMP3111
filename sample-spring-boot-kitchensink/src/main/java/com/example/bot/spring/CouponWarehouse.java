@@ -81,6 +81,7 @@ public class CouponWarehouse{
   final private static int NUMOFCOUPONS = 5000;
   final private static int NUMOFCODES = 5000;
   private static ArrayList<String> existingUids;
+  private static HashMap<String, ArratList<String>> inviteeOfExistingUsers = new HashMap<String,ArratList<String>>();
   private static ArrayList<String> newUids = new ArrayList<String>();
   private static ArrayList<String> codes = new ArrayList<String>();
   private static ArrayList<Coupon> coupons = new ArrayList<Coupon>();
@@ -180,18 +181,23 @@ public class CouponWarehouse{
       }
       if(found){
        coupons.get(i).setInvitee(invitee);
-       if( ! isNewUser(coupons.get(i).getInviter()) ) couponsRemaining--;
-       //log.info("X!#R@#%#$^%@$&U^%IJ^*(K%HE$YG#Q$WTC$QRC#)RC<@#_R(!#<_CR*@＃)");
+       if( ! isNewUser(coupons.get(i).getInviter()) ){
+          ArrayList<String> invitees = inviteeOfExistingUsers.get(coupons.get(i).getInviter())
+          invitees.add(invitee);
+          inviteeOfExistingUsers.put(coupons.get(i).getInviter(), invitees );
+          couponsRemaining--;
+        }
        return coupons.get(i);
      }
      return null;
     }
     return null;
   }
-  public boolean isCodeValid(String code){
+  public boolean isCodeValid(String invitee,String code){
     for(Coupon c : coupons){
       if(c.getCode().equals(code)) {
-        if(!isNewUser(c.getInviter())) return true;
+        if(!isNewUser(c.getInviter()))
+          if(! inviteeOfExistingUsers.get(c.getInviter()).contains(invitee)) return true;
         else if(c.getInvitee() == null) // no invitees
           return true;
       }

@@ -1074,7 +1074,7 @@ public class StageHandler {
 	}
 	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
-		if(CouponWarehouse.getInstance().isCodeValid(text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
+		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			 if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) ){
 
@@ -1086,7 +1086,7 @@ public class StageHandler {
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 				}
 				else
-				
+
 					replymsg = newCoupon.getCoupon();
 					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
