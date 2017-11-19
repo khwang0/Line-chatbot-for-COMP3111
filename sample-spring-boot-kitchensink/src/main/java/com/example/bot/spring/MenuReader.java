@@ -54,7 +54,7 @@ public class MenuReader {
 				tempList.add(temp[i]);
 			}
 		}
-		ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
+		//ingredientList[0] = new String[(tempList.toArray(new String[0])).length];
 		ingredientList[0] = tempList.toArray(new String[0]);
 		return fi;
 	}
@@ -82,7 +82,7 @@ public class MenuReader {
 		}catch(JSONException exception){
 
 		}finally{
-			
+
 		}
 		return true;
 	}

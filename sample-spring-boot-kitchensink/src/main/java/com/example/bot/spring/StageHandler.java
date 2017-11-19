@@ -314,11 +314,21 @@ public class StageHandler {
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			foodInput = new FoodInput(event.getSource().getUserId(),time);
+			foodInput.setPrice(50);
 			database.pushDietRecord(foodInput);
-			int amount = (100/ingredients[0].length);
-			int realPrice = (price[0]/ingredients[0].length);
+			int amount;
+			int realPrice;
+			if (ingredientsp[0].length!=0) {
+				amount = (100/ingredients[0].length);
+				realPrice = (price[0]/ingredients[0].length);
+			}
+			else{
+				amount = 100;
+				realPrice = 10;
+			}
 			for (int i =0; i<ingredients[0].length; i++) {
 				foodInput = new FoodInput(event.getSource().getUserId(),time);
+				foodInput.setPrice(60);
 				database.pushDietRecord(foodInput);
 				foodInput.setFoodName(ingredients[0][i]);
 				database.pushDietRecord(foodInput);
