@@ -229,5 +229,8 @@ public class CouponWarehouse{
   public static boolean isCampaignStarted(){
     return started;
   }
+  public boolean notGotCoupon(String uid){
+    return gotCouponNewUsers.contains(uid);
+  }
 
 }
