@@ -174,6 +174,10 @@ public class StageHandler {
 //						+ "6 Self Assessment(recommened for first-time users)\n\n"
 						+ "Please enter your choice:(1-5)";
 			}
+			if(CouponWarehouse.isCampaignStarted())
+			 	replymsg +="\n\nThe campaign is now in progress!! We have "
+										+ CouponWarehouse + " coupons left!! Type \"friend\" to get invitation code and invite your friends!!"
+										+ "And for new users please type \"code\" to send you and your inviter a coupon!!";
 			//replymsg= msg);
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
