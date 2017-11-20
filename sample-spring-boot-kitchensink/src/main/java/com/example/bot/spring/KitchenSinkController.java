@@ -373,7 +373,7 @@ public class KitchenSinkController {
 	        }
 	}
 		//database.updateUser(currentUser);
-		if(toMulitpleUsers(replymsg))
+		if(toMultipleUsers(replymsg))
 			pushToAll(replymsg);
 		/*
 		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
