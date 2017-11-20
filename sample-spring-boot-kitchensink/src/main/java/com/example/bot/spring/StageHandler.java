@@ -259,7 +259,7 @@ public class StageHandler {
 			}break;
 			case "friend" :{
 				if(CouponWarehouse.isCampaignStarted()){
-					//if(currentUser.registerTime after compaign starting time)
+					//if(currentUser.registerTime after compaign starting time
 					replymsg = "This is your code for campaign:"
 				 		+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
 			 	}
