@@ -12,9 +12,46 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+/**
+* FoodInfo will be the object that stores the value that will be pushed in the
+* foodinfo table in database (AKA local food database)
+* @author  G8
+* @version 1.0
+* @since   2017/11/19
+*/
 @Slf4j
 public class SQLDatabaseEngine extends DatabaseEngine {
+	/**
+	* This method returns all the UID of Users stored in users table in database
+	* @see Users
+	* @return ArrayList<String> returns ArrayList of UIDs
+	*/
+	ArrayList<String> fetchUIDs(){
+		ArrayList<String> UIDs = new ArrayList<String>();
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT * FROM users");
+			ResultSet rs = stmt.executeQuery();
 
+			while(rs.next()) {
+				UIDs.add(rs.getString(1));
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		return UIDs;
+	}
+	/**
+	* This method returns the Users retrieved from the information stored in users table
+	* in database where UID = uidkey
+	* @param uidkey the UID to search the informations
+	* @see Users
+	* @return Users returns Users with corresponding informations
+	*/
 	Users searchUser(String uidkey) throws Exception {
 		Users user = null;
 		try {
@@ -44,6 +81,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 		user.setEatingHabits(b);
 		 		user.setOtherInfo(rs.getString(16));
 		 		user.setAssessmentScore(rs.getInt(17));
+				user.setBudget(rs.getDouble(18));
+				//user.setRegisterTime(rs.getString(19));
 			}
 			rs.close();
 			stmt.close();
@@ -106,7 +145,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
 			
@@ -131,9 +170,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 	stmt.setArray(15,sqlArray);
 		 	stmt.setString(16,(user).getOtherInfo());
 		 	stmt.setInt(17,(user).getAssessmentScore());
+			stmt.setDouble(18,(user).getBudget());
+			//stmt.setString(19,(user).getRegisterTime());
 
-
-		    result = stmt.execute();
+		  result = stmt.execute();
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
@@ -547,7 +587,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return answer;
 
 	}
-	
+
 	ArrayList<String> findallusers() {
 		ArrayList<String> answer = new ArrayList<String>();
 		try {
@@ -570,10 +610,10 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 
 		return answer;
 	}
-	
-	
-	
-	
+
+
+
+
 	boolean pushDietRecord(FoodInput foodInput){
 		boolean result = false;
 		try {
@@ -686,8 +726,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(
-					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=? WHERE id = ?");
-			stmt.setString(17, user.getID());
+					"UPDATE users SET name=?,gender=?, height=?, weight =?, age =?, stage =?, substage =?, amountofexercise=?, bodyfat=?, caloriesconsump=?, carbsconsump=?, proteinconsump=?, vegfruitconsump=?, eatinghabits=?, otherinformation=?, assessmentscore=?, budget = ? WHERE id = ?");
+			stmt.setString(18, user.getID());
 			stmt.setString(1, user.getName());
 			String temp = ""+user.getGender();
 			stmt.setString(2, temp) ;
@@ -709,7 +749,8 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 			stmt.setArray(14,sqlArray);
 			stmt.setString(15,user.getOtherInfo());
 			stmt.setInt(16,user.getAssessmentScore());
-
+			stmt.setDouble(17,user.getBudget());
+			//stmt.setString(18,user.getRegisterTime());
 		    result = stmt.execute();
 			stmt.close();
 			connection.close();

@@ -129,7 +129,7 @@ public class KitchenSinkController {
 				"http://www.health.com/syndication/vegan-hollandaise-edgy-veg",
 				"http://www.health.com/food/candy-corn-ingredients-video",
 				"http://www.health.com/food/stop-food-guilt",
-				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",	
+				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",
 				"http://www.health.com/food/quinoa-recipes-burger-salad-muffin",
 				"http://www.health.com/food/slow-cooker-recipes-chicken-tarragon-chickpea-cumin",
 				"http://www.health.com/food/spaghetti-squash-recipes",
@@ -252,12 +252,12 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
-	
+
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
-	
+
 	private void push(@NonNull String to, @NonNull Message message) {
         push(to,  Collections.singletonList(message));
     }
@@ -288,7 +288,7 @@ public class KitchenSinkController {
 		}
 		this.reply(replyToken, new TextMessage(message));
 	}
-	
+
 	private void pushText(@NonNull String to, @NonNull String message) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("to must not be empty");
@@ -320,19 +320,19 @@ public class KitchenSinkController {
             throws Exception {
         String text = content.getText();
 		currentUser = getSourceUser(event);
-		
-		number++;
-		if(number > links.length-1) {
-			number = 0;
-		}
-		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {		
+
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {
 			ArrayList<String> usersid= database.findallusers();
+			number++;
+			if(number > links.length-1) {
+				number = 0;
+			}
 			for (int i=0;i<usersid.size();i++) {
 				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
-			}	 
+			}
 		}
-		
-		else {	
+
+		else {
 	        switch(currentUser.getStage()) {
 	        	case "Init":
 	        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
@@ -341,9 +341,6 @@ public class KitchenSinkController {
 	        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
 	        		break;
 	        	case "LivingHabitCollector":{
-					//if(!(currentUser instanceof DetailedUser)){
-					//	currentUser = new DetailedUser(currentUser);
-					//}
 	        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
 	        	}	break;
 	        	case "LivingHabitEditor":
@@ -361,6 +358,9 @@ public class KitchenSinkController {
 	        	case "UserGuide":
 	        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
 	        		break;
+						case "Coupon":
+							replymsg = stageHandler.couponHandler(replyToken, event, text, currentUser, database);
+							break;
 	//        	case "SelfAssessment":{
 	//				if(!(currentUser instanceof DetailedUser)){
 	//					currentUser = new DetailedUser(currentUser);
@@ -372,31 +372,38 @@ public class KitchenSinkController {
 	        		break;
 	        }
 	}
-		
-		
-		
-		
-		//database.updateUser(currentUser);
-		this.replyText(replyToken,replymsg);
 
-    }
+
+		//database.updateUser(currentUser);
+		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
+			String[] replyinfo = replymsg.split("@@");
+			this.pushText(replyinfo[2], replyinfo[3]);
+			this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[3]);
+		}
+		else
+			this.replyText(replyToken,replymsg);
+
+	}
 
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
 
 	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
+		//Thread chatbotThread = new Thread(() -> {
+			ProcessBuilder processBuilder = new ProcessBuilder(args);
+			try {
+				Process start = processBuilder.start();
+				int i = start.waitFor();
+				log.info("result: {} =>  {}", Arrays.toString(args), i);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			} catch (InterruptedException e) {
+				log.info("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+		//});
+		//chatbotThread.start();
 	}
 
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
