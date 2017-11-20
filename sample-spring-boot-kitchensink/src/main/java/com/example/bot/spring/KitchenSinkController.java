@@ -320,16 +320,16 @@ public class KitchenSinkController {
             throws Exception {
         String text = content.getText();
 		currentUser = getSourceUser(event);
-		
-		number++;
-		if(number > links.length-1) {
-			number = 0;
-		}
 		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {		
 			ArrayList<String> usersid= database.findallusers();
 			for (int i=0;i<usersid.size();i++) {
 				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
 			}	 
+			
+			number++;
+			if(number > links.length-1) {
+				number = 0;
+			}
 		}
 		
 		else {	
