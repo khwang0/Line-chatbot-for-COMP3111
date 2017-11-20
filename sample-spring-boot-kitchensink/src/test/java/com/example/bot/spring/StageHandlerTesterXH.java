@@ -2,13 +2,15 @@ package com.example.bot.spring;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.InputStream;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
@@ -42,81 +44,33 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
-@SpringBootTest(classes = { UsersTester.class, SQLDatabaseEngine.class })
-public class UsersTester {
-	//@Autowired
-	//private SQLDatabaseEngine databaseEngine;
+@SpringBootTest(classes = { StageHandlerTesterXH.class, StageHandler.class })
+public class StageHandlerTesterXH {
+	@Autowired
+	private SQLDatabaseEngine databaseEngine;
+	private StageHandler stageHandler;
 	
-	//@Test
-	public void testUserContrt1() throws Exception {
-		boolean thrown = false;
-		Users user = new Users("1001");
-		assertThat(user != null).isEqualTo(true);
+	String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
 
-	}
 	
-	//@Test
-	public void testUserContrt2() throws Exception {
-		boolean thrown = false;
-		Users user = new Users("1001", "HXH");
-		assertThat(user != null).isEqualTo(true);
-	}
-	
-	//@Test
-	public void testUserSetEatingHabits() throws Exception {
-		boolean[] eatingHabits = {false,false,false,false,false,false};
-		Users user = new Users("1001", "HXH");
-		user.setEatingHabits(eatingHabits);
-		boolean[] read = user.getEatingHabits();
-
-		assertThat(read.length != 0).isEqualTo(true);
-	}
-	
-	//@Test
-	public void testUserSetEatingHabits2() throws Exception {
-		Boolean[] eatingHabits = {false,false,false,false,false,false};
-		Users user = new Users("1001", "HXH");
-		user.setEatingHabits(eatingHabits);
-		boolean[] read = user.getEatingHabits();
-
-		assertThat(read.length != 0).isEqualTo(true);
-	}
-	
-	//@Test
-	public void testUsertoString() throws Exception {
-		boolean thrown = false;
-		Users user = new Users("1001", "HXH");
-		user.setAssessmentScore(-1);
-		if(user.toString() == null) {
-			thrown = true;
-		}
-
-		user.setAssessmentScore(20);
-		if(user.toString() == null) {
-			thrown = true;
-		}
-
-		user.setAssessmentScore(101);
-		if(user.toString() == null) {
-			thrown = true;
-		}
-
-		assertThat(!thrown).isEqualTo(true);
-	}
-
-
 //	@Test
-//	public void testNotFound() throws Exception {
+//	public void testMainStageHandler() throws Exception {
 //		boolean thrown = false;
-//		try {
-//			this.databaseEngine.search("0000000000");
-//		} catch (Exception e) {
+//		String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
+//		String text = "dummy";
+//		Users currentUser= new Users("test1001","HXH");
+//		currentUser.setSubStage(0);
+//		//case 0 if
+//		currentUser.setBodyFat(0);
+//		String reply = stageHandler.mainStageHandler(dummyReplyToken, event, text, currentUser, databaseEngine);
+////		//case 0 else
+////		user.setBodyFat(1);
+//		if (currentUser.getSubStage() != 1) {
 //			thrown = true;
 //		}
-//		assertThat(thrown).isEqualTo(true);
+//		
+//		assertThat(!thrown).isEqualTo(true);
 //	}
 
 }

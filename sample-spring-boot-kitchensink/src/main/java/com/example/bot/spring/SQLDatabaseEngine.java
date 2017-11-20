@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+
+@Slf4j
 /**
-* FoodInfo will be the object that stores the value that will be pushed in the
-* foodinfo table in database (AKA local food database)
+* SQLDatabaseEnging will be perform the function of retrieving, pushing and updating informations from real database
 * @author  G8
 * @version 1.0
 * @since   2017/11/19
@@ -48,7 +49,7 @@ public class SQLDatabaseEngine {
 	}
 
 	/**
-	* Retrieve users from data base.
+	* Retrieve users from database.
 	* @param uidkey User id as a key for searching
 	* @return A user of type Users with Id specified
 	*/
@@ -104,41 +105,11 @@ public class SQLDatabaseEngine {
 		}
 	}
 
-	// DetailedUser searchDetailedUser(Users user) throws Exception { //this contains bug
-	// 	DetailedUser newuser = null;
-	// 	try {
-	// 		Connection connection = this.getConnection();
-	// 		PreparedStatement stmt = connection.prepareStatement(
-	// 				"SELECT * FROM detailedusers WHERE id=(?)");
-	// 		stmt.setString(1,user.getID());
-	// 		ResultSet rs = stmt.executeQuery();
-
-	// 		while(rs.next()) {
-	// 			newuser = new DetailedUser(user);
-	// 			newuser.setExercise(rs.getInt(2)) ;
-	// 			newuser.setBodyFat(rs.getDouble(3));
-	// 			newuser.setCalories(rs.getInt(4));
-	// 			newuser.setCarbs(rs.getDouble(5)) ;
-	// 			newuser.setProtein(rs.getDouble(6));
-	// 			newuser.setVegfruit(rs.getDouble(7));
-	// 			newuser.setOtherInfo(rs.getString(9));
-	// 			newuser.setAssessmentScore(rs.getInt(10));
-	// 			Array sqlArray = rs.getArray(8);
-	// 			newuser.setEatingHabits((Boolean[])sqlArray.getArray());
-
-	// 		}
-	// 		rs.close();
-	// 		stmt.close();
-	// 		connection.close();
-	// 	} catch (Exception e) {
-	// 		log.info(e.getMessage());
-	// 	}
-	// 	if(newuser != null)	{
-	// 		return newuser;
-	// 	}
-	// 	throw new Exception("NOT FOUND");
-	// }
-
+	/**
+	* push users to data base.
+	* @param user Obsject of Users
+	* @return a boolean to indicate if the push is successful
+	*/
 	boolean pushUser(Users user) {
 		boolean result = false;
 		try {
@@ -147,7 +118,6 @@ public class SQLDatabaseEngine {
 					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
-			
 			String temp = ""+user.getGender();
 			stmt.setString(3, temp) ;
 			stmt.setDouble(4, user.getHeight());
@@ -178,38 +148,16 @@ public class SQLDatabaseEngine {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		// if(user instanceof DetailedUser) {
-		// try {
-		// 	Connection connection = this.getConnection();
-		// 	PreparedStatement stmt = connection.prepareStatement(
-		// 			"INSERT INTO detailedusers VALUES(?,?,?,?,?,?,?,?,?,?)");
-		// 	stmt.setString(1,user.getID());
-		// 	stmt.setInt(2, ((DetailedUser)user).getExercise());
-		// 	stmt.setDouble(3, ((DetailedUser)user).getBodyFat());
-		// 	stmt.setInt(4, ((DetailedUser)user).getCalories());
-		// 	stmt.setDouble(5, ((DetailedUser)user).getCarbs());
-		// 	stmt.setDouble(6, ((DetailedUser)user).getProtein());
-		// 	stmt.setDouble(7, ((DetailedUser)user).getVegfruit());
-		// 	boolean[] h = ((DetailedUser)user).getEatingHabits();
-		// 	Boolean[] b = new Boolean[h.length];
-		// 	for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
-		// 	Array sqlArray = connection.createArrayOf("bool",b);
-		// 	stmt.setArray(8,sqlArray);
-		// 	stmt.setString(9,((DetailedUser)user).getOtherInfo());
-		// 	stmt.setInt(10,((DetailedUser)user).getAssessmentScore());
-		// 	result = stmt.execute();
-		// 	stmt.close();
-		// 	connection.close();
-		// } catch (Exception e) {
-		// 	System.out.println(e);
-		// 	return result;
-		// }
-		// }
 		return result;
 	}
 
 	/*functions added by Xuhua*/
 	//Search existing user in diet_plan
+	/**
+	* retrieve diet plan of specific user from database.
+	* @param user_id user id to find the corresponding plan
+	* @return a boolean to indicate if the search is successful
+	*/
 	boolean search_diet_plan(String user_id) {
 		try {
 			Connection connection = this.getConnection();
@@ -231,6 +179,11 @@ public class SQLDatabaseEngine {
 	}
 
 	//Generate user diet_plan
+	/**
+	* generate a diet plan of specific user from database.
+	* @param currentUser Object of user to find the corresponding plan
+	* @return a boolean to indicate if the search and insert is successful
+	*/
 	public boolean gen_plan(Users currentUser){
 
 		try {
@@ -352,6 +305,12 @@ public class SQLDatabaseEngine {
 		return true;
 	}
 
+	/**
+	* retrieve diet plan of specific user from database.
+	* @param gender the infomation to search with
+	* @param age the infomation to search with
+	* @return a boolean to indicate if the search is successful
+	*/
 	boolean search_intake_reference(String gender, int age){
 		try {
 			Connection connection = this.getConnection();
@@ -374,8 +333,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-
-	//Display function for the diet plan to return a String
+	/**
+	* retrieve diet plan of specific user from database.
+	* @param user_id the infomation to search with
+	* @param budget the infomation to work with
+	* @return a String of the diet plan
+	*/
 	String display_diet_plan(String user_id, double budget) {
 		String result = "(DAILY BASIS)\n";
 
@@ -417,6 +380,11 @@ public class SQLDatabaseEngine {
 	}
 
 	//Query the target diet plan info from "diet_plan" table and return
+	/**
+	* retrieve the information of diet plan of specific user from database.
+	* @param user_id the user id to search with
+	* @return an ArrayList of the result
+	*/
 	ArrayList<Double> search_plan(String user_id) {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table
 		try {
@@ -451,6 +419,12 @@ public class SQLDatabaseEngine {
 	}
 
 	//Query the current diet status info from "diet_conclusion" table and return
+	/**
+	* retrieve the information of diet conclusion of specific user and date from database.
+	* @param user_id the user id to search with
+	* @param date the date to search with
+	* @return an ArrayList of the result
+	*/
 	ArrayList<Double> search_current(String user_id, String date) {
 		ArrayList<Double> current_info = new ArrayList<Double>(); // store the query result from current table
 		try {
@@ -478,6 +452,14 @@ public class SQLDatabaseEngine {
 	}
 
 	/*  Function added by ZK*/
+	/**
+	* update the information of diet_conclusion of specific user and date from database.
+	* @param id the user id to search with
+	* @param healthSearcher the searcher that the function need to use
+	* @param amount the amount of food to calculate with
+	* @param time the time to search with
+	* @param price the price to caculate with
+	*/
 	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time,double price) {
 		try {
 			Connection connection = this.getConnection();
@@ -521,12 +503,6 @@ public class SQLDatabaseEngine {
 				else {
 					current_fiber = previous_fiber;
 				}
-
-
-
-
-
-
 				PreparedStatement stmt2 = connection.prepareStatement(
 				"UPDATE diet_conclusion SET protein = ?, energy = ?, fiber = ?, price=? WHERE id = ? AND date = ?;");
 
@@ -559,7 +535,12 @@ public class SQLDatabaseEngine {
 		}
 	}
 
-
+	/**
+	* select the information of diet record of specific date from database.
+	* @param text user input text
+	* @param id the user id to search with
+	* @return String of the dietrecord
+	*/
 	String reportDiet(String text, String id) {
 		String answer =" ";
 		try {
@@ -586,7 +567,10 @@ public class SQLDatabaseEngine {
 		return answer;
 
 	}
-
+	/**
+	* retrieve all user id in table users from database.
+	* @return an ArrayList of user ids
+	*/
 	ArrayList<String> findallusers() {
 		ArrayList<String> answer = new ArrayList<String>();
 		try {
@@ -612,7 +596,11 @@ public class SQLDatabaseEngine {
 
 
 
-
+	/**
+	* push the information of foodinput to dietrecord table from database.
+	* @param foodInput the foodinput to push with
+	* @return a boolean to indicate if the push is successful
+	*/
 	boolean pushDietRecord(FoodInput foodInput){
 		boolean result = false;
 		try {
@@ -634,6 +622,13 @@ public class SQLDatabaseEngine {
 		}
 		return result;
 	}
+
+	/**
+	* push the information of foodInfo to foodinfo table from database.
+	* @param food the foodInfo to push with
+	* @see FoodInfo
+	* @return a boolean to indicate if the push is successful
+	*/
 	boolean pushFoodInfo(FoodInfo food) {
 		boolean result = false;
 		try {
@@ -666,7 +661,12 @@ public class SQLDatabaseEngine {
 		return result;
 	}
 
-
+	/**
+	* retrieve the information of foodInfo given foodInfo name of foodinfo table from database.
+	* @param foodname the food name to search with
+	* @see FoodInfo
+	* @return return a  FoodInfo object
+	*/
 	FoodInfo searchFoodInfo(String foodname){
 		//boolean result = false;
 		FoodInfo foodInfo = null;
@@ -699,7 +699,11 @@ public class SQLDatabaseEngine {
 		return foodInfo;
 	}
 
-
+	/**
+	* retrieve all the name of foodInfo in foodinfo table from database.
+	* @see FoodInfo
+	* @return a String[] of foodinfo name
+	*/
 	String[] getFoodInfo(){
 		ArrayList<String> foodNamesArray = new ArrayList<String>();
 		String[] foodNames;
@@ -728,8 +732,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-
-
+	/**
+	* update the information of user in users table from database.
+	* @param user the object of users to search with
+	* @see Users
+	* @return a boolean to indicate if the update is successful
+	*/
 	boolean updateUser(Users user) {
 		boolean result = false;
 
@@ -766,53 +774,6 @@ public class SQLDatabaseEngine {
 			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
-		}
-
-		// if(user instanceof DetailedUser) {
-		// try {
-		// 	Connection connection = this.getConnection();
-		// 	PreparedStatement stmt = connection.prepareStatement(
-		// 	"UPDATE detailedusers SET amountofexercise=?,bodyfat=?,caloriesconsump=?,carbsconsump=?,proteinconsump=?,vegfruitsonsump=?,"
-		// 	+ "eatinghabits=?,otherinformation = ?, assessmentscore = ? WHERE id = ?");
-		// 	stmt.setInt(1, ((DetailedUser)user).getExercise());
-		// 	stmt.setDouble(2, ((DetailedUser)user).getBodyFat());
-		// 	stmt.setInt(3, ((DetailedUser)user).getCalories());
-		// 	stmt.setDouble(4, ((DetailedUser)user).getCarbs());
-		// 	stmt.setDouble(5, ((DetailedUser)user).getProtein());
-		// 	stmt.setDouble(6, ((DetailedUser)user).getVegfruit());
-		// 	boolean[] h = ((DetailedUser)user).getEatingHabits();
-		// 	Boolean[] b = new Boolean[h.length];
-		// 	for(int i = 0 ; i < h.length ; i++) b[i] = new Boolean(h[i]);
-		// 	Array sqlArray = connection.createArrayOf("bool",b);
-		// 	stmt.setArray(7,sqlArray);
-		// 	stmt.setString(8,((DetailedUser)user).getOtherInfo());
-		// 	stmt.setInt(9,((DetailedUser)user).getAssessmentScore());
-		// 	stmt.setString(10,user.getID());
-		// 	result = stmt.execute();
-		// 	stmt.close();
-		// 	connection.close();
-		// } catch (Exception e) {
-		// 	System.out.println(e);
-		// 	return result;
-		// }
-		// }
-		return result;
-	}
-
-
-	boolean pushTest(int a){
-		boolean result = false;
-		try {
-			Connection connection = this.getConnection();
-			PreparedStatement stmt = connection.prepareStatement(
-					"INSERT INTO test VALUES(?)");
-			stmt.setInt(1,a);
-			result = stmt.execute();
-			stmt.close();
-			connection.close();
-		} catch (Exception e) {
-			System.out.println(e);
-			return result;
 		}
 		return result;
 	}
