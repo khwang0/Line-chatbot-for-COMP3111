@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 
 @Slf4j
-public class SQLDatabaseEngine extends DatabaseEngine {
+public class SQLDatabaseEngine {
 
 	/**
 	* Fetch user ids from the database.
