@@ -696,12 +696,12 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg = replymsg + "Heading to Main menu...";
-				return replymsg;
 				}
-				//else the quiz start
+			else{//else the quiz start
 				replymsg = replymsg +  "Then let's start the quiz ;) \n"
 						+ question[0];
 				currentUser.setSubStage(501);
+				}
 		}break;
 		case 510:{
 				replymsg = "Congratulations that you have finished the quiz!:)\n"
@@ -758,7 +758,6 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
-				return replymsg;
 			}
 			else {
 				replymsg= "Please reply a valid answer(T/F)";
