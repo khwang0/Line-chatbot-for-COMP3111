@@ -1201,17 +1201,13 @@ public class StageHandler {
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
 			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
-				else replymsg = "@@" + "nowhere";
+				else replymsg = "@@" + "-1"; // dummy representation for not sending
 
 			 	replymsg += "@@" + newCoupon.getInvitee() +"@@" + newCoupon.getCoupon();
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 									log.info(replymsg);
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-				//}
-				//else
 
-				//	replymsg = newCoupon.getCoupon();
-					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used. (You can not get coupon by the code issued to yourself)";

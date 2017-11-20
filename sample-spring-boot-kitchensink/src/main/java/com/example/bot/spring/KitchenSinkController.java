@@ -378,7 +378,8 @@ public class KitchenSinkController {
 		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
 			String[] replyinfo = replymsg.split("@@");
 			this.pushText(replyinfo[2], replyinfo[3]);
-			this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[3]);
+			if(! replyinfo[1].equals("-1"))
+				this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[3]);
 		}
 		else
 			this.replyText(replyToken,replymsg);
