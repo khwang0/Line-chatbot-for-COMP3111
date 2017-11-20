@@ -176,7 +176,7 @@ public class StageHandler {
 			}
 			if(CouponWarehouse.isCampaignStarted())
 			 	replymsg +="\n\nThe campaign is now in progress!! We have "
-										+ CouponWarehouse + " coupons left!! Type \"friend\" to get invitation code and invite your friends!!"
+										+ CouponWarehouse.getInstance().couponRemaining() + " coupons left!! Type \"friend\" to get invitation code and invite your friends!!"
 										+ "And for new users please type \"code\" to send you and your inviter a coupon!!";
 			//replymsg= msg);
 			currentUser.setSubStage(currentUser.getSubStage()+1);
@@ -231,7 +231,7 @@ public class StageHandler {
 			case "code" :{
 				if(CouponWarehouse.isCampaignStarted()){
 					//if(currentUser.registerTime after compaign starting time)
-					if(CouponWarehouse.getInstance().isCouponRemaining() &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+					if(CouponWarehouse.getInstance().couponRemaining() > 0  &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
 						//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
 						replymsg = "Please input your invitation code:";
 

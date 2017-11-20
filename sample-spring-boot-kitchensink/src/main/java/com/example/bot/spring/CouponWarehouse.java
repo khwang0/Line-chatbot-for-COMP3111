@@ -203,7 +203,7 @@ public class CouponWarehouse{
   * @return An instance of type COUPON
   */
   public Coupon issueCoupon(String invitee, String code){
-    if (isCouponRemaining()){
+    if (couponRemaining() > 0){
       couponsRemaining--;
 
       int i = 0;
@@ -244,9 +244,10 @@ public class CouponWarehouse{
   }
   /**
   * Checks if coupons still remain.
+  * @return Remaining coupon numbers
   */
-  public boolean isCouponRemaining(){
-    return (couponsRemaining > 0);
+  public int couponRemaining(){
+    return couponsRemaining ;
   }
   /**
   * Checks whether a user is registered after campaign.
