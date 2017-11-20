@@ -74,7 +74,6 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		 		user.setOtherInfo(rs.getString(16));
 		 		user.setAssessmentScore(rs.getInt(17));
 				user.setBudget(rs.getDouble(18));
-				//user.setRegisterTime(rs.getString(19));
 			}
 			rs.close();
 			stmt.close();
