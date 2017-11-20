@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 
 
-@Slf4j
 /**
 * SQLDatabaseEnging will be perform the function of retrieving, pushing and updating informations from real database
 * @author  G8
@@ -655,7 +654,7 @@ public class SQLDatabaseEngine {
 			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-			
+
 			return result;
 		}
 		return result;
