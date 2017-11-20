@@ -1225,7 +1225,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	// this is self assessment Handler function
+	// this is self assessment Handler
 //	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 //		String replymsg = "";
 //		switch (currentUser.getSubStage()) {
