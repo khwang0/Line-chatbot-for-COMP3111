@@ -14,7 +14,7 @@ public class Coupon{
   public Coupon(String inviter, String code){
     this.inviter = inviter;
     this.code = code;
-    coupon = "G8's ICE CREAM COUPON\n ISSUE CODE: "+code +invitee;
+    coupon = "G8's ICE CREAM COUPON\n ISSUE CODE: "+code;
   }
   public Coupon(String inviter, String invitee, String code){
     this(inviter,code);
@@ -23,7 +23,7 @@ public class Coupon{
   public String getCode(){return code;}
   public String getInviter(){return inviter;}
   public String getInvitee(){return invitee;}
-  public String getCoupon(){return coupon;}
+  public String getCoupon(){return coupon + invitee;}
   public void setInvitee(String invitee){this.invitee = invitee;}
   @Override
   public boolean equals(Object c){return code.equals(((Coupon)c).code);}
