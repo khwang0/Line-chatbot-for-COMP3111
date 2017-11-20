@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.io.*;
 import org.json.*;
+import java.net.URL;
+import java.nio.charset.Charset;
 //import org.json.simple.parser.JSONParser;
 
 /**
@@ -33,25 +35,14 @@ public class MenuReader {
 	* @param url the url of the JSON file
 	* @return String the String format of JSON file
 	*/
-	private String readJSONFile(String url) {
-		File file = new File(url);
-		String content = "";
-		StringBuilder sb = new StringBuilder();
-		try {
-			BufferedReader bf = new BufferedReader(new FileReader(file));
-			 while(content != null){
-				 content = bf.readLine();
-				 if(content == null){
-					 break;
-				}
-				 sb.append(content.trim());
-			 }
-			 bf.close();
-		}catch(IOException ioexception){
-
-		}
-		return sb.toString();
-	}
+	private String readAll(Reader rd) throws IOException {
+	    StringBuilder sb = new StringBuilder();
+	    int cp;
+	    while ((cp = rd.read()) != -1) {
+	      sb.append((char) cp);
+	    }
+	    return sb.toString();
+	  }
 
 	/**
 	* This method is to get the price and ingredient name from the user's input text
@@ -100,11 +91,17 @@ public class MenuReader {
 	* @param url the url of the JSON file
 	* @return boolean return true if the food, ingredients and corresponding price is found in the given JSON
 	*/
-	public boolean readFromJSON(String url) {
+	public boolean readFromJSON(String url) throws IOException, JSONException{
+		//String JSONString =  FileUtils.readFileToString(new File(url), "UTF-8");
+		//String jsonText;
 		boolean fi = true;
-		try{
-			String JSONString = readJSONFile(url);
-			JSONArray jsonArray = new JSONArray(JSONString);
+		InputStream is = new URL(url).openStream();
+	    try {
+	      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+	      String jsonText = readAll(rd);
+	      System.out.println(jsonText);
+	      //JSONObject json = new JSONObject(jsonText);
+	      JSONArray jsonArray = new JSONArray(jsonText);
 			nameList = new String[jsonArray.length()];
 			priceList = new int[jsonArray.length()];
 			ingredientList = new String[jsonArray.length()][];
@@ -120,11 +117,9 @@ public class MenuReader {
 			    		ingredientList[i][j] = ingreArray.getString(j);
 			    }
 			}
-		}catch(JSONException exception){
-
-		}finally{
-
-		}
+	    } finally {
+	      is.close();
+	    }
 		return fi;
 	}
 

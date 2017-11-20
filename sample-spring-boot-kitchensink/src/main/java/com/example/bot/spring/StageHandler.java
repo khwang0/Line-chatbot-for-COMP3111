@@ -1,8 +1,8 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
-
-
+import java.io.*;
+import org.json.*;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -425,7 +425,12 @@ public class StageHandler {
 			Date date;
 			SimpleDateFormat ft;
 			menuReader = new MenuReader();
-			menuReader.readFromJSON(text);
+			try {
+				menuReader.readFromJSON(text);
+			}catch(IOException ex) {
+			}catch(JSONException ex2){
+			}finally{
+			}
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			int amount;
