@@ -92,7 +92,7 @@ public class StageHandler {
         	// 	replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
         	// 	currentUser.setStage("");
         	// 	currentUser.setSubStage(0);
-        	// 	currentUser = null;
+        	// 	currentUser = null
         	// }
 		}break;
 		case 1:{
