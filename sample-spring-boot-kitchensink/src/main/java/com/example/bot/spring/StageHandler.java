@@ -703,6 +703,11 @@ public class StageHandler {
 						+ question[0];
 				currentUser.setSubStage(501);
 		}break;
+		case 510:{
+				replymsg = "Congratulations that you have finished the quiz!:)\n"
+				+ "reply anything to get the feedback";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+		}break;
 		case 511:{
 			int score = (currentUser).getAssessmentScore();
 			if(score >= 90) {
@@ -759,12 +764,12 @@ public class StageHandler {
 				replymsg= "Please reply a valid answer(T/F)";
 				return replymsg;
 			}
-			if(currentUser.getSubStage() == 510) {
-				replymsg = "Congratulations that you have finished the quiz!:)\n"
-						+ "reply anything to get the feedback";
-				currentUser.setSubStage(currentUser.getSubStage()+1);
-				return replymsg;
-			}
+//			if(currentUser.getSubStage() == 510) {
+//				replymsg = "Congratulations that you have finished the quiz!:)\n"
+//						+ "reply anything to get the feedback";
+//				currentUser.setSubStage(currentUser.getSubStage()+1);
+//				return replymsg;
+//			}
 			replymsg= question[currentUser.getSubStage()-500];
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
