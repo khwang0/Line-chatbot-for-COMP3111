@@ -361,12 +361,6 @@ public class KitchenSinkController {
 						case "Coupon":
 							replymsg = stageHandler.couponHandler(replyToken, event, text, currentUser, database);
 							break;
-	//        	case "SelfAssessment":{
-	//				if(!(currentUser instanceof DetailedUser)){
-	//					currentUser = new DetailedUser(currentUser);
-	//				}
-	//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-	//        	}break;
 	        	default:
 	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
 	        		break;
@@ -383,6 +377,7 @@ public class KitchenSinkController {
 	private boolean toMultipleUsers(String replymsg){
 		return( replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@' );
 	}
+
 
 	private void pushToAll(String replymsg){
 		String[] replyinfo = replymsg.split("@@");
