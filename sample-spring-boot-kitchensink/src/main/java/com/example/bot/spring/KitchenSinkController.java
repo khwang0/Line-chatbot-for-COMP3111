@@ -323,12 +323,20 @@ public class KitchenSinkController {
 
 		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036") && text.equals("activate") ) {
 			ArrayList<String> usersid= database.findallusers();
+			
+
+			
+			
 			number++;
-			if(number > links.length-1) {
+			if(number > database.countLink()) {
 				number = 0;
 			}
+			
+			String link = database.searchLink(number);
+			
+			
 			for (int i=0;i<usersid.size();i++) {
-				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
+				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ link));
 			}
 		}
 

@@ -8,8 +8,8 @@ public class FoodInfo{
 	protected int price = 0;
 
 	public FoodInfo() {}
-	public void setFoodName(String foodname) {
-		this.foodName = foodname;
+	public void setFoodName(String foodName) {
+		this.foodName = foodName;
 	}
 	public void setEnergy(double energy) {
 		this.energy = energy;
