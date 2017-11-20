@@ -50,14 +50,14 @@ public class InputCheckerTester {
 	@Autowired
 	private InputChecker checker;
 	private SQLDatabaseEngine database;
-		
+
 	@Test
 	public void testValidName() throws Exception {
 		String valid_input = "valid";
 		String invalid_input = "asfahsfhasfuasoifuasoifuoasifuoaiufoiasufoiasufsfiaufoiaufoiausofiaus";
 		assertThat((checker.ValidName(valid_input)==true)&&(checker.ValidName(invalid_input)==false)).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidGender() throws Exception {
 		String valid_input1 = "M";
@@ -65,7 +65,7 @@ public class InputCheckerTester {
 		String invalid_input = "asfahsfhasfuasoifua";
 		assertThat((checker.ValidGender(valid_input1)==true)&&(checker.ValidGender(valid_input2)==true)&&(checker.ValidGender(invalid_input)==false)).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidHeight() throws Exception {
 
@@ -76,7 +76,7 @@ public class InputCheckerTester {
 		String invalid_input3 = "261";
 		String invalid_input4 = "260";
 		String invalid_input5 = "50";
-		
+
 
 		boolean check1 = (checker.ValidHeight(valid_input1)==true);
 		boolean check2 = (checker.ValidHeight(valid_input2)==true);
@@ -89,7 +89,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3&&check5&&check6&&check7&&check8).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidWeight() throws Exception {
 		String valid_input1 = "100";
@@ -108,18 +108,18 @@ public class InputCheckerTester {
 		boolean check6 = (checker.ValidWeight(invalid_input3)==false);
 		boolean check7 = (checker.ValidWeight(invalid_input4)==false);
 		boolean check8 = (checker.ValidWeight(invalid_input5)==false);
-		
+
 //		boolean thrown = false;
 //		try {
-//			
+//
 //		}
 //		catch (Exception e) {
-//			
+//
 //		}
-		
+
 		assertThat(check2&&check3&&check5&&check6&&check7&&check8).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidAge() throws Exception {
 		String valid_input1 = "100";
@@ -136,7 +136,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidExercise() throws Exception {
 		String valid_input1 = "8";
@@ -153,7 +153,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidBodyfat() throws Exception {
 		String valid_input1 = "40";
@@ -169,7 +169,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidCalories() throws Exception {
 		String valid_input1 = "40";
@@ -184,7 +184,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidAmount() throws Exception {
 		String valid_input1 = "40";
@@ -199,7 +199,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidDate() throws Exception {
 		String valid_input1 = "25000000";
@@ -214,7 +214,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidCarbs() throws Exception {
 		String valid_input1 = "1500";
@@ -229,7 +229,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidProtein() throws Exception {
 		String valid_input1 = "500";
@@ -244,7 +244,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidVegfruit() throws Exception {
 		String valid_input1 = "25";
@@ -259,7 +259,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testValidOtherinfo() throws Exception {
 		String valid_input1 = "2fasfasf5";
@@ -272,7 +272,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testAgeEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -290,7 +290,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testGenderEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -308,7 +308,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testNameEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -324,7 +324,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testWeightEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -342,7 +342,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testHeightEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -378,7 +378,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testExerciseEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -396,7 +396,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testCaloriesEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -414,7 +414,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testCarbsEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -432,7 +432,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testProteinEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -450,7 +450,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testVegfruitEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -468,8 +468,8 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
-	
+
+
 	@Test
 	public void testOtherinfoEditting() {
 		Users user = new Users("r12r21i489y", "test_can_delete");
@@ -485,8 +485,8 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2).isEqualTo(true);
 	}
-	
-	
+
+
 	@Test
 	public void testfoodAdd() {
 		FoodInfo test = new FoodInfo();
@@ -501,7 +501,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testenergyAdd() {
 		FoodInfo test1 = new FoodInfo();
@@ -517,7 +517,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testproteinAdd() {
 		FoodInfo test1 = new FoodInfo();
@@ -533,7 +533,7 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testfiberAdd() {
 		FoodInfo test1 = new FoodInfo();
@@ -549,8 +549,8 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
-	
+
+
 	@Test
 	public void testpriceAdd() {
 		FoodInput test1 = new FoodInput("test", "20171111");
@@ -564,7 +564,7 @@ public class InputCheckerTester {
 
 		assertThat(check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testFoodAdd() {
 		FoodInput test1 = new FoodInput("test", "20171111");
@@ -580,11 +580,11 @@ public class InputCheckerTester {
 
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void test_priceAdd() {
 		FoodInfo test1 = new FoodInfo();
-		
+
 		String invalid_text1 = "-10";
 		String invalid_text2 = "abc";
 
@@ -597,34 +597,32 @@ public class InputCheckerTester {
 	@Test
 	public void testamountAdd() {
 		FoodInput test1 = new FoodInput("test", "20171111");
-		
+
 		String valid_text1 = "500";
 		String invalid_text1 = "-10";
 		String invalid_text2 = "abc";
-	
-	
+
+
 		boolean check1 =(checker.amountAdd(valid_text1, test1, database)==true);
 		boolean check2 =(checker.amountAdd(invalid_text1, test1, database)==false);
 		boolean check3 =(checker.amountAdd(invalid_text2, test1, database)==false);
-		
+
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testdateCheck() {
-		
+
 		String valid_text1 = "20171111";
 		String invalid_text1 = "-10";
 		String invalid_text2 = "abc";
-	
-	
+
+
 		boolean check1 =(checker.dateCheck(valid_text1)==true);
 		boolean check2 =(checker.dateCheck(invalid_text1)==false);
 		boolean check3 =(checker.dateCheck(invalid_text2)==false);
-		
+
 		assertThat(check1&&check2&&check3).isEqualTo(true);
 	}
 
 }
-
-		

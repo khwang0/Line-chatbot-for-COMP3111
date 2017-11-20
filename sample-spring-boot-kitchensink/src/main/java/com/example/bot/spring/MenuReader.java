@@ -30,11 +30,6 @@ public class MenuReader {
 		priceList[0] = 0;
 	}
 
-	/**
-	* This method is to get the string format JSON file from given url
-	* @param url the url of the JSON file
-	* @return String the String format of JSON file
-	*/
 	private String readAll(Reader rd) throws IOException {
 	    StringBuilder sb = new StringBuilder();
 	    int cp;
@@ -72,7 +67,6 @@ public class MenuReader {
 			}
 			nameList[i] = matcher.group(1);
 			priceList[i] = Integer.parseInt(matcher.group(2));
-			//database.pushTest(temp.length);
 
 			tempList = new ArrayList<String>();
 			for (int j = 0; j<temp.length; j++ ) {
@@ -89,6 +83,8 @@ public class MenuReader {
 	/**
 	* This method is to get the price and ingredient name from the url of the JSON file
 	* @param url the url of the JSON file
+	* @throws IOException it throws IOException when there is an error reading/closing the file
+	* @throws JSONException it throws JSONException when there is an error operating the JSONArray
 	* @return boolean return true if the food, ingredients and corresponding price is found in the given JSON
 	*/
 	public boolean readFromJSON(String url) throws IOException, JSONException{
