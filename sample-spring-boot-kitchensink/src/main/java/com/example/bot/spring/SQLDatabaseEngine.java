@@ -15,8 +15,7 @@ import java.net.URI;
 
 @Slf4j
 /**
-* SQLDatabaseEnging will be the object that stores the value that will be pushed in the
-* foodinfo table in database (AKA local food database)
+* SQLDatabaseEnging will be perform the function of retrieving, pushing and updating informations from real database
 * @author  G8
 * @version 1.0
 * @since   2017/11/19
@@ -646,7 +645,6 @@ public class SQLDatabaseEngine {
 			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
-			log.info("problem is {}",e)
 			return result;
 		}
 		return result;
