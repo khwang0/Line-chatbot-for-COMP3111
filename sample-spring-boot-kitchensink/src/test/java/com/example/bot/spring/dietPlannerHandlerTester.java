@@ -258,7 +258,7 @@ public class dietPlannerHandlerTester {
 	
 	
 	@Test
-	public void dietPlannerHandlerTest_case_default() {
+	public void dietPlannerHandlerTest_case_default1() {
 		StageHandler handler = new StageHandler();
 		SQLDatabaseEngine db = new SQLDatabaseEngine();
 		Users user = new Users("test");
@@ -270,17 +270,75 @@ public class dietPlannerHandlerTester {
 			user.setAssessmentScore(0);
 			user.setSubStage(123);
 			handler.dietPlannerHandler("T", user, db);
-			user.setSubStage(123);
-			handler.dietPlannerHandler("F", user, db);
-			user.setSubStage(510);
-			handler.dietPlannerHandler("Q", user, db);
-			user.setSubStage(510);
-			handler.dietPlannerHandler("abc", user, db);
+
 
 		}catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void dietPlannerHandlerTest_case_default2() {
+		StageHandler handler = new StageHandler();
+		SQLDatabaseEngine db = new SQLDatabaseEngine();
+		Users user = new Users("test");
+		
+		boolean thrown = false;
+		db.pushUser(user);
+		//case 5,6
+		try {
+			user.setAssessmentScore(0);
+			user.setSubStage(123);
+			handler.dietPlannerHandler("F", user, db);
+
+
+		}catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(false);
+	}
+	
+	@Test
+	public void dietPlannerHandlerTest_case_default3() {
+		StageHandler handler = new StageHandler();
+		SQLDatabaseEngine db = new SQLDatabaseEngine();
+		Users user = new Users("test");
+		
+		boolean thrown = false;
+		db.pushUser(user);
+		//case 5,6
+		try {
+			user.setAssessmentScore(0);
+			user.setSubStage(510);
+			handler.dietPlannerHandler("123", user, db);
+
+
+		}catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(true);
+	}
+	
+	@Test
+	public void dietPlannerHandlerTest_case_default4() {
+		StageHandler handler = new StageHandler();
+		SQLDatabaseEngine db = new SQLDatabaseEngine();
+		Users user = new Users("test");
+		
+		boolean thrown = false;
+		db.pushUser(user);
+		//case 5,6
+		try {
+			user.setAssessmentScore(0);
+			user.setSubStage(123);
+			handler.dietPlannerHandler("q", user, db);
+
+
+		}catch (Exception e) {
+			thrown = true;
+		}
+		assertThat(!thrown).isEqualTo(true);
 	}
 	
 	//many test for the case 42&43

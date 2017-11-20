@@ -72,6 +72,12 @@ public class MainStageHandlerTester {
 		if (currentUser.getSubStage() != 1) {
 			thrown = true;
 		}		
+		currentUser.setSubStage(0);
+		CouponWarehouse.startCampaign();
+		reply = stageHandler.mainStageHandler(text, currentUser, databaseEngine);
+		if (currentUser.getSubStage() != 1) {
+			thrown = true;
+		}	
 		assertThat(!thrown).isEqualTo(true);
 	}	
 
@@ -98,35 +104,39 @@ public class MainStageHandlerTester {
 		reply = stageHandler.mainStageHandler( "1", currentUser, databaseEngine);
 		if (currentUser.getSubStage() != 0) {
 			thrown = true;
-		}		
+		}
+		
+		//campaign starts
+		//case "code"
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "code", currentUser, databaseEngine);
+		//case "friend"
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "friend", currentUser, databaseEngine);
+		//case "6"
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "6", currentUser, databaseEngine);
+		
+		//campaign closes
+		//CouponWarehouse.closeCampaign();
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "code", currentUser, databaseEngine);
+		//case "friend"
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "friend", currentUser, databaseEngine);
+		//case "6"
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "6", currentUser, databaseEngine);
+		
+		//case 2,3 default
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "2", currentUser, databaseEngine);
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "3", currentUser, databaseEngine);
+		currentUser.setSubStage(1);
+		reply = stageHandler.mainStageHandler( "100", currentUser, databaseEngine);//default
+		
+		
 		assertThat(!thrown).isEqualTo(true);
 	}
-
-	//case code
-	//	@Test
-	//	public void testMainStageHandlerCode() throws Exception {
-	//		boolean thrown = false;
-	//		StageHandler stageHandler = new StageHandler();
-	//		SQLDatabaseEngine databaseEngine = new SQLDatabaseEngine();
-	//		String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
-	//		String text = "dummy";
-	//		Users currentUser= new Users("test1001","HXH");
-	//		databaseEngine.pushUser(currentUser);
-	//		currentUser.setSubStage(1);
-	//		//case 1 if
-	//		currentUser.setBodyFat(0);
-	//		String reply = stageHandler.mainStageHandler( "code", currentUser, databaseEngine);
-	//		if (currentUser.getSubStage() != 0) {
-	//			thrown = true;
-	//		}
-	//		//case 1 else
-	//		currentUser.setSubStage(1);
-	//		currentUser.setBodyFat(1);
-	//		reply = stageHandler.mainStageHandler( "1", currentUser, databaseEngine);
-	//		if (currentUser.getSubStage() != 0) {
-	//			thrown = true;
-	//		}		
-	//	assertThat(!thrown).isEqualTo(true);
-	//}
-
 }
