@@ -766,7 +766,7 @@ public class SQLDatabaseEngine {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return 0;
+		return count;
 	}
 
 	boolean updateUser(Users user) {
