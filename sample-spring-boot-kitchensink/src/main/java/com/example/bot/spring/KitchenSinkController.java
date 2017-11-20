@@ -129,7 +129,7 @@ public class KitchenSinkController {
 				"http://www.health.com/syndication/vegan-hollandaise-edgy-veg",
 				"http://www.health.com/food/candy-corn-ingredients-video",
 				"http://www.health.com/food/stop-food-guilt",
-				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",	
+				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",
 				"http://www.health.com/food/quinoa-recipes-burger-salad-muffin",
 				"http://www.health.com/food/slow-cooker-recipes-chicken-tarragon-chickpea-cumin",
 				"http://www.health.com/food/spaghetti-squash-recipes",
@@ -252,12 +252,12 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
-	
+
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
-	
+
 	private void push(@NonNull String to, @NonNull Message message) {
         push(to,  Collections.singletonList(message));
     }
@@ -288,7 +288,7 @@ public class KitchenSinkController {
 		}
 		this.reply(replyToken, new TextMessage(message));
 	}
-	
+
 	private void pushText(@NonNull String to, @NonNull String message) {
 		if (to.isEmpty()) {
 			throw new IllegalArgumentException("to must not be empty");
@@ -320,19 +320,19 @@ public class KitchenSinkController {
             throws Exception {
         String text = content.getText();
 		currentUser = getSourceUser(event);
-		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {		
+
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {
 			ArrayList<String> usersid= database.findallusers();
-			for (int i=0;i<usersid.size();i++) {
-				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
-			}	 
-			
 			number++;
 			if(number > links.length-1) {
 				number = 0;
 			}
+			for (int i=0;i<usersid.size();i++) {
+				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
+			}
 		}
-		
-		else {	
+
+		else {
 	        switch(currentUser.getStage()) {
 	        	case "Init":
 	        		replymsg = stageHandler.initStageHandler(replyToken, event, text, currentUser, database);
@@ -341,9 +341,6 @@ public class KitchenSinkController {
 	        		replymsg = stageHandler.mainStageHandler(replyToken, event, text, currentUser, database);
 	        		break;
 	        	case "LivingHabitCollector":{
-					//if(!(currentUser instanceof DetailedUser)){
-					//	currentUser = new DetailedUser(currentUser);
-					//}
 	        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, event, text, currentUser, database);
 	        	}	break;
 	        	case "LivingHabitEditor":
@@ -361,42 +358,52 @@ public class KitchenSinkController {
 	        	case "UserGuide":
 	        		replymsg = stageHandler.userGuideHandler(replyToken, event, text, currentUser, database);
 	        		break;
-	//        	case "SelfAssessment":{
-	//				if(!(currentUser instanceof DetailedUser)){
-	//					currentUser = new DetailedUser(currentUser);
-	//				}
-	//        		replymsg = stageHandler.selfAssessmentHandler(replyToken, event, text, currentUser, database);
-	//        	}break;
+						case "Coupon":
+							replymsg = stageHandler.couponHandler(replyToken, event, text, currentUser, database);
+							break;
 	        	default:
 	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
 	        		break;
 	        }
 	}
-		
-		
-		
-		
 		//database.updateUser(currentUser);
-		this.replyText(replyToken,replymsg);
+		if(toMultipleUsers(replymsg))
+			pushToAll(replymsg);
+		else
+			this.replyText(replyToken,replymsg);
 
-    }
+	}
+
+	private boolean toMultipleUsers(String replymsg){
+		return( replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@' );
+	}
+
+
+	private void pushToAll(String replymsg){
+		String[] replyinfo = replymsg.split("@@");
+		String msg = replyinfo[1];
+		for(int i = 2 ; i < replyinfo.length;i++) if(!replyinfo[i].equals("-1")) this.pushText(replyinfo[i],msg); // non null
+	}
 
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
 
 	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
+		//Thread chatbotThread = new Thread(() -> {
+			ProcessBuilder processBuilder = new ProcessBuilder(args);
+			try {
+				Process start = processBuilder.start();
+				int i = start.waitFor();
+				log.info("result: {} =>  {}", Arrays.toString(args), i);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			} catch (InterruptedException e) {
+				log.info("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+		//});
+		//chatbotThread.start();
 	}
 
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
