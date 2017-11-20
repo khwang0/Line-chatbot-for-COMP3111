@@ -87,7 +87,7 @@ public class CouponWarehouse{
   private static ArrayList<String> codes = new ArrayList<String>();
   private static ArrayList<Coupon> coupons = new ArrayList<Coupon>();
   private static int couponsRemaining = NUMOFCOUPONS;
-  private static boolean started = true;
+  private static boolean started = false;
   private static ArrayList<String> uids;
   private static CouponWarehouse couponWarehouse = new CouponWarehouse();
 
