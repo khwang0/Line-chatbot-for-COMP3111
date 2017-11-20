@@ -249,7 +249,7 @@ public class StageHandler {
 			case "6" :{
 				if(!CouponWarehouse.isCampaignStarted()){
 					String replyinfo =  CouponWarehouse.startCampaign();
-					ArrayList<String> alluids = CouponWarehouse.getInstance.getNotifiableObservers(replyinfo).getData();
+					ArrayList<String> alluids = CouponWarehouse.getInstance().getNotifiableObservers(replyinfo).getData();
 					replymsg = "@@" + replyinfo;
 					for(String uid:alluids) replymsg += "@@" + uid;
 				}

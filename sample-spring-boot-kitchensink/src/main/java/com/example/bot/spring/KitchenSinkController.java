@@ -387,7 +387,7 @@ public class KitchenSinkController {
 
 	}
 
-	private boolean toMutipleUsers(String replymsg){
+	private boolean toMultipleUsers(String replymsg){
 		return( replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@' );
 	}
 
