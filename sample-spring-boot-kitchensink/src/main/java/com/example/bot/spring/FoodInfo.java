@@ -9,7 +9,7 @@ public class FoodInfo{
 
 	public FoodInfo() {}
 	public void setFoodName(String foodname) {
-		this.foodName = foodName;
+		this.foodName = foodname;
 	}
 	public void setEnergy(double energy) {
 		this.energy = energy;
