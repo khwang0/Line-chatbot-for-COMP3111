@@ -43,6 +43,14 @@ import java.net.URI;
 
 
 @Slf4j
+/**
+* StageHandler will mainly perform the function of handling the event and deciding
+* what is the reply message to users. More importantly, it also perform the functions
+* of updating corresponding database and other interactions of different classes.
+* In short, a mediator
+* @version 1.0
+* @since   2017/11/19
+*/
 public class StageHandler {
 	private String time;
 	private InputChecker inputChecker = new InputChecker();
@@ -79,7 +87,11 @@ public class StageHandler {
 	private float Grain_weight_per_serve = 500;//500kj Grain
 	private float MM_weight_per_serve = 100;
 
-
+	/**
+	* InputChecker will perform the function of checking whether users' inputs are correct
+	* and updating the database corresponding to different input
+	* @param replyToken
+	*/
 	public String initStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
@@ -365,12 +377,8 @@ public class StageHandler {
 			SimpleDateFormat ft;
 			menuReader = new MenuReader();
 			boolean fi = menuReader.readFromText(text,database);
-			database.pushTest(100);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
-			//foodInput = new FoodInput(event.getSource().getUserId(),time);
-			//foodInput.setPrice(50);
-			//database.pushDietRecord(foodInput);
 			int amount;
 			int realPrice;
 			boolean check = true;
