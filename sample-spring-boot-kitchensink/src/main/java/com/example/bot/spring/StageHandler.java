@@ -171,9 +171,13 @@ public class StageHandler {
 						+ "3 Healthpedia \n"
 						+ "4 Feedback \n"
 						+ "5 User Guide(recommended for first-time users)\n"
-//						+ "6 Self Assessment(recommened for first-time users)\n\n"
+//						+ "6 Self Assessment(recommened for first-time users
 						+ "Please enter your choice:(1-5)";
 			}
+			if(CouponWarehouse.isCampaignStarted())
+			 	replymsg +="\n\nThe campaign is now in progress!! We have "
+										+ CouponWarehouse.getInstance().couponRemaining() + " coupons left!! Type \"friend\" to get invitation code and invite your friends!!"
+										+ "And for new users please type \"code\" to send you and your inviter a coupon!!";
 			//replymsg= msg);
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -227,7 +231,7 @@ public class StageHandler {
 			case "code" :{
 				if(CouponWarehouse.isCampaignStarted()){
 					//if(currentUser.registerTime after compaign starting time)
-					if(CouponWarehouse.getInstance().isCouponRemaining() &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+					if(CouponWarehouse.getInstance().couponRemaining() > 0  &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
 						//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
 						replymsg = "Please input your invitation code:";
 
@@ -248,8 +252,10 @@ public class StageHandler {
 			}break;
 			case "6" :{
 				if(!CouponWarehouse.isCampaignStarted()){
-					MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
-					replymsg = replyinfo.getMsg();
+					String replyinfo =  CouponWarehouse.startCampaign();
+					ArrayList<String> alluids = CouponWarehouse.getInstance().getNotifiableObservers(replyinfo).getData();
+					replymsg = "@@" + replyinfo;
+					for(String uid:alluids) replymsg += "@@" + uid;
 				}
 				else{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 				currentUser.setStage("Main");
@@ -257,7 +263,7 @@ public class StageHandler {
 			}break;
 			case "friend" :{
 				if(CouponWarehouse.isCampaignStarted()){
-					//if(currentUser.registerTime after compaign starting time)
+					//if(currentUser.registerTime after compaign starting time
 					replymsg = "This is your code for campaign:"
 				 		+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
 			 	}
@@ -696,12 +702,17 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg = replymsg + "Heading to Main menu...";
-				return replymsg;
 				}
-				//else the quiz start
+			else{//else the quiz start
 				replymsg = replymsg +  "Then let's start the quiz ;) \n"
 						+ question[0];
 				currentUser.setSubStage(501);
+				}
+		}break;
+		case 510:{
+				replymsg = "Congratulations that you have finished the quiz!:)\n"
+				+ "reply anything to get the feedback";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 511:{
 			int score = (currentUser).getAssessmentScore();
@@ -753,18 +764,17 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
-				return replymsg;
 			}
 			else {
 				replymsg= "Please reply a valid answer(T/F)";
 				return replymsg;
 			}
-			if(currentUser.getSubStage() == 510) {
-				replymsg = "Congratulations that you have finished the quiz!:)\n"
-						+ "reply anything to get the feedback";
-				currentUser.setSubStage(currentUser.getSubStage()+1);
-				return replymsg;
-			}
+//			if(currentUser.getSubStage() == 510) {
+//				replymsg = "Congratulations that you have finished the quiz!:)\n"
+//						+ "reply anything to get the feedback";
+//				currentUser.setSubStage(currentUser.getSubStage()+1);
+//				return replymsg;
+//			}
 			replymsg= question[currentUser.getSubStage()-500];
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -1205,18 +1215,15 @@ public class StageHandler {
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
-			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
-				else replymsg = "@@" + "nowhere";
+			  replymsg += "@@" + newCoupon.getCoupon();
+			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@"+newCoupon.getInviter();
+				else replymsg += "@@" + "-1"; // dummy representation for not sending
 
-			 	replymsg += "@@" + newCoupon.getInvitee() +"@@" + newCoupon.getCoupon();
+			 	replymsg += "@@" + newCoupon.getInvitee();
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 									log.info(replymsg);
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-				//}
-				//else
 
-				//	replymsg = newCoupon.getCoupon();
-					//log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 		else{
 			replymsg = "oops! Your code is either invalid or used. (You can not get coupon by the code issued to yourself)";
