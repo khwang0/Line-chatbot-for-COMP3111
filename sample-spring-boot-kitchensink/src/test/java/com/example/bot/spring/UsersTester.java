@@ -50,7 +50,7 @@ public class UsersTester {
 	//@Autowired
 	//private SQLDatabaseEngine databaseEngine;
 	
-	//@Test
+	@Test
 	public void testUserContrt1() throws Exception {
 		boolean thrown = false;
 		Users user = new Users("1001");
@@ -58,14 +58,14 @@ public class UsersTester {
 
 	}
 	
-	//@Test
+	@Test
 	public void testUserContrt2() throws Exception {
 		boolean thrown = false;
 		Users user = new Users("1001", "HXH");
 		assertThat(user != null).isEqualTo(true);
 	}
 	
-	//@Test
+	@Test
 	public void testUserSetEatingHabits() throws Exception {
 		boolean[] eatingHabits = {false,false,false,false,false,false};
 		Users user = new Users("1001", "HXH");
@@ -75,7 +75,7 @@ public class UsersTester {
 		assertThat(read.length != 0).isEqualTo(true);
 	}
 	
-	//@Test
+	@Test
 	public void testUserSetEatingHabits2() throws Exception {
 		Boolean[] eatingHabits = {false,false,false,false,false,false};
 		Users user = new Users("1001", "HXH");
@@ -85,7 +85,7 @@ public class UsersTester {
 		assertThat(read.length != 0).isEqualTo(true);
 	}
 	
-	//@Test
+	@Test
 	public void testUsertoString() throws Exception {
 		boolean thrown = false;
 		Users user = new Users("1001", "HXH");
