@@ -25,9 +25,9 @@ public class SQLDatabaseEngine {
 
 	/**
 	* Fetch user ids from the database.
-	* @return A Container of type ArrayList<String> cotaining user Ids
+	* @return A Container of type ArrayList cotaining user Ids
 	*/
-	ArrayList<String> fetchUIDs(){
+	public ArrayList<String> fetchUIDs(){
 		ArrayList<String> UIDs = new ArrayList<String>();
 		try {
 			Connection connection = this.getConnection();
@@ -50,9 +50,10 @@ public class SQLDatabaseEngine {
 	/**
 	* Retrieve users from database.
 	* @param uidkey User id as a key for searching
+	* @throws Exception when there is a exception executing the stmt
 	* @return A user of type Users with Id specified
 	*/
-	Users searchUser(String uidkey) throws Exception {
+	public Users searchUser(String uidkey) throws Exception {
 		Users user = null;
 		try {
 			Connection connection = this.getConnection();
@@ -109,7 +110,7 @@ public class SQLDatabaseEngine {
 	* @param user Obsject of Users
 	* @return a boolean to indicate if the push is successful
 	*/
-	boolean pushUser(Users user) {
+	public boolean pushUser(Users user) {
 		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
@@ -157,7 +158,7 @@ public class SQLDatabaseEngine {
 	* @param user_id user id to find the corresponding plan
 	* @return a boolean to indicate if the search is successful
 	*/
-	boolean search_diet_plan(String user_id) {
+	public boolean search_diet_plan(String user_id) {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement("SELECT id FROM diet_plan WHERE id = ?");
@@ -310,7 +311,7 @@ public class SQLDatabaseEngine {
 	* @param age the infomation to search with
 	* @return a boolean to indicate if the search is successful
 	*/
-	boolean search_intake_reference(String gender, int age){
+	public boolean search_intake_reference(String gender, int age){
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM intake_reference where gender = ? AND min_age <= ? AND max_age >= ?" );
@@ -338,7 +339,7 @@ public class SQLDatabaseEngine {
 	* @param budget the infomation to work with
 	* @return a String of the diet plan
 	*/
-	String display_diet_plan(String user_id, double budget) {
+	public String display_diet_plan(String user_id, double budget) {
 		String result = "(DAILY BASIS)\n";
 
 
@@ -384,7 +385,7 @@ public class SQLDatabaseEngine {
 	* @param user_id the user id to search with
 	* @return an ArrayList of the result
 	*/
-	ArrayList<Double> search_plan(String user_id) {
+	public ArrayList<Double> search_plan(String user_id) {
 		ArrayList<Double> plan_info = new ArrayList<Double>(); // store the query result from plan table
 		try {
 			//connect to the database with table: diet_plan
@@ -424,7 +425,7 @@ public class SQLDatabaseEngine {
 	* @param date the date to search with
 	* @return an ArrayList of the result
 	*/
-	ArrayList<Double> search_current(String user_id, String date) {
+	public ArrayList<Double> search_current(String user_id, String date) {
 		ArrayList<Double> current_info = new ArrayList<Double>(); // store the query result from current table
 		try {
 			//connect
@@ -459,7 +460,7 @@ public class SQLDatabaseEngine {
 	* @param time the time to search with
 	* @param price the price to caculate with
 	*/
-	void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time,double price) {
+	public void updateconsumption(HealthSearch healthSearcher,int amount,String id, String time,double price) {
 		try {
 			Connection connection = this.getConnection();
 			PreparedStatement stmt = connection.prepareStatement("SELECT protein, energy, fiber,price FROM diet_conclusion where id = ? AND date = ?");
@@ -540,7 +541,7 @@ public class SQLDatabaseEngine {
 	* @param id the user id to search with
 	* @return String of the dietrecord
 	*/
-	String reportDiet(String text, String id) {
+	public String reportDiet(String text, String id) {
 		String answer =" ";
 		try {
 
@@ -570,7 +571,7 @@ public class SQLDatabaseEngine {
 	* retrieve all user id in table users from database.
 	* @return an ArrayList of user ids
 	*/
-	ArrayList<String> findallusers() {
+	public ArrayList<String> findallusers() {
 		ArrayList<String> answer = new ArrayList<String>();
 		try {
 
@@ -600,7 +601,7 @@ public class SQLDatabaseEngine {
 	* @param foodInput the foodinput to push with
 	* @return a boolean to indicate if the push is successful
 	*/
-	boolean pushDietRecord(FoodInput foodInput){
+	public boolean pushDietRecord(FoodInput foodInput){
 		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
@@ -628,7 +629,7 @@ public class SQLDatabaseEngine {
 	* @see FoodInfo
 	* @return a boolean to indicate if the push is successful
 	*/
-	boolean pushFoodInfo(FoodInfo food) {
+	public boolean pushFoodInfo(FoodInfo food) {
 		boolean result = false;
 		try {
 			Connection connection = this.getConnection();
@@ -666,7 +667,7 @@ public class SQLDatabaseEngine {
 	* @see FoodInfo
 	* @return return a  FoodInfo object
 	*/
-	FoodInfo searchFoodInfo(String foodname){
+	public FoodInfo searchFoodInfo(String foodname){
 		//boolean result = false;
 		FoodInfo foodInfo = null;
 		try {
@@ -703,7 +704,7 @@ public class SQLDatabaseEngine {
 	* @see FoodInfo
 	* @return a String[] of foodinfo name
 	*/
-	String[] getFoodInfo(){
+	public String[] getFoodInfo(){
 		ArrayList<String> foodNamesArray = new ArrayList<String>();
 		String[] foodNames;
 		try {
@@ -731,8 +732,12 @@ public class SQLDatabaseEngine {
 	}
 
 
-
-	String searchLink(int id) {
+	/**
+	* retrieve the information of link given id name of link stored in links table from database.
+	* @param id the link id to search with
+	* @return return link in String
+	*/
+	public String searchLink(int id) {
 		String link = "";
 		try {
 			Connection connection = this.getConnection();
@@ -752,8 +757,11 @@ public class SQLDatabaseEngine {
 		}
 		return link;
 	}
-	
-	int countLink() {
+	/**
+	* retrieve the total numbers of links stored in links table in database.
+	* @return return a int totol numbers
+	*/
+	public int countLink() {
 		int count = 0;
 		try {
 			Connection connection = this.getConnection();
@@ -780,7 +788,7 @@ public class SQLDatabaseEngine {
 	* @see Users
 	* @return a boolean to indicate if the update is successful
 	*/
-	boolean updateUser(Users user) {
+	public boolean updateUser(Users user) {
 		boolean result = false;
 
 		try {
