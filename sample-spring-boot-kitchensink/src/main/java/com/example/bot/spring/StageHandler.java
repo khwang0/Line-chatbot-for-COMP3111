@@ -80,7 +80,7 @@ public class StageHandler {
 	private float MM_weight_per_serve = 100;
 
 
-	public String initStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String initStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -92,7 +92,7 @@ public class StageHandler {
         	// 	replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
         	// 	currentUser.setStage("");
         	// 	currentUser.setSubStage(0);
-        	// 	currentUser = null;
+        	// 	currentUser = null
         	// }
 		}break;
 		case 1:{
@@ -147,7 +147,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String mainStageHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String mainStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -171,7 +171,7 @@ public class StageHandler {
 						+ "3 Healthpedia \n"
 						+ "4 Feedback \n"
 						+ "5 User Guide(recommended for first-time users)\n"
-//						+ "6 Self Assessment(recommened for first-time users
+//						+ "6 Self Assessment(recommened for first-time users)\n\n"
 						+ "Please enter your choice:(1-5)";
 			}
 			if(CouponWarehouse.isCampaignStarted())
@@ -231,7 +231,7 @@ public class StageHandler {
 			case "code" :{
 				if(CouponWarehouse.isCampaignStarted()){
 					//if(currentUser.registerTime after compaign starting time)
-					if(CouponWarehouse.getInstance().couponRemaining() > 0  &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
+					if(CouponWarehouse.getInstance().couponRemaining() >0 &&	CouponWarehouse.getInstance().canGetCouponFromCode(currentUser) ){//and other shit
 						//CouponWarehouse.getInstance().isCodeRequestValid(currentUser)){
 						replymsg = "Please input your invitation code:";
 
@@ -283,7 +283,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-	public String dietPlannerHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String dietPlannerHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -324,7 +324,7 @@ public class StageHandler {
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
 			ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 			time = ft.format(date);
-			foodInput = new FoodInput(event.getSource().getUserId(),time);
+			foodInput = new FoodInput(currentUser.getID(),time);
 			replymsg= "Please enter the food name: ";
 			currentUser.setSubStage(currentUser.getSubStage()+10);
 		}break;
@@ -348,7 +348,7 @@ public class StageHandler {
 		}break;
 		case 13:{
 			if(inputChecker.priceAdd(text, foodInput, database)) {
-				inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,Double.valueOf(text));
+				inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),currentUser.getID(),time,Double.valueOf(text));
 				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0) ;
 				}
@@ -390,14 +390,14 @@ public class StageHandler {
 							ft = new SimpleDateFormat("yyyyMMddHHmmss");
 							ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 							time = ft.format(date);
-							foodInput = new FoodInput(event.getSource().getUserId(),time);
+							foodInput = new FoodInput(currentUser.getID(),time);
 							foodInput.setFoodName(ingredients[i][j]);
 							healthSearcher.setKeyword(ingredients[i][j]);
 							if (healthSearcher.search()) {
 								foodInput.setAmount(amount);
 								foodInput.setPrice(realPrice);
 								database.pushDietRecord(foodInput);
-								inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+								inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),currentUser.getID(),time,(double)realPrice);
 								try{
 									Thread.sleep(1000);
 								}catch (InterruptedException e) {
@@ -444,7 +444,7 @@ public class StageHandler {
 						ft = new SimpleDateFormat("yyyyMMddHHmmss");
 						ft.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 						time = ft.format(date);
-						foodInput = new FoodInput(event.getSource().getUserId(),time);
+						foodInput = new FoodInput(currentUser.getID(),time);
 						foodInput.setFoodName(ingredients[i][j]);
 						healthSearcher.setKeyword(ingredients[i][j]);
 						if (healthSearcher.search()) {
@@ -453,7 +453,7 @@ public class StageHandler {
 							foodInput.setAmount(amount);
 							foodInput.setPrice(realPrice);
 							database.pushDietRecord(foodInput);
-							inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),event.getSource().getUserId(),time,(double)realPrice);
+							inputChecker.consumptionUpdate(healthSearcher,database,foodInput.getAmount(),currentUser.getID(),time,(double)realPrice);
 							try{
 								Thread.sleep(1000);
 							}catch (InterruptedException e) {
@@ -784,7 +784,7 @@ public class StageHandler {
 
 
 
-	public String livingHabitCollectorEditor(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String livingHabitCollectorEditor(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -974,7 +974,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String livingHabitCollectorHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String livingHabitCollectorHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()){
 		case 0:{
@@ -1117,7 +1117,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String healthPediaHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String healthPediaHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		//user key word input
 		//String
@@ -1190,7 +1190,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String feedBackHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String feedBackHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
@@ -1198,7 +1198,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-	public String userGuideHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String userGuideHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
@@ -1206,7 +1206,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-	public String couponHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String couponHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
@@ -1230,7 +1230,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	// this is self assessment Handler function
+	// this is self assessment Handler
 //	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 //		String replymsg = "";
 //		switch (currentUser.getSubStage()) {

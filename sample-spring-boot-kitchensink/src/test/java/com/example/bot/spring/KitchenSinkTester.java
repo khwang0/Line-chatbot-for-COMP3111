@@ -42,7 +42,6 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
 
 
 @RunWith(SpringRunner.class)
@@ -51,12 +50,12 @@ import com.example.bot.spring.DatabaseEngine;
 public class KitchenSinkTester {
 	@Autowired
 	private SQLDatabaseEngine databaseEngine;
-	
+
 	@Test
 	public void testNotFound() throws Exception {
 		boolean thrown = false;
 		try {
-			this.databaseEngine.search("0000000000");
+			this.databaseEngine.searchUser("0000000000");
 		} catch (Exception e) {
 			thrown = true;
 		}

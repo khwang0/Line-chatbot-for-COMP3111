@@ -21,7 +21,8 @@ import java.net.URI;
 * @version 1.0
 * @since   2017/11/19
 */
-public class SQLDatabaseEngine extends DatabaseEngine {
+@Slf4j
+public class SQLDatabaseEngine {
 
 
 	/**
