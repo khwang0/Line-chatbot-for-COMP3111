@@ -92,6 +92,13 @@ import java.net.URI;
 
 @Slf4j
 @LineMessageHandler
+/**
+* KitchenSinkController will mainly perform the function of a interface which will interact with users.
+* That is receiving the event triggered by users and let StageHandler to handle content to get replyMessage
+* and reply message to users
+* @version 1.0
+* @since   2017/11/19
+*/
 public class KitchenSinkController {
 
 	private String[] links = {
@@ -151,7 +158,9 @@ public class KitchenSinkController {
 	private StageHandler stageHandler = new StageHandler();
 	private int number = 0; // No. of links
 
-
+	/**
+	* Constructor of KitchenSinkController
+	*/
 	public KitchenSinkController() {
 		database = new SQLDatabaseEngine();
 		itscLOGIN = System.getenv("ITSC_LOGIN");
@@ -160,6 +169,12 @@ public class KitchenSinkController {
 
 
 	@EventMapping
+	/**
+	* This method will be triggered user text content when user send text to chatbot
+	* and let handleTextContent() to handle the text
+	* @param event a MessageEvent<TextMessageContent> object
+	* @throws Exception when there is an exception
+	*/
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		log.info("This is your entry point:");
@@ -213,6 +228,12 @@ public class KitchenSinkController {
 	}
 
 	@EventMapping
+	/**
+	* This method will be triggered user text content when user block/unfollow
+	* and let stageHandler's function to handle the text
+	* @param event an UnfollowEvent object
+	* @see StageHandler
+	*/
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
 		currentUser = getSourceUser(event);
@@ -223,6 +244,12 @@ public class KitchenSinkController {
 	}
 
 	@EventMapping
+	/**
+	* This method will be triggered user text content when user unblock/follow
+	* and let stageHandler's function to handle the text
+	* @param event a FollowEvent object
+	* @see StageHandler
+	*/
 	public void handleFollowEvent(FollowEvent event) {
 		String replyToken = event.getReplyToken();
 		String msgbuffer = null;

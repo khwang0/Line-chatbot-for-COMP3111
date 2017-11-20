@@ -24,6 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
+/**
+* StageHandler will mainly perform the function of handling the event and deciding
+* what is the reply message to users. More importantly, it also perform the functions
+* of updating corresponding database and other interactions of different classes.
+* In short, a mediator
+* @version 1.0
+* @since   2017/11/19
+*/
 public class KitchenSinkWebMvcConfigurer extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -88,9 +88,12 @@ public class StageHandler {
 	private float MM_weight_per_serve = 100;
 
 	/**
-	* InputChecker will perform the function of checking whether users' inputs are correct
-	* and updating the database corresponding to different input
-	* @param replyToken
+	* This is to use to handle the users' input(decide what to reply) when users newly followed the bot.
+	* It will also record and update new users infomation
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param SQLDatabaseEngine Used to access database
+	* @return String return the reply message that will be sent to users.
 	*/
 	public String initStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
@@ -159,6 +162,14 @@ public class StageHandler {
 		return replymsg;
 	}
 
+	/**
+	* This is to use to handle the users' input(decide what to reply) when users come to the main stage
+	* it will help user to be directed to differen funcitons of chatbot
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param database Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String mainStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
@@ -295,6 +306,15 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
+
+	/**
+	* This is to use to handle the users' input(decide what to reply) when users enter the diet planner
+	* It will also record and update users' infomation
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param database Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String dietPlannerHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
@@ -795,7 +815,14 @@ public class StageHandler {
 
 
 
-
+	/**
+	* This is to use to handle the users' input(decide what to reply) when users want to editing their informations.
+	* It will also record and update users' infomation
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param database Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String livingHabitCollectorEditor(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
@@ -986,6 +1013,14 @@ public class StageHandler {
 		return replymsg;
 	}
 
+	/**
+	* This is to use to handle the users' input(decide what to reply) when users newly followed the bot and want to complete their personal informations.
+	* It will also record and update users' infomation
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param database Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String livingHabitCollectorHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()){
@@ -1129,6 +1164,14 @@ public class StageHandler {
 		return replymsg;
 	}
 
+	/**
+	* This is to use to handle the users' input(decide what to reply) when users enter the healthPedia functions.
+	* It will also record and update users' infomation
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param database Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String healthPediaHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		//user key word input
@@ -1218,6 +1261,15 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
+
+	/**
+	* This is to use to handle the users' input(decide what to reply) when users try to do something related to coupons.
+	* It will also record and update users' infomation
+	* @param text users input text
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param SQLDatabaseEngine Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String couponHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
@@ -1334,12 +1386,26 @@ public class StageHandler {
 //		}
 //		return replymsg;
 //	}
+	/**
+	* This is to use to handle the situation when user block/unfollow the chatbot
+	* It may record and update users' infomation
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param SQLDatabaseEngine Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public void unfollowHandler(Users currentUser , SQLDatabaseEngine database){
 		currentUser.setStage("Main");
 		currentUser.setSubStage(0);
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
-
+	/**
+	* This is to use to handle the situation when user unblock/follow the chatbot
+	* It will also record and update users' infomation
+	* @param event the follow event to get source user information and create new Users
+	* @param currentUser indicate the user using the bot currently. It's stage and substage may be changed in the function
+	* @param SQLDatabaseEngine Used to access database
+	* @return String return the reply message that will be sent to users.
+	*/
 	public String followHandler(String replyToken, Event event, Users currentUser , SQLDatabaseEngine database){
 		String msg = "";
 		try{
