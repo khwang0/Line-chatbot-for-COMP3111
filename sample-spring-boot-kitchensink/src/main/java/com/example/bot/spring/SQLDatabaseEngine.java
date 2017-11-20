@@ -12,9 +12,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+/**
+* FoodInfo will be the object that stores the value that will be pushed in the
+* foodinfo table in database (AKA local food database)
+* @author  G8
+* @version 1.0
+* @since   2017/11/19
+*/
 @Slf4j
 public class SQLDatabaseEngine extends DatabaseEngine {
-
+	/**
+	* This method returns all the UID of Users stored in users table in database
+	* @see Users
+	* @return ArrayList<String> returns ArrayList of UIDs
+	*/
 	ArrayList<String> fetchUIDs(){
 		ArrayList<String> UIDs = new ArrayList<String>();
 		try {
@@ -34,7 +45,13 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		}
 		return UIDs;
 	}
-
+	/**
+	* This method returns the Users retrieved from the information stored in users table
+	* in database where UID = uidkey
+	* @param uidkey the UID to search the informations
+	* @see Users
+	* @return Users returns Users with corresponding informations
+	*/
 	Users searchUser(String uidkey) throws Exception {
 		Users user = null;
 		try {

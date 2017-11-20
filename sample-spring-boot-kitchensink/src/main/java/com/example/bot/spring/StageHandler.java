@@ -1,8 +1,8 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
-
-
+import java.io.*;
+import org.json.*;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -297,7 +297,7 @@ public class StageHandler {
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 6) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 8) {
 					replymsg= REDIRECT;
 				}
 				else {
@@ -425,7 +425,12 @@ public class StageHandler {
 			Date date;
 			SimpleDateFormat ft;
 			menuReader = new MenuReader();
-			menuReader.readFromJSON(text);
+			try {
+				menuReader.readFromJSON(text);
+			}catch(IOException ex) {
+			}catch(JSONException ex2){
+			}finally{
+			}
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			int amount;
@@ -680,7 +685,7 @@ public class StageHandler {
 		case 20:{
 
 			if(inputChecker.priceAdd(text,foodInfo,database)) {
-				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0);
 			}
 			else replymsg= "Please enter valid number: ";
