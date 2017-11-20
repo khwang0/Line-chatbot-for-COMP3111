@@ -12,8 +12,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+/**
+* FoodInfo will be the object that stores the value that will be pushed in the
+* foodinfo table in database (AKA local food database)
+* @author  G8
+* @version 1.0
+* @since   2017/11/19
+*/
 @Slf4j
 public class SQLDatabaseEngine {
+
 
 	/**
 	* Fetch user ids from the database.
@@ -139,6 +147,7 @@ public class SQLDatabaseEngine {
 					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
+			
 			String temp = ""+user.getGender();
 			stmt.setString(3, temp) ;
 			stmt.setDouble(4, user.getHeight());

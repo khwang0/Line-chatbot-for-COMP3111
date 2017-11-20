@@ -1,8 +1,8 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
-
-
+import java.io.*;
+import org.json.*;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -303,7 +303,7 @@ public class StageHandler {
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 6) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 8) {
 					replymsg= REDIRECT;
 				}
 				else {
@@ -431,7 +431,12 @@ public class StageHandler {
 			Date date;
 			SimpleDateFormat ft;
 			menuReader = new MenuReader();
-			menuReader.readFromJSON(text);
+			try {
+				menuReader.readFromJSON(text);
+			}catch(IOException ex) {
+			}catch(JSONException ex2){
+			}finally{
+			}
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
 			int amount;
@@ -686,7 +691,7 @@ public class StageHandler {
 		case 20:{
 
 			if(inputChecker.priceAdd(text,foodInfo,database)) {
-				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0);
 			}
 			else replymsg= "Please enter valid number: ";
@@ -697,12 +702,17 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg = replymsg + "Heading to Main menu...";
-				return replymsg;
 				}
-				//else the quiz start
+			else{//else the quiz start
 				replymsg = replymsg +  "Then let's start the quiz ;) \n"
 						+ question[0];
 				currentUser.setSubStage(501);
+				}
+		}break;
+		case 510:{
+				replymsg = "Congratulations that you have finished the quiz!:)\n"
+				+ "reply anything to get the feedback";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 511:{
 			int score = (currentUser).getAssessmentScore();
@@ -754,18 +764,17 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
-				return replymsg;
 			}
 			else {
 				replymsg= "Please reply a valid answer(T/F)";
 				return replymsg;
 			}
-			if(currentUser.getSubStage() == 510) {
-				replymsg = "Congratulations that you have finished the quiz!:)\n"
-						+ "reply anything to get the feedback";
-				currentUser.setSubStage(currentUser.getSubStage()+1);
-				return replymsg;
-			}
+//			if(currentUser.getSubStage() == 510) {
+//				replymsg = "Congratulations that you have finished the quiz!:)\n"
+//						+ "reply anything to get the feedback";
+//				currentUser.setSubStage(currentUser.getSubStage()+1);
+//				return replymsg;
+//			}
 			replymsg= question[currentUser.getSubStage()-500];
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
