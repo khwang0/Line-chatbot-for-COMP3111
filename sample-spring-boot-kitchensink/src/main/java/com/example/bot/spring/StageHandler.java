@@ -365,12 +365,8 @@ public class StageHandler {
 			SimpleDateFormat ft;
 			menuReader = new MenuReader();
 			boolean fi = menuReader.readFromText(text,database);
-			database.pushTest(100);
 			String[][] ingredients = menuReader.getIngredient();
 			int[] price = menuReader.getPrice();
-			//foodInput = new FoodInput(event.getSource().getUserId(),time);
-			//foodInput.setPrice(50);
-			//database.pushDietRecord(foodInput);
 			int amount;
 			int realPrice;
 			boolean check = true;

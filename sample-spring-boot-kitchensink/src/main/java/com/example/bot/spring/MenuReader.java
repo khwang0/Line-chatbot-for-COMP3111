@@ -72,7 +72,6 @@ public class MenuReader {
 			}
 			nameList[i] = matcher.group(1);
 			priceList[i] = Integer.parseInt(matcher.group(2));
-			//database.pushTest(temp.length);
 
 			tempList = new ArrayList<String>();
 			for (int j = 0; j<temp.length; j++ ) {

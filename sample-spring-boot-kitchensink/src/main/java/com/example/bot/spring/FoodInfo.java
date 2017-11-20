@@ -1,11 +1,17 @@
 package com.example.bot.spring;
-
+/**
+* FoodInfo will be the object that stores the value that will be pushed in the
+* foodinfo table in database (AKA local food database)
+* @author  G8
+* @version 1.0
+* @since   2017/11/19
+*/
 public class FoodInfo{
-	protected String foodName;
-	protected double energy;
-	protected double protein;
-	protected double fiber;
-	protected int price;
+	private String foodName;
+	private double energy;
+	private double protein;
+	private double fiber;
+	private int price;
 
 	public FoodInfo() {
 		energy = 0;
