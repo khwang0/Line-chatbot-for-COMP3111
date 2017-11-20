@@ -147,7 +147,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String mainStageHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
+	public String mainStageHandler(  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -158,10 +158,10 @@ public class StageHandler {
 				+ "1 Living Habit Collector (INSERT YOUR DATA HERE)\n"
 				+ "2 Diet Planner(Please complete 1 first)\n"
 				+ "3 Healthpedia \n"
-				+ "4 Feedback \n"
-				+ "5 User Guide(recommended for first-time users)\n"
+				/*+ "4 Feedback \n"
+				+ "5 User Guide(recommended for first-time users)\n"*/
 //				+ "6 Self Assessment(recommened for first-time users)\n\n"
-				+ "Please enter your choice:(1-5)\n";
+				+ "Please enter your choice:(1-3)\n";
 			}else {
 				replymsg = "Welcome to G8's Diet Planner!\n\n"
 						+ "We provide serveral functions for you to keep your fitness."
@@ -169,10 +169,10 @@ public class StageHandler {
 						+ "1 Living Habot Editor\n"
 						+ "2 Diet Planner\n"
 						+ "3 Healthpedia \n"
-						+ "4 Feedback \n"
-						+ "5 User Guide(recommended for first-time users)\n"
+						/*+ "4 Feedback \n"
+						+ "5 User Guide(recommended for first-time users)\n"*/
 //						+ "6 Self Assessment(recommened for first-time users)\n\n"
-						+ "Please enter your choice:(1-5)";
+						+ "Please enter your choice:(1-3)";
 			}
 			if(CouponWarehouse.isCampaignStarted())
 			 	replymsg +="\n\nThe campaign is now in progress!! We have "
@@ -209,6 +209,7 @@ public class StageHandler {
 				currentUser.setStage("HealthPedia");
 				currentUser.setSubStage(0);
 			}break;
+			/*
 			case "4":{
 				//move to feedback
 				replymsg = "Moving to FeedBack...Input anything to continue...";
@@ -220,7 +221,7 @@ public class StageHandler {
 				currentUser.setStage("UserGuide");
 				currentUser.setSubStage(0);
 				//move to user guide
-			}break;
+			}break;*/
 //			case "6":{
 //				replymsg ="Moving to Self Assessment...Input anything to continue...";
 //				currentUser.setStage("SelfAssessment");
@@ -245,7 +246,7 @@ public class StageHandler {
 					}
 				}
 				else{
-					replymsg = "Invalid input! Please input numbers from 1 to 5!!";
+					replymsg = "Invalid input! Please input numbers from 1 to 3!!";
 					currentUser.setStage("Main");
 					currentUser.setSubStage(0);
 				}
@@ -257,7 +258,7 @@ public class StageHandler {
 					replymsg = "@@" + replyinfo;
 					for(String uid:alluids) replymsg += "@@" + uid;
 				}
-				else{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
+				else{replymsg = "Invalid input! Please input numbers from 1 to 3!!";}
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 			}break;
@@ -268,13 +269,13 @@ public class StageHandler {
 				 		+ CouponWarehouse.getInstance().issueCode(currentUser.getID());
 			 	}
 				else{
-					replymsg = "Invalid input! Please input numbers from 1 to 5!!";
+					replymsg = "Invalid input! Please input numbers from 1 to 3!!";
 				}
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 
 			}break;
-			default:{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
+			default:{replymsg = "Invalid input! Please input numbers from 1 to 3!!";}
 			}
 			//replymsg= msg);
 		}break;
@@ -1189,7 +1190,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-
+	/*
 	public String feedBackHandler(  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
@@ -1205,7 +1206,7 @@ public class StageHandler {
 		currentUser.setSubStage(0);
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
-	}
+	}*/
 	public String couponHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){

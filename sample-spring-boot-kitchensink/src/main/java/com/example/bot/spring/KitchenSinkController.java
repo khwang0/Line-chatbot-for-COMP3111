@@ -352,12 +352,12 @@ public class KitchenSinkController {
 	        	case "HealthPedia":
 	        		replymsg = stageHandler.healthPediaHandler(text, currentUser, database);
 	        		break;
-	        	case "FeedBack":
+	        	/*case "FeedBack":
 	        		replymsg = stageHandler.feedBackHandler(text, currentUser, database);
 	        		break;
 	        	case "UserGuide":
 	        		replymsg = stageHandler.userGuideHandler(text, currentUser, database);
-	        		break;
+	        		break;*/
 						case "Coupon":
 							replymsg = stageHandler.couponHandler( text, currentUser, database);
 							break;
