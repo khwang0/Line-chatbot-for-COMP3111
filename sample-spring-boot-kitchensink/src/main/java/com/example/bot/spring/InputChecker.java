@@ -530,6 +530,7 @@ public class InputChecker {
 		try {
 			if(ValidCarbs(text)) {
 	    		food.setPrice(Integer.valueOf(text));
+	    		database.pushTest(food.getPrice());
 	    		database.pushFoodInfo(food);
 	    		return true;
 	    	}
