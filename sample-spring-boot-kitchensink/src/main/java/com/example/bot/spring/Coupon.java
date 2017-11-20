@@ -8,7 +8,7 @@ public class Coupon{
   public Coupon(String inviter, String code){
     this.inviter = inviter;
     this.code = code;
-    coupon = "==G8's ICE CREAM COUPON==\n ISSUE CODE: "+code;
+    coupon = "G8's ICE CREAM COUPON\n ISSUE CODE: "+code +invitee;
   }
   public Coupon(String inviter, String invitee, String code){
     this(inviter,code);

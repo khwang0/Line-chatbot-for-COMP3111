@@ -248,8 +248,10 @@ public class StageHandler {
 			}break;
 			case "6" :{
 				if(!CouponWarehouse.isCampaignStarted()){
-					MsgAttachedData<Date> replyinfo =  CouponWarehouse.startCampaign();
-					replymsg = replyinfo.getMsg();
+					String replyinfo =  CouponWarehouse.startCampaign();
+					ArrayList<String> alluids = CouponWarehouse.getInstance.getNotifiableObservers(replyinfo).getData();
+					replymsg = "@@" + replyinfo;
+					for(String uid:alluids) replymsg += "@@" + uid;
 				}
 				else{replymsg = "Invalid input! Please input numbers from 1 to 5!!";}
 				currentUser.setStage("Main");
@@ -1200,10 +1202,11 @@ public class StageHandler {
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
 			// if ( ! CouponWarehouse.getInstance().isNewUser(newCoupon.getInviter()) )
-			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@" + newCoupon.getInviter();
-				else replymsg = "@@" + "-1"; // dummy representation for not sending
+			  replymsg += "@@" + newCoupon.getCoupon();
+			  if(CouponWarehouse.getInstance().notGotCoupon(newCoupon.getInviter())) replymsg += "@@"+newCoupon.getInviter();
+				else replymsg += "@@" + "-1"; // dummy representation for not sending
 
-			 	replymsg += "@@" + newCoupon.getInvitee() +"@@" + newCoupon.getCoupon();
+			 	replymsg += "@@" + newCoupon.getInvitee();
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 									log.info(replymsg);
 									log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

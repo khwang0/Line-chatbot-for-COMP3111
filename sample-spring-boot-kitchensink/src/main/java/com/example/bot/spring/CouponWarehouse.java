@@ -121,7 +121,7 @@ public class CouponWarehouse{
   static public CouponWarehouse getInstance(){
     return couponWarehouse;
   }
-  static public MsgAttachedData<Date> startCampaign(){
+  static public String startCampaign(){
     String msg = "Campaign has been started!\n "
     +"Each current user can type \"friend\" into the chatbot and the chatbot will reply them a 6-digits unique code. "
     + "The user can give this code to his friend and recommend them to add the chatbot as their line friend. "
@@ -129,10 +129,9 @@ public class CouponWarehouse{
     + "Each new user can claim the coupon once only. Each user can recommend infinite number of friends. "
     + "Each new user can also recommend new users. Users who registered before the campaign cannot type \"code\" to get the coupon. "
     + "After 5000 copies of ice-cream coupon were given out, the campaign stops.";
-    Date now = new Date();
     started = true;
     fetchUsers();
-    return new MsgAttachedData<Date>(msg,now);
+    return msg;
   }
 
   public void register(Users obj) {
@@ -146,10 +145,11 @@ public class CouponWarehouse{
   		newUids.remove(uid);
   }
 
-  public MsgAttachedData<ArrayList<String>> getNotifiableObservers() {
-      String msg = "Someone has invited their firends and got coupon!\n"
+  public MsgAttachedData<ArrayList<String>> getNotifiableObservers(String msg) {
+    /*  String msg = "Someone has invited their firends and got coupon!\n"
            +"We have " + Integer.toString(couponsRemaining) + " coupons left!\n"
            +"Go invite friends and enjoy ice creams!";
+      */
       ArrayList<String> allUids = new ArrayList<String>(existingUids);
       allUids.addAll(newUids);
    		return new MsgAttachedData<ArrayList<String>>(msg, allUids);
