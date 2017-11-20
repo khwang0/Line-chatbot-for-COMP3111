@@ -321,7 +321,7 @@ public class KitchenSinkController {
         String text = content.getText();
 		currentUser = getSourceUser(event);
 
-		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036") && text.equals("activate") ) {
 			ArrayList<String> usersid= database.findallusers();
 			number++;
 			if(number > links.length-1) {
