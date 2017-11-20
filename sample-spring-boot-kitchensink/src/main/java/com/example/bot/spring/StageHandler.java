@@ -171,7 +171,7 @@ public class StageHandler {
 						+ "3 Healthpedia \n"
 						+ "4 Feedback \n"
 						+ "5 User Guide(recommended for first-time users)\n"
-//						+ "6 Self Assessment(recommened for first-time users)\n\n"
+//						+ "6 Self Assessment(recommened for first-time users
 						+ "Please enter your choice:(1-5)";
 			}
 			if(CouponWarehouse.isCampaignStarted())
