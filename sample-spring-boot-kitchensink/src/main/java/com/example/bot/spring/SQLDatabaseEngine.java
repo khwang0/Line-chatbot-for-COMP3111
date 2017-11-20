@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 
 
-@Slf4j
 /**
 * SQLDatabaseEnging will be perform the function of retrieving, pushing and updating informations from real database
 * @author  G8
@@ -644,7 +643,18 @@ public class SQLDatabaseEngine {
 			stmt.close();
 			connection.close();
 		} catch (Exception e) {
-			System.out.println(e);
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info(e.getMessage());
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
 			return result;
 		}
 		return result;
@@ -718,6 +728,49 @@ public class SQLDatabaseEngine {
 		foodNames = foodNamesArray.toArray(new String[foodNamesArray.size()]);
 		return foodNames;
 
+	}
+
+
+
+	String searchLink(int id) {
+		String link = "";
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT link from links where id = ?");
+			stmt.setInt(1, id);
+		    stmt.execute();
+		    ResultSet rs = stmt.executeQuery();
+		    while(rs.next()) {
+				link = (rs.getString(1));
+			}
+		    rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return link;
+	}
+	
+	int countLink() {
+		int count = 0;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT count(*) from links");
+		    stmt.execute();
+		    ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				count = rs.getInt(1);
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return count;
 	}
 
 

@@ -101,50 +101,6 @@ import java.net.URI;
 */
 public class KitchenSinkController {
 
-	private String[] links = {
-				"http://www.health.com/food/thanksgiving-dairy-gluten-food-intolerances",
-				"http://www.health.com/food/brussels-sprout-recipes",
-				"http://www.health.com/syndication/whole-foods-amazon-turkey-deal",
-				"http://www.health.com/syndication/drinks-order-bar-unhealthy",
-				"http://www.health.com/food/keto-recipes",
-				"http://www.health.com/syndication/stove-top-stuffing-thanksgiving-dinner-pants",
-				"http://www.health.com/syndication/best-olive-oil-taste-test",
-				"http://www.health.com/syndication/guac-lock-keep-guacamole-fresh",
-				"http://www.health.com/syndication/halo-top-scoop-shop-los-angeles",
-				"http://www.health.com/food/infused-water-recipes",
-				"http://www.health.com/syndication/world-health-organization-antibiotics-animals",
-				"http://www.health.com/syndication/whole-foods-top-ten-food-trends",
-				"http://www.health.com/food/best-matcha-gifts",
-				"http://www.health.com/syndication/coffee-add-ins",
-				"http://www.health.com/syndication/what-to-do-after-eating-too-much-sugar",
-				"http://www.health.com/food/spicy-food-character",
-				"http://www.health.com/food/vegan-bacon-recipes-tempeh-bacon-eggplant-bacon",
-				"http://www.health.com/syndication/whole-foods-new-ahimi-vegan-tuna-sushi",
-				"http://www.health.com/food/mashed-potatoes-recipes",
-				"http://www.health.com/food/celebrity-healthy-snacks",
-				"http://www.health.com/syndication/new-trader-joes-products",
-				"http://www.health.com/food/foods-fight-fat-video",
-				"http://www.health.com/syndication/halo-top-non-dairy-flavors-ranked",
-				"http://www.health.com/food/how-to-use-instant-pot",
-				"http://www.health.com/food/buffalo-cauliflower-tacos-recipe-video",
-				"http://www.health.com/health/gallery/0,,20345806,00.html",
-				"http://www.health.com/health/gallery/0,,20350502,00.html",
-				"http://www.health.com/food/healthy-taco-recipes-video",
-				"http://www.health.com/food/broccoli-recipes",
-				"http://www.health.com/food/peanut-butter-dessert-recipes-video",
-				"http://www.health.com/food/stir-fry-recipes-turkey-thai-beef-shrimp",
-				"http://www.health.com/syndication/vegan-hollandaise-edgy-veg",
-				"http://www.health.com/food/candy-corn-ingredients-video",
-				"http://www.health.com/food/stop-food-guilt",
-				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",
-				"http://www.health.com/food/quinoa-recipes-burger-salad-muffin",
-				"http://www.health.com/food/slow-cooker-recipes-chicken-tarragon-chickpea-cumin",
-				"http://www.health.com/food/spaghetti-squash-recipes",
-				"http://www.health.com/food/valerie-bertinelli-cookbook-recipes",
-				"http://www.health.com/food/best-healthy-cookbooks-gifts-2017",
-				"http://www.health.com/food/best-gifts-breakfast-lovers",
-				"http://www.health.com/syndication/halo-top-dairy-free-vegan-flavors"
-	};
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
@@ -183,7 +139,7 @@ public class KitchenSinkController {
 		handleTextContent(event.getReplyToken(), event, message);
 
 	}
-
+	/*
 	@EventMapping
 	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
 		handleSticker(event.getReplyToken(), event.getMessage());
@@ -226,7 +182,7 @@ public class KitchenSinkController {
 		DownloadedContent mp4 = saveContent("mp4", response);
 		reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));
 	}
-
+*/
 	@EventMapping
 	/**
 	* This method will be triggered user text content when user block/unfollow
@@ -253,10 +209,10 @@ public class KitchenSinkController {
 	public void handleFollowEvent(FollowEvent event) {
 		String replyToken = event.getReplyToken();
 		String msgbuffer = null;
-		msgbuffer = stageHandler.followHandler(replyToken,event,currentUser,database);
+		msgbuffer = stageHandler.followHandler(event,currentUser,database);
 		this.replyText(replyToken, msgbuffer);
 	}
-
+	/*
 	@EventMapping
 	public void handleJoinEvent(JoinEvent event) {
 		String replyToken = event.getReplyToken();
@@ -279,7 +235,7 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
-
+*/
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
@@ -326,11 +282,11 @@ public class KitchenSinkController {
 		this.push(to, new TextMessage(message));
 	}
 
-
+	/*
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
-
+*/
 	private Users getSourceUser(Event event){
 		Users user = null;
 		try{
@@ -348,45 +304,53 @@ public class KitchenSinkController {
         String text = content.getText();
 		currentUser = getSourceUser(event);
 
-		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036")) {
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036") && text.equals("activate") ) {
 			ArrayList<String> usersid= database.findallusers();
+			
+
+			String link = database.searchLink(number);		
+			
 			number++;
-			if(number > links.length-1) {
+			if(number > database.countLink()) {
 				number = 0;
 			}
+			
+
+			
+			
 			for (int i=0;i<usersid.size();i++) {
-				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
+				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ link));
 			}
 		}
 
 		else {
 	        switch(currentUser.getStage()) {
 	        	case "Init":
-	        		replymsg = stageHandler.initStageHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.initStageHandler( text, currentUser, database);
 	        		break;
 	        	case "Main":
-	        		replymsg = stageHandler.mainStageHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.mainStageHandler( text, currentUser, database);
 	        		break;
 	        	case "LivingHabitCollector":{
-	        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, text, currentUser, database);
+	        		replymsg = stageHandler.livingHabitCollectorHandler(text, currentUser, database);
 	        	}	break;
 	        	case "LivingHabitEditor":
-	        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.livingHabitCollectorEditor(text, currentUser, database);
 	        		break;
 	        	case "DietPlanner":
-	        		replymsg = stageHandler.dietPlannerHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.dietPlannerHandler(text, currentUser, database);
 	        		break;
 	        	case "HealthPedia":
-	        		replymsg = stageHandler.healthPediaHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.healthPediaHandler(text, currentUser, database);
 	        		break;
-	        	case "FeedBack":
-	        		replymsg = stageHandler.feedBackHandler(replyToken, text, currentUser, database);
+	        	/*case "FeedBack":
+	        		replymsg = stageHandler.feedBackHandler(text, currentUser, database);
 	        		break;
 	        	case "UserGuide":
-	        		replymsg = stageHandler.userGuideHandler(replyToken, text, currentUser, database);
-	        		break;
+	        		replymsg = stageHandler.userGuideHandler(text, currentUser, database);
+	        		break;*/
 						case "Coupon":
-							replymsg = stageHandler.couponHandler(replyToken,  text, currentUser, database);
+							replymsg = stageHandler.couponHandler( text, currentUser, database);
 							break;
 	        	default:
 	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
@@ -432,7 +396,7 @@ public class KitchenSinkController {
 		//});
 		//chatbotThread.start();
 	}
-
+	/*
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
 		log.info("Got content-type: {}", responseBody);
 
@@ -489,4 +453,5 @@ public class KitchenSinkController {
         	);
     	}
     }
+		*/
 }

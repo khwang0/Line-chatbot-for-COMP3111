@@ -17,7 +17,7 @@ public class Coupon{
     coupon = "G8's ICE CREAM COUPON\n ISSUE CODE: "+code;
   }
   /**
-  * Consturcts a Coupon with a code wrapped with inviter and invitee. 
+  *  Consturcts a Coupon with a code wrapped with inviter and invitee. 
   * @param inviter The inviter user id of String tytpe
   * @param invitee The invitee user id of String type
   * @param code Corresponding code of String type

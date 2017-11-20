@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SQLDatabaseEngineTester {
 	@Autowired
 	private SQLDatabaseEngine databaseEngine;
-
+	
 	@Test
 	public void testPush_SearchUser() throws Exception {
 		boolean thrown = false;
@@ -75,7 +75,7 @@ public class SQLDatabaseEngineTester {
 		}
 		assertThat(!thrown).isEqualTo(true);
 	}
-
+	
 	@Test
 	public void testNotSearchUser() throws Exception {
 		boolean thrown = false;
@@ -92,7 +92,7 @@ public class SQLDatabaseEngineTester {
 		}
 		assertThat(!thrown).isEqualTo(true);
 	}
-
+	
 	@Test
 	public void testSearch_intake_reference() throws Exception {
 		boolean thrown = false;

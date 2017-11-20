@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UsersTester {
 	//@Autowired
 	//private SQLDatabaseEngine databaseEngine;
-
+	
 	@Test
 	public void testUserContrt1() throws Exception {
 		boolean thrown = false;
@@ -57,14 +57,14 @@ public class UsersTester {
 		assertThat(user != null).isEqualTo(true);
 
 	}
-
+	
 	@Test
 	public void testUserContrt2() throws Exception {
 		boolean thrown = false;
 		Users user = new Users("1001", "HXH");
 		assertThat(user != null).isEqualTo(true);
 	}
-
+	
 	@Test
 	public void testUserSetEatingHabits() throws Exception {
 		boolean[] eatingHabits = {false,false,false,false,false,false};
@@ -74,7 +74,7 @@ public class UsersTester {
 
 		assertThat(read.length != 0).isEqualTo(true);
 	}
-
+	
 	@Test
 	public void testUserSetEatingHabits2() throws Exception {
 		Boolean[] eatingHabits = {false,false,false,false,false,false};
@@ -84,7 +84,7 @@ public class UsersTester {
 
 		assertThat(read.length != 0).isEqualTo(true);
 	}
-
+	
 	@Test
 	public void testUsertoString() throws Exception {
 		boolean thrown = false;
