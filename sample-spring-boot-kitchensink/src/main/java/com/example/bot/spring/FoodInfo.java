@@ -28,7 +28,7 @@ public class FoodInfo{
 	* @param foodname  the input parameter of the set function
 	*/
 	public void setFoodName(String foodname) {
-		this.foodName = foodName;
+		this.foodName = foodname;
 	}
 
 	/**
