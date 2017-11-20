@@ -375,13 +375,6 @@ public class KitchenSinkController {
 		//database.updateUser(currentUser);
 		if(toMultipleUsers(replymsg))
 			pushToAll(replymsg);
-		/*
-		if(replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@'){
-			String[] replyinfo = replymsg.split("@@");
-			this.pushText(replyinfo[2], replyinfo[3]);
-			if(! replyinfo[1].equals("-1"))
-				this.pushText(replyinfo[1],"Your friend has joined our chatbot!! This is your coupon:\n"+replyinfo[3]);
-		}*/
 		else
 			this.replyText(replyToken,replymsg);
 
@@ -394,7 +387,7 @@ public class KitchenSinkController {
 	private void pushToAll(String replymsg){
 		String[] replyinfo = replymsg.split("@@");
 		String msg = replyinfo[1];
-		for(int i = 2 ; i < replyinfo.length;i++) if(! replyinfo[i].equals("-1")) this.pushText(replyinfo[i],msg); // non null
+		for(int i = 2 ; i < replyinfo.length;i++) if(!replyinfo[i].equals("-1")) this.pushText(replyinfo[i],msg); // non null
 	}
 
 	static String createUri(String path) {

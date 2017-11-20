@@ -5,6 +5,12 @@ public class Coupon{
   private String invitee;
   private String code;
   private String coupon;
+
+  /**
+  *Other constructor of Coupon
+  *@param inviter A varaible of type String
+  *@param code A varialbe of type String
+  */
   public Coupon(String inviter, String code){
     this.inviter = inviter;
     this.code = code;
