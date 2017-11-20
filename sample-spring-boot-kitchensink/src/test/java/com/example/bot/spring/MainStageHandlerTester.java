@@ -45,8 +45,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { StageHandlerTesterXH.class, StageHandler.class })
-public class StageHandlerTesterXH {
+@SpringBootTest(classes = { MainStageHandlerTester.class, StageHandler.class })
+public class MainStageHandlerTester {
 	//	@Autowired
 	//	private SQLDatabaseEngine databaseEngine;
 

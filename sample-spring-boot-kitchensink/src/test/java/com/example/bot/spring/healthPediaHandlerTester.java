@@ -43,23 +43,55 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 
-
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
-@SpringBootTest(classes = { KitchenSinkTester.class, SQLDatabaseEngine.class })
-public class KitchenSinkTester {
-	@Autowired
-	private SQLDatabaseEngine databaseEngine;
+@SpringBootTest(classes = { StageHandler.class, healthPediaHandlerTester.class })
+public class healthPediaHandlerTester {
+//	@Autowired
+//	private StageHandler handler;
 
 	@Test
-	public void testNotFound() throws Exception {
+	public void healthPediaHandlerTest_case0() {
+		StageHandler handler = new StageHandler();
+		SQLDatabaseEngine db = new SQLDatabaseEngine();
+		Users user = new Users("test");
 		boolean thrown = false;
+		db.pushUser(user);
+		//case 0
+	
 		try {
-			this.databaseEngine.searchUser("0000000000");
-		} catch (Exception e) {
+			user.setSubStage(-1);
+			handler.healthPediaHandler("3", user, db);
+			user.setSubStage(-1);
+			handler.healthPediaHandler("10", user, db);
+			user.setSubStage(-1);
+			handler.healthPediaHandler("test", user, db);
+			
+			user.setSubStage(0);
+			handler.healthPediaHandler("test", user, db);
+			user.setSubStage(1);
+			handler.healthPediaHandler("test", user, db);
+			user.setSubStage(11);
+			handler.healthPediaHandler("12312312313123", user, db);
+			user.setSubStage(11);
+			handler.healthPediaHandler("apple", user, db);
+
+			user.setSubStage(21);
+			handler.healthPediaHandler("1", user, db);
+			user.setSubStage(21);
+			handler.healthPediaHandler("2", user, db);
+			user.setSubStage(21);
+			handler.healthPediaHandler("abc", user, db);
+
+		}catch (Exception e) {
 			thrown = true;
 		}
-		assertThat(thrown).isEqualTo(true);
+		assertThat(!thrown).isEqualTo(true);
 	}
 
+
+	
 }
+
+
+		
