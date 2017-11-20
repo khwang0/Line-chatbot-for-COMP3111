@@ -17,11 +17,14 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +33,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.Date;
+import java.util.TimeZone;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +45,7 @@ import com.google.common.io.ByteStreams;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.MessageContentResponse;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.action.MessageAction;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.action.URIAction;
@@ -84,24 +90,55 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 
+/**
+* KitchenSinkController will mainly perform the function of a interface which will interact with users.
+* That is receiving the event triggered by users and let StageHandler to handle content to get replyMessage
+* and reply message to users
+* @version 1.0
+* @since   2017/11/19
+*/
 @Slf4j
 @LineMessageHandler
 public class KitchenSinkController {
-	
 
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
+	private String currentStage = "Init";
+	private int subStage = 0;
+	private Users currentUser = null;
 
+	private SQLDatabaseEngine database;
+	private String itscLOGIN;
+	private String replymsg;
+	private StageHandler stageHandler = new StageHandler();
+	private int number = 0; // No. of links
+
+	/**
+	* Constructor of KitchenSinkController
+	*/
+	public KitchenSinkController() {
+		database = new SQLDatabaseEngine();
+		itscLOGIN = System.getenv("ITSC_LOGIN");
+	}
+
+
+	/**
+	* This method will be triggered user text content when user send text to chatbot
+	* and let handleTextContent() to handle the text
+	* @param event a MessageEvent object
+	* @throws Exception when there is an exception
+	*/
 	@EventMapping
 	public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
-		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		log.info("This is your entry point:");
 		log.info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		TextMessageContent message = event.getMessage();
 		handleTextContent(event.getReplyToken(), event, message);
-	}
 
+	}
+	/*
 	@EventMapping
 	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
 		handleSticker(event.getReplyToken(), event.getMessage());
@@ -144,18 +181,36 @@ public class KitchenSinkController {
 		DownloadedContent mp4 = saveContent("mp4", response);
 		reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));
 	}
-
+*/
+	/**
+	* This method will be triggered user text content when user block/unfollow
+	* and let stageHandler's function to handle the text
+	* @param event an UnfollowEvent object
+	* @see StageHandler
+	*/
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
+		currentUser = getSourceUser(event);
+		if (currentUser!=null) {
+			stageHandler.unfollowHandler(currentUser, database);
+		}
+		//currentUser = null;
 	}
-
+	/**
+	* This method will be triggered user text content when user unblock/follow
+	* and let stageHandler's function to handle the text
+	* @param event a FollowEvent object
+	* @see StageHandler
+	*/
 	@EventMapping
 	public void handleFollowEvent(FollowEvent event) {
 		String replyToken = event.getReplyToken();
-		this.replyText(replyToken, "Got followed event");
+		String msgbuffer = null;
+		msgbuffer = stageHandler.followHandler(event,currentUser,database);
+		this.replyText(replyToken, msgbuffer);
 	}
-
+	/*
 	@EventMapping
 	public void handleJoinEvent(JoinEvent event) {
 		String replyToken = event.getReplyToken();
@@ -178,15 +233,28 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
+*/
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
 	}
 
+	private void push(@NonNull String to, @NonNull Message message) {
+        push(to,  Collections.singletonList(message));
+    }
+
 	private void reply(@NonNull String replyToken, @NonNull List<Message> messages) {
 		try {
 			BotApiResponse apiResponse = lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages)).get();
 			log.info("Sent messages: {}", apiResponse);
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	private void push(@NonNull String to, @NonNull List<Message> messages) {
+		try {
+			BotApiResponse apiResponse = lineMessagingClient.pushMessage(new PushMessage(to, messages)).get();
+			log.info("Push messages: {}", apiResponse);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
@@ -202,95 +270,136 @@ public class KitchenSinkController {
 		this.reply(replyToken, new TextMessage(message));
 	}
 
+	private void pushText(@NonNull String to, @NonNull String message) {
+		if (to.isEmpty()) {
+			throw new IllegalArgumentException("to must not be empty");
+		}
+		if (message.length() > 1000) {
+			message = message.substring(0, 1000 - 2) + "..";
+		}
+		this.push(to, new TextMessage(message));
+	}
 
+	/*
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
+*/
+	private Users getSourceUser(Event event){
+		Users user = null;
+		try{
+			user = database.searchUser(event.getSource().getUserId());
+		}
+		catch(Exception ex){
+			return null;
+		}
+		return user;
+	}
+
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
             throws Exception {
         String text = content.getText();
+		currentUser = getSourceUser(event);
 
-        log.info("Got text message from {}: {}", replyToken, text);
-        switch (text) {
-            case "profile": {
-                String userId = event.getSource().getUserId();
-                if (userId != null) {
-                    lineMessagingClient
-                            .getProfile(userId)
-                            .whenComplete(new ProfileGetter (this, replyToken));
-                } else {
-                    this.replyText(replyToken, "Bot can't use profile API without user ID");
-                }
-                break;
-            }
-            case "confirm": {
-                ConfirmTemplate confirmTemplate = new ConfirmTemplate(
-                        "Do it?",
-                        new MessageAction("Yes", "Yes!"),
-                        new MessageAction("No", "No!")
-                );
-                TemplateMessage templateMessage = new TemplateMessage("Confirm alt text", confirmTemplate);
-                this.reply(replyToken, templateMessage);
-                break;
-            }
-            case "carousel": {
-                String imageUrl = createUri("/static/buttons/1040.jpg");
-                CarouselTemplate carouselTemplate = new CarouselTemplate(
-                        Arrays.asList(
-                                new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-                                        new URIAction("Go to line.me",
-                                                      "https://line.me"),
-                                        new PostbackAction("Say hello1",
-                                                           "hello ã�“ã‚“ã�«ã�¡ã�¯")
-                                )),
-                                new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-                                        new PostbackAction("è¨€ hello2",
-                                                           "hello ã�“ã‚“ã�«ã�¡ã�¯",
-                                                           "hello ã�“ã‚“ã�«ã�¡ã�¯"),
-                                        new MessageAction("Say message",
-                                                          "Rice=ç±³")
-                                ))
-                        ));
-                TemplateMessage templateMessage = new TemplateMessage("Carousel alt text", carouselTemplate);
-                this.reply(replyToken, templateMessage);
-                break;
-            }
+		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036") && text.equals("activate") ) {
+			ArrayList<String> usersid= database.findallusers();
 
-            default:
-            	String reply = null;
-            	try {
-            		reply = database.search(text);
-            	} catch (Exception e) {
-            		reply = text;
-            	}
-                log.info("Returns echo message {}: {}", replyToken, reply);
-                this.replyText(
-                        replyToken,
-                        itscLOGIN + " says " + reply
-                );
-                break;
-        }
-    }
 
+			String link = database.searchLink(number);
+
+			number++;
+			if(number > database.countLink()) {
+				number = 0;
+			}
+
+
+
+
+			for (int i=0;i<usersid.size();i++) {
+				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ link));
+			}
+		}
+
+		else {
+	        switch(currentUser.getStage()) {
+	        	case "Init":
+	        		replymsg = stageHandler.initStageHandler( text, currentUser, database);
+	        		break;
+	        	case "Main":
+	        		replymsg = stageHandler.mainStageHandler( text, currentUser, database);
+	        		break;
+	        	case "LivingHabitCollector":{
+	        		replymsg = stageHandler.livingHabitCollectorHandler(text, currentUser, database);
+	        	}	break;
+	        	case "LivingHabitEditor":
+	        		replymsg = stageHandler.livingHabitCollectorEditor(text, currentUser, database);
+	        		break;
+	        	case "DietPlanner":
+	        		replymsg = stageHandler.dietPlannerHandler(text, currentUser, database);
+	        		break;
+	        	case "HealthPedia":
+	        		replymsg = stageHandler.healthPediaHandler(text, currentUser, database);
+	        		break;
+	        	/*case "FeedBack":
+	        		replymsg = stageHandler.feedBackHandler(text, currentUser, database);
+	        		break;
+	        	case "UserGuide":
+	        		replymsg = stageHandler.userGuideHandler(text, currentUser, database);
+	        		break;*/
+						case "Coupon":
+							replymsg = stageHandler.couponHandler( text, currentUser, database);
+							break;
+	        	default:
+	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
+	        		break;
+	        }
+	}
+		//database.updateUser(currentUser);
+		if(toMultipleUsers(replymsg))
+			pushToAll(replymsg);
+		else
+			this.replyText(replyToken,replymsg);
+
+	}
+
+	private boolean toMultipleUsers(String replymsg){
+		return( replymsg.charAt(0)=='@' && replymsg.charAt(1)=='@' );
+	}
+
+
+	private void pushToAll(String replymsg){
+		String[] replyinfo = replymsg.split("@@");
+		String msg = replyinfo[1];
+		for(int i = 2 ; i < replyinfo.length;i++) if(!replyinfo[i].equals("-1")) this.pushText(replyinfo[i],msg); // non null
+	}
+
+	/**
+	* This method will be create Uri based on the given path
+	* @param path a String of the path
+	* @return String uri
+	*/
 	static String createUri(String path) {
 		return ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 	}
 
 	private void system(String... args) {
-		ProcessBuilder processBuilder = new ProcessBuilder(args);
-		try {
-			Process start = processBuilder.start();
-			int i = start.waitFor();
-			log.info("result: {} =>  {}", Arrays.toString(args), i);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} catch (InterruptedException e) {
-			log.info("Interrupted", e);
-			Thread.currentThread().interrupt();
-		}
+		//Thread chatbotThread = new Thread(() -> {
+			ProcessBuilder processBuilder = new ProcessBuilder(args);
+			try {
+				Process start = processBuilder.start();
+				int i = start.waitFor();
+				log.info("result: {} =>  {}", Arrays.toString(args), i);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			} catch (InterruptedException e) {
+				log.info("Interrupted", e);
+				Thread.currentThread().interrupt();
+			}
+		//});
+		//chatbotThread.start();
 	}
-
+	/*
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
 		log.info("Got content-type: {}", responseBody);
 
@@ -312,17 +421,6 @@ public class KitchenSinkController {
 	}
 
 
-	
-
-
-	public KitchenSinkController() {
-		database = new DatabaseEngine();
-		itscLOGIN = System.getenv("ITSC_LOGIN");
-	}
-
-	private DatabaseEngine database;
-	private String itscLOGIN;
-	
 
 	//The annontation @Value is from the package lombok.Value
 	//Basically what it does is to generate constructor and getter for the class below
@@ -338,7 +436,7 @@ public class KitchenSinkController {
 	class ProfileGetter implements BiConsumer<UserProfileResponse, Throwable> {
 		private KitchenSinkController ksc;
 		private String replyToken;
-		
+
 		public ProfileGetter(KitchenSinkController ksc, String replyToken) {
 			this.ksc = ksc;
 			this.replyToken = replyToken;
@@ -358,7 +456,5 @@ public class KitchenSinkController {
         	);
     	}
     }
-	
-	
-
+		*/
 }

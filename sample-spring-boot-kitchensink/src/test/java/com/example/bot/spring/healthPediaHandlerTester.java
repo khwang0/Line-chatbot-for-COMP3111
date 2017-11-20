@@ -42,36 +42,56 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
-
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
-public class KitchenSinkTester {
-	@Autowired
-	private DatabaseEngine databaseEngine;
-	
+//@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
+@SpringBootTest(classes = { StageHandler.class, healthPediaHandlerTester.class })
+public class healthPediaHandlerTester {
+//	@Autowired
+//	private StageHandler handler;
+
 	@Test
-	public void testNotFound() throws Exception {
+	public void healthPediaHandlerTest_case0() {
+		StageHandler handler = new StageHandler();
+		SQLDatabaseEngine db = new SQLDatabaseEngine();
+		Users user = new Users("test");
 		boolean thrown = false;
-		try {
-			this.databaseEngine.search("no");
-		} catch (Exception e) {
-			thrown = true;
-		}
-		assertThat(thrown).isEqualTo(true);
-	}
+		db.pushUser(user);
+		//case 0
 	
-	@Test
-	public void testFound() throws Exception {
-		boolean thrown = false;
-		String result = null;
 		try {
-			result = this.databaseEngine.search("abc");
-		} catch (Exception e) {
+			user.setSubStage(-1);
+			handler.healthPediaHandler("3", user, db);
+			user.setSubStage(-1);
+			handler.healthPediaHandler("10", user, db);
+			user.setSubStage(-1);
+			handler.healthPediaHandler("test", user, db);
+			
+			user.setSubStage(0);
+			handler.healthPediaHandler("test", user, db);
+			user.setSubStage(1);
+			handler.healthPediaHandler("test", user, db);
+			user.setSubStage(11);
+			handler.healthPediaHandler("12312312313123", user, db);
+			user.setSubStage(11);
+			handler.healthPediaHandler("apple", user, db);
+
+			user.setSubStage(21);
+			handler.healthPediaHandler("1", user, db);
+			user.setSubStage(21);
+			handler.healthPediaHandler("2", user, db);
+			user.setSubStage(21);
+			handler.healthPediaHandler("abc", user, db);
+
+		}catch (Exception e) {
 			thrown = true;
 		}
 		assertThat(!thrown).isEqualTo(true);
-		assertThat(result).isEqualTo("def");
 	}
+
+
+	
 }
+
+
+		

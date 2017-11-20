@@ -1,0 +1,15 @@
+[{
+	"name":"Spicy Bean curd with Minced Pork served with Rice",
+	"price":35,
+	"ingredients":["Pork","Bean curd","Rice"]
+},
+{
+	"name":"Sweet and Sour Pork served with Rice",
+	"price":36,
+	"ingredients":["Pork","Sweet and Sour Sauce","Pork"]
+},
+{
+	"name":"Chili Chicken on Rice",
+	"price":28,
+	"ingredients":["Chili","Chicken","Rice"]
+}]

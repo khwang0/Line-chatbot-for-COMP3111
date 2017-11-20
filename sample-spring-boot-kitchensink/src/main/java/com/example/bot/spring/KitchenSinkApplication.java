@@ -22,7 +22,11 @@ import java.nio.file.Path;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+/**
+* This is the start point of the program, severed like a main function
+* @version 1.0
+* @since   2017/11/19
+*/
 @SpringBootApplication
 public class KitchenSinkApplication {
     static Path downloadedContentDir;

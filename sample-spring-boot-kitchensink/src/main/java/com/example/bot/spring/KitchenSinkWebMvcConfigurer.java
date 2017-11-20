@@ -21,10 +21,18 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import lombok.extern.slf4j.Slf4j;
-
+/**
+* This is to configure your resourses path
+* @version 1.0
+* @since   2017/11/19
+*/
 @Configuration
 @Slf4j
 public class KitchenSinkWebMvcConfigurer extends WebMvcConfigurerAdapter {
+    /**
+    * This is to add handlers to handle the resourses
+    * @param registry a resourcehandlers
+    */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
