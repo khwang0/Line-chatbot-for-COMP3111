@@ -15,6 +15,10 @@ import java.net.URI;
 @Slf4j
 public class SQLDatabaseEngine extends DatabaseEngine {
 
+	/**
+	* Fetch user ids from the database.
+	* @return A Container of type ArrayList<String> cotaining user Ids
+	*/
 	ArrayList<String> fetchUIDs(){
 		ArrayList<String> UIDs = new ArrayList<String>();
 		try {
@@ -35,6 +39,11 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 		return UIDs;
 	}
 
+	/**
+	* Retrieve users from data base.
+	* @param uidkey User id as a key for searching
+	* @return A user of type Users with Id specified
+	*/
 	Users searchUser(String uidkey) throws Exception {
 		Users user = null;
 		try {
