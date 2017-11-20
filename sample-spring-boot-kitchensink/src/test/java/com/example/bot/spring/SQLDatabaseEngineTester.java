@@ -113,43 +113,43 @@ public class SQLDatabaseEngineTester {
 		assertThat(!thrown).isEqualTo(true);	
 	}
 	
-	@Test
-	public void testGen_Search_diet_plan() throws Exception {
-		boolean thrown = false;
-		
-		Users user = new Users("1001test","HXH");
-		//gen plan yes -> remeber to delete diet_plan after every test!!!
-		user.setAge(50);
-		boolean result = databaseEngine.gen_plan(user);
-		if(result==false) {
-			thrown = true;
-		}
-		//gen plan no - impossible
-//		user.setAge(5);
-//		result = databaseEngine.gen_plan(user);
+//	@Test
+//	public void testGen_Search_diet_plan() throws Exception {
+//		boolean thrown = false;
+//		
+//		Users user = new Users("1001test","HXH");
+//		//gen plan yes -> remeber to delete diet_plan after every test!!!
+//		user.setAge(50);
+//		boolean result = databaseEngine.gen_plan(user);
 //		if(result==false) {
 //			thrown = true;
 //		}
-		
-		//search_diet_plan and search_plan
-		result = databaseEngine.search_diet_plan("1001test");
-		if(result==false) {
-			thrown = true;
-		}
-		
-		result = databaseEngine.search_diet_plan("1002test");
-		if(result==true) {
-			thrown = true;
-		}
-		
-		ArrayList<Double> plan_info = databaseEngine.search_plan("1001test");
-		if(plan_info.size()==0) {
-			thrown = true;
-		}
-		
-		assertThat(!thrown).isEqualTo(true);	
-	}
-	
+//		//gen plan no - impossible
+////		user.setAge(5);
+////		result = databaseEngine.gen_plan(user);
+////		if(result==false) {
+////			thrown = true;
+////		}
+//		
+//		//search_diet_plan and search_plan
+//		result = databaseEngine.search_diet_plan("1001test");
+//		if(result==false) {
+//			thrown = true;
+//		}
+//		
+//		result = databaseEngine.search_diet_plan("1002test");
+//		if(result==true) {
+//			thrown = true;
+//		}
+//		
+//		ArrayList<Double> plan_info = databaseEngine.search_plan("1001test");
+//		if(plan_info.size()==0) {
+//			thrown = true;
+//		}
+//		
+//		assertThat(!thrown).isEqualTo(true);	
+//	}
+//	
 	//test updateconsumption
 	@Test
 	public void testUpdateconsumption() throws Exception {

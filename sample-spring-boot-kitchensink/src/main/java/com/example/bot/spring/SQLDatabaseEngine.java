@@ -148,6 +148,7 @@ public class SQLDatabaseEngine extends DatabaseEngine {
 					"INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			stmt.setString(1, user.getID());
 			stmt.setString(2, user.getName());
+			
 			String temp = ""+user.getGender();
 			stmt.setString(3, temp) ;
 			stmt.setDouble(4, user.getHeight());
