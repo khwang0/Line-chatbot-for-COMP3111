@@ -43,16 +43,13 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
-
-
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
 @SpringBootTest(classes = { SQLDatabaseEngineTester.class, SQLDatabaseEngine.class})
 public class SQLDatabaseEngineTester {
 	@Autowired
 	private SQLDatabaseEngine databaseEngine;
-	
+
 	@Test
 	public void testPush_SearchUser() throws Exception {
 		boolean thrown = false;
@@ -76,9 +73,9 @@ public class SQLDatabaseEngineTester {
 				thrown = true;
 			}
 		}
-		assertThat(!thrown).isEqualTo(true);		
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testNotSearchUser() throws Exception {
 		boolean thrown = false;
@@ -93,63 +90,63 @@ public class SQLDatabaseEngineTester {
 				thrown = true;
 			}
 		}
-		assertThat(!thrown).isEqualTo(true);	
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	@Test
 	public void testSearch_intake_reference() throws Exception {
 		boolean thrown = false;
-		
+
 		boolean result = databaseEngine.search_intake_reference("M", 5);
 		if(result==true) {
 			thrown = true;
 		}
-		
+
 		result = databaseEngine.search_intake_reference("M", 15);
 		if(result==false) {
 			thrown = true;
 		}
-		
-		assertThat(!thrown).isEqualTo(true);	
+
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
-//	@Test
-//	public void testGen_Search_diet_plan() throws Exception {
-//		boolean thrown = false;
-//		
-//		Users user = new Users("1001test","HXH");
-//		//gen plan yes -> remeber to delete diet_plan after every test!!!
-//		user.setAge(50);
-//		boolean result = databaseEngine.gen_plan(user);
+
+	@Test
+	public void testGen_Search_diet_plan() throws Exception {
+		boolean thrown = false;
+
+		Users user = new Users("1001test","HXH");
+		//gen plan yes -> remeber to delete diet_plan after every test!!!
+		user.setAge(50);
+		boolean result = databaseEngine.gen_plan(user);
+		if(result==false) {
+			thrown = true;
+		}
+		//gen plan no - impossible
+//		user.setAge(5);
+//		result = databaseEngine.gen_plan(user);
 //		if(result==false) {
 //			thrown = true;
 //		}
-//		//gen plan no - impossible
-////		user.setAge(5);
-////		result = databaseEngine.gen_plan(user);
-////		if(result==false) {
-////			thrown = true;
-////		}
-//		
-//		//search_diet_plan and search_plan
-//		result = databaseEngine.search_diet_plan("1001test");
-//		if(result==false) {
-//			thrown = true;
-//		}
-//		
-//		result = databaseEngine.search_diet_plan("1002test");
-//		if(result==true) {
-//			thrown = true;
-//		}
-//		
-//		ArrayList<Double> plan_info = databaseEngine.search_plan("1001test");
-//		if(plan_info.size()==0) {
-//			thrown = true;
-//		}
-//		
-//		assertThat(!thrown).isEqualTo(true);	
-//	}
-//	
+
+		//search_diet_plan and search_plan
+		result = databaseEngine.search_diet_plan("1001test");
+		if(result==false) {
+			thrown = true;
+		}
+
+		result = databaseEngine.search_diet_plan("1002test");
+		if(result==true) {
+			thrown = true;
+		}
+
+		ArrayList<Double> plan_info = databaseEngine.search_plan("1001test");
+		if(plan_info.size()==0) {
+			thrown = true;
+		}
+
+		assertThat(!thrown).isEqualTo(true);
+	}
+
 	//test updateconsumption
 	@Test
 	public void testUpdateconsumption() throws Exception {
@@ -162,7 +159,7 @@ public class SQLDatabaseEngineTester {
 		databaseEngine.updateconsumption(healthSearcher,100, "1003test", "20171119010101",30);
 		//if case -> user exist && null
 		databaseEngine.updateconsumption(healthSearcherNA,100, "1003test", "20171119010122",30);
-		
+
 		//if case & not null
 		healthSearcher.setKeyword("apple");
 		healthSearcher.search();
@@ -171,10 +168,10 @@ public class SQLDatabaseEngineTester {
 		databaseEngine.updateconsumption(healthSearcher,100, "1001test", "20171119010101",30);
 		//if case && not null
 		databaseEngine.updateconsumption(healthSearcher,100, "1001test", "20171119010122",30);
-		
-		assertThat(!thrown).isEqualTo(true);	
+
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//test search_current makes use of diet_conlusion
 	@Test
 	public void testSearch_current() throws Exception {
@@ -183,24 +180,24 @@ public class SQLDatabaseEngineTester {
 		if (current_info.size() == 0) {
 			thrown = true;
 		}
-		assertThat(!thrown).isEqualTo(true);	
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//set up before testing reportDiet
 	@Test
 	public void testPushDietRecord() throws Exception {
 		boolean thrown =  false;
-		
+
 		FoodInput foodinput = new FoodInput("1001test","20171119010101");
 		boolean result = databaseEngine.pushDietRecord(foodinput);
-		assertThat(!thrown).isEqualTo(true);	
+		assertThat(!thrown).isEqualTo(true);
 	}
 
 	///??????????
 	@Test
 	public void testPushFoodInfo() throws Exception {
 		boolean thrown =  false;
-		
+
 		FoodInfo food = new FoodInfo();
 		food.setFoodName("apple");
 //		food.setEnergy(2);
@@ -208,10 +205,10 @@ public class SQLDatabaseEngineTester {
 //        food.setFiber(2);
 //        food.setPrice(2);
 		boolean result = databaseEngine.pushFoodInfo(food);
-		
-		assertThat(!thrown).isEqualTo(true);	
+
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//test searchFoodInfo(String foodname)
 	@Test
 	public void testSearchFoodInfo() throws Exception {
@@ -219,14 +216,14 @@ public class SQLDatabaseEngineTester {
 		FoodInfo food_info_null = databaseEngine.searchFoodInfo("banana");
 		if (food_info_null != null)
 			thrown = true;
-		
+
 		FoodInfo food_info = databaseEngine.searchFoodInfo("Chicken");
 		if(food_info == null)
 			thrown = false;
-		
-		assertThat(!thrown).isEqualTo(true);	
+
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//test reportDiet
 	@Test
 	public void testReportDiet() throws Exception {
@@ -235,62 +232,61 @@ public class SQLDatabaseEngineTester {
 		if (answer.equals(" ")) {
 			thrown = true;
 		}
-		//else case 
+		//else case
 		String answer2 = databaseEngine.reportDiet("20171119", "100000test");
 		if (!answer2.equals(" ")) {
 			thrown = true;
 		}
-		
-		assertThat(!thrown).isEqualTo(true);	
+
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//test getFoodInfo
 	@Test
 	public void testGetFoodInfo() throws Exception {
 		boolean thrown =  false;
-		
+
 		String[] answer = databaseEngine.getFoodInfo();
 		if (answer.length==0) {
 			thrown = true;
-		}		
-		assertThat(!thrown).isEqualTo(true);	
+		}
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//test findallusers()
 	@Test
 	public void testFindallusers() throws Exception {
 		boolean thrown =  false;
-		
+
 		ArrayList<String> answer = databaseEngine.findallusers();
 		if (answer.size()==0) {
 			thrown = true;
-		}		
-		assertThat(!thrown).isEqualTo(true);	
+		}
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
+
 	//test updateUser
 	@Test
 	public void testUpdateUser() throws Exception {
 		boolean thrown =  false;
-		
+
 		Users user = new Users("1004test","HHH");
 		boolean answer = databaseEngine.updateUser(user);
 
-		assertThat(!thrown).isEqualTo(true);	
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
-	
+
+
 //	@Test
 //	public void testUpdate_users() throws Exception {
 //		boolean thrown = false;
-//		
+//
 //		Users user = new Users("1001test","HXH");
 //		//gen plan yes -> remeber to delete diet_plan after every test!!!
 //		user.setAge(50);
 //		boolean result = databaseEngine.updateUser(user);
 //
-//		
-//		assertThat(!thrown).isEqualTo(true);	
+//
+//		assertThat(!thrown).isEqualTo(true);
 //	}
 }
-	
