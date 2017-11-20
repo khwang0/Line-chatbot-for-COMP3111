@@ -297,7 +297,7 @@ public class StageHandler {
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 6) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 8) {
 					replymsg= REDIRECT;
 				}
 				else {
