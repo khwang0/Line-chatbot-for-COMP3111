@@ -47,9 +47,9 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { StageHandlerTesterXH.class, StageHandler.class })
 public class StageHandlerTesterXH {
-//	@Autowired
-//	private SQLDatabaseEngine databaseEngine;
-	
+	//	@Autowired
+	//	private SQLDatabaseEngine databaseEngine;
+
 	@Test
 	public void testMainStageHandler0() throws Exception {
 		boolean thrown = false;
@@ -66,14 +66,16 @@ public class StageHandlerTesterXH {
 		if (currentUser.getSubStage() != 1) {
 			thrown = true;
 		}
-////		//case 0 else
+		////		//case 0 else
 		currentUser.setSubStage(0);
 		currentUser.setBodyFat(1);
 		reply = stageHandler.mainStageHandler(dummyReplyToken, text, currentUser, databaseEngine);
 		if (currentUser.getSubStage() != 1) {
 			thrown = true;
 		}		
-		
+		assertThat(!thrown).isEqualTo(true);
+	}	
+
 	//case 1 
 	@Test
 	public void testMainStageHandler1() throws Exception {
@@ -98,34 +100,34 @@ public class StageHandlerTesterXH {
 		if (currentUser.getSubStage() != 0) {
 			thrown = true;
 		}		
-	assertThat(!thrown).isEqualTo(true);
-}
-	
+		assertThat(!thrown).isEqualTo(true);
+	}
+
 	//case code
-//	@Test
-//	public void testMainStageHandlerCode() throws Exception {
-//		boolean thrown = false;
-//		StageHandler stageHandler = new StageHandler();
-//		SQLDatabaseEngine databaseEngine = new SQLDatabaseEngine();
-//		String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
-//		String text = "dummy";
-//		Users currentUser= new Users("test1001","HXH");
-//		databaseEngine.pushUser(currentUser);
-//		currentUser.setSubStage(1);
-//		//case 1 if
-//		currentUser.setBodyFat(0);
-//		String reply = stageHandler.mainStageHandler(dummyReplyToken, "code", currentUser, databaseEngine);
-//		if (currentUser.getSubStage() != 0) {
-//			thrown = true;
-//		}
-//		//case 1 else
-//		currentUser.setSubStage(1);
-//		currentUser.setBodyFat(1);
-//		reply = stageHandler.mainStageHandler(dummyReplyToken, "1", currentUser, databaseEngine);
-//		if (currentUser.getSubStage() != 0) {
-//			thrown = true;
-//		}		
-//	assertThat(!thrown).isEqualTo(true);
-//}
+	//	@Test
+	//	public void testMainStageHandlerCode() throws Exception {
+	//		boolean thrown = false;
+	//		StageHandler stageHandler = new StageHandler();
+	//		SQLDatabaseEngine databaseEngine = new SQLDatabaseEngine();
+	//		String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
+	//		String text = "dummy";
+	//		Users currentUser= new Users("test1001","HXH");
+	//		databaseEngine.pushUser(currentUser);
+	//		currentUser.setSubStage(1);
+	//		//case 1 if
+	//		currentUser.setBodyFat(0);
+	//		String reply = stageHandler.mainStageHandler(dummyReplyToken, "code", currentUser, databaseEngine);
+	//		if (currentUser.getSubStage() != 0) {
+	//			thrown = true;
+	//		}
+	//		//case 1 else
+	//		currentUser.setSubStage(1);
+	//		currentUser.setBodyFat(1);
+	//		reply = stageHandler.mainStageHandler(dummyReplyToken, "1", currentUser, databaseEngine);
+	//		if (currentUser.getSubStage() != 0) {
+	//			thrown = true;
+	//		}		
+	//	assertThat(!thrown).isEqualTo(true);
+	//}
 
 }
