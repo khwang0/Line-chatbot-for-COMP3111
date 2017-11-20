@@ -731,6 +731,49 @@ public class SQLDatabaseEngine {
 	}
 
 
+
+	String searchLink(int id) {
+		String link = "";
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT link from links where id = ?");
+			stmt.setInt(1, id);
+		    stmt.execute();
+		    ResultSet rs = stmt.executeQuery();
+		    while(rs.next()) {
+				link = (rs.getString(1));
+			}
+		    rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return link;
+	}
+	
+	int countLink() {
+		int count = 0;
+		try {
+			Connection connection = this.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(
+					"SELECT count(*) from links");
+		    stmt.execute();
+		    ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				count = rs.getInt(1);
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return count;
+	}
+
+
 	/**
 	* update the information of user in users table from database.
 	* @param user the object of users to search with

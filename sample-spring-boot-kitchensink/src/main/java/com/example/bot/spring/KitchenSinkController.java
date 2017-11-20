@@ -94,50 +94,6 @@ import java.net.URI;
 @LineMessageHandler
 public class KitchenSinkController {
 
-	private String[] links = {
-				"http://www.health.com/food/thanksgiving-dairy-gluten-food-intolerances",
-				"http://www.health.com/food/brussels-sprout-recipes",
-				"http://www.health.com/syndication/whole-foods-amazon-turkey-deal",
-				"http://www.health.com/syndication/drinks-order-bar-unhealthy",
-				"http://www.health.com/food/keto-recipes",
-				"http://www.health.com/syndication/stove-top-stuffing-thanksgiving-dinner-pants",
-				"http://www.health.com/syndication/best-olive-oil-taste-test",
-				"http://www.health.com/syndication/guac-lock-keep-guacamole-fresh",
-				"http://www.health.com/syndication/halo-top-scoop-shop-los-angeles",
-				"http://www.health.com/food/infused-water-recipes",
-				"http://www.health.com/syndication/world-health-organization-antibiotics-animals",
-				"http://www.health.com/syndication/whole-foods-top-ten-food-trends",
-				"http://www.health.com/food/best-matcha-gifts",
-				"http://www.health.com/syndication/coffee-add-ins",
-				"http://www.health.com/syndication/what-to-do-after-eating-too-much-sugar",
-				"http://www.health.com/food/spicy-food-character",
-				"http://www.health.com/food/vegan-bacon-recipes-tempeh-bacon-eggplant-bacon",
-				"http://www.health.com/syndication/whole-foods-new-ahimi-vegan-tuna-sushi",
-				"http://www.health.com/food/mashed-potatoes-recipes",
-				"http://www.health.com/food/celebrity-healthy-snacks",
-				"http://www.health.com/syndication/new-trader-joes-products",
-				"http://www.health.com/food/foods-fight-fat-video",
-				"http://www.health.com/syndication/halo-top-non-dairy-flavors-ranked",
-				"http://www.health.com/food/how-to-use-instant-pot",
-				"http://www.health.com/food/buffalo-cauliflower-tacos-recipe-video",
-				"http://www.health.com/health/gallery/0,,20345806,00.html",
-				"http://www.health.com/health/gallery/0,,20350502,00.html",
-				"http://www.health.com/food/healthy-taco-recipes-video",
-				"http://www.health.com/food/broccoli-recipes",
-				"http://www.health.com/food/peanut-butter-dessert-recipes-video",
-				"http://www.health.com/food/stir-fry-recipes-turkey-thai-beef-shrimp",
-				"http://www.health.com/syndication/vegan-hollandaise-edgy-veg",
-				"http://www.health.com/food/candy-corn-ingredients-video",
-				"http://www.health.com/food/stop-food-guilt",
-				"http://www.health.com/food/chicken-recipes-peanut-penne-southwestern-video",
-				"http://www.health.com/food/quinoa-recipes-burger-salad-muffin",
-				"http://www.health.com/food/slow-cooker-recipes-chicken-tarragon-chickpea-cumin",
-				"http://www.health.com/food/spaghetti-squash-recipes",
-				"http://www.health.com/food/valerie-bertinelli-cookbook-recipes",
-				"http://www.health.com/food/best-healthy-cookbooks-gifts-2017",
-				"http://www.health.com/food/best-gifts-breakfast-lovers",
-				"http://www.health.com/syndication/halo-top-dairy-free-vegan-flavors"
-	};
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
@@ -323,12 +279,20 @@ public class KitchenSinkController {
 
 		if(event.getSource().getUserId().equals("U16d4f0da660c593be7cffe7d1208f036") && text.equals("activate") ) {
 			ArrayList<String> usersid= database.findallusers();
+			
+
+			String link = database.searchLink(number);		
+			
 			number++;
-			if(number > links.length-1) {
+			if(number > database.countLink()) {
 				number = 0;
 			}
+			
+
+			
+			
 			for (int i=0;i<usersid.size();i++) {
-				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ links[number]));
+				pushText(usersid.get(i),("Regular Healthy Tips!: \n"+ link));
 			}
 		}
 
