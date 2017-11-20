@@ -685,7 +685,7 @@ public class StageHandler {
 		case 20:{
 
 			if(inputChecker.priceAdd(text,foodInfo,database)) {
-				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
+				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
 				currentUser.setSubStage(0);
 			}
 			else replymsg= "Please enter valid number: ";
