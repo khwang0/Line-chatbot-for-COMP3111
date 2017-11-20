@@ -42,8 +42,6 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
-
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = { KitchenSinkTester.class, DatabaseEngine.class })
@@ -57,14 +55,14 @@ public class UsersTester {
 		boolean thrown = false;
 		Users user = new Users("1001");
 		assertThat(user != null).isEqualTo(true);
-		
+
 	}
 	
 	//@Test
 	public void testUserContrt2() throws Exception {
 		boolean thrown = false;
 		Users user = new Users("1001", "HXH");
-		assertThat(user != null).isEqualTo(true);	
+		assertThat(user != null).isEqualTo(true);
 	}
 	
 	//@Test
@@ -73,8 +71,8 @@ public class UsersTester {
 		Users user = new Users("1001", "HXH");
 		user.setEatingHabits(eatingHabits);
 		boolean[] read = user.getEatingHabits();
-		
-		assertThat(read.length != 0).isEqualTo(true);	
+
+		assertThat(read.length != 0).isEqualTo(true);
 	}
 	
 	//@Test
@@ -83,8 +81,8 @@ public class UsersTester {
 		Users user = new Users("1001", "HXH");
 		user.setEatingHabits(eatingHabits);
 		boolean[] read = user.getEatingHabits();
-		
-		assertThat(read.length != 0).isEqualTo(true);	
+
+		assertThat(read.length != 0).isEqualTo(true);
 	}
 	
 	//@Test
@@ -95,21 +93,21 @@ public class UsersTester {
 		if(user.toString() == null) {
 			thrown = true;
 		}
-		
+
 		user.setAssessmentScore(20);
 		if(user.toString() == null) {
 			thrown = true;
 		}
-		
+
 		user.setAssessmentScore(101);
 		if(user.toString() == null) {
 			thrown = true;
 		}
-	
-		assertThat(!thrown).isEqualTo(true);	
+
+		assertThat(!thrown).isEqualTo(true);
 	}
-	
-	
+
+
 //	@Test
 //	public void testNotFound() throws Exception {
 //		boolean thrown = false;

@@ -20,7 +20,7 @@ import java.net.URI;
 * @since   2017/11/19
 */
 @Slf4j
-public class SQLDatabaseEngine extends DatabaseEngine {
+public class SQLDatabaseEngine {
 
 
 	/**

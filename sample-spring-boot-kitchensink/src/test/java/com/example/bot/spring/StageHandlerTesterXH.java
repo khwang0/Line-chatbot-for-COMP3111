@@ -3,6 +3,7 @@ package com.example.bot.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -43,36 +44,33 @@ import com.linecorp.bot.spring.boot.annotation.LineBotMessages;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.bot.spring.DatabaseEngine;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { StageHandlerTesterXH.class, StageHandler.class })
 public class StageHandlerTesterXH {
 	@Autowired
 	private SQLDatabaseEngine databaseEngine;
-	private Event event;
 	private StageHandler stageHandler;
 	
 	String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
 
 	
-	@Test
-	public void testMainStageHandler() throws Exception {
-		boolean thrown = false;
-		String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
-		String text = "dummy";
-		Users currentUser= new Users("test1001","HXH");
-		currentUser.setSubStage(0);
-		//case 0 if
-		currentUser.setBodyFat(0);
-		String reply = stageHandler.mainStageHandler(dummyReplyToken, event, text, currentUser, databaseEngine);
-//		//case 0 else
-//		user.setBodyFat(1);
-		if (currentUser.getSubStage() != 1) {
-			thrown = true;
-		}
-		
-		assertThat(!thrown).isEqualTo(true);
-	}
+//	@Test
+//	public void testMainStageHandler() throws Exception {
+//		boolean thrown = false;
+//		String dummyReplyToken = "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA";
+//		String text = "dummy";
+//		Users currentUser= new Users("test1001","HXH");
+//		currentUser.setSubStage(0);
+//		//case 0 if
+//		currentUser.setBodyFat(0);
+//		String reply = stageHandler.mainStageHandler(dummyReplyToken, event, text, currentUser, databaseEngine);
+////		//case 0 else
+////		user.setBodyFat(1);
+//		if (currentUser.getSubStage() != 1) {
+//			thrown = true;
+//		}
+//		
+//		assertThat(!thrown).isEqualTo(true);
+//	}
 
 }
