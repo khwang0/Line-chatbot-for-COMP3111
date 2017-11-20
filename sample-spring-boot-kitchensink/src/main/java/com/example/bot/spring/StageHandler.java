@@ -1,8 +1,8 @@
 package com.example.bot.spring;
 
 import java.io.IOException;
-import java.io.*;
 import org.json.*;
+import java.io.*;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -80,7 +80,7 @@ public class StageHandler {
 	private float MM_weight_per_serve = 100;
 
 
-	public String initStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
+	public String initStageHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -92,7 +92,7 @@ public class StageHandler {
         	// 	replymsg = "I will be deactivated. To reactivate me, please block->unblock me. Bye.";
         	// 	currentUser.setStage("");
         	// 	currentUser.setSubStage(0);
-        	// 	currentUser = null
+        	// 	currentUser = null;
         	// }
 		}break;
 		case 1:{
@@ -147,7 +147,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String mainStageHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
+	public String mainStageHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -283,7 +283,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-	public String dietPlannerHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
+	public String dietPlannerHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -303,7 +303,7 @@ public class StageHandler {
 		case -1:{
 			try{
 				currentUser.setSubStage(Integer.parseInt(text));
-				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 8) {
+				if (currentUser.getSubStage() >=1 && currentUser.getSubStage() <= 6) {
 					replymsg= REDIRECT;
 				}
 				else {
@@ -691,7 +691,7 @@ public class StageHandler {
 		case 20:{
 
 			if(inputChecker.priceAdd(text,foodInfo,database)) {
-				replymsg= "Your data has been recorded.\nInput anything to conitnue.";
+				replymsg= "Your data has been recorded.\\nInput anything to conitnue.";
 				currentUser.setSubStage(0);
 			}
 			else replymsg= "Please enter valid number: ";
@@ -702,17 +702,12 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg = replymsg + "Heading to Main menu...";
+				return replymsg;
 				}
-			else{//else the quiz start
+				//else the quiz start
 				replymsg = replymsg +  "Then let's start the quiz ;) \n"
 						+ question[0];
 				currentUser.setSubStage(501);
-				}
-		}break;
-		case 510:{
-				replymsg = "Congratulations that you have finished the quiz!:)\n"
-				+ "reply anything to get the feedback";
-				currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
 		case 511:{
 			int score = (currentUser).getAssessmentScore();
@@ -764,17 +759,18 @@ public class StageHandler {
 				currentUser.setStage("Main");
 				currentUser.setSubStage(0);
 				replymsg= "Heading to mainMenu... \nreply anything to get back to mainMenu...";
+				return replymsg;
 			}
 			else {
 				replymsg= "Please reply a valid answer(T/F)";
 				return replymsg;
 			}
-//			if(currentUser.getSubStage() == 510) {
-//				replymsg = "Congratulations that you have finished the quiz!:)\n"
-//						+ "reply anything to get the feedback";
-//				currentUser.setSubStage(currentUser.getSubStage()+1);
-//				return replymsg;
-//			}
+			if(currentUser.getSubStage() == 510) {
+				replymsg = "Congratulations that you have finished the quiz!:)\n"
+						+ "reply anything to get the feedback";
+				currentUser.setSubStage(currentUser.getSubStage()+1);
+				return replymsg;
+			}
 			replymsg= question[currentUser.getSubStage()-500];
 			currentUser.setSubStage(currentUser.getSubStage()+1);
 		}break;
@@ -788,7 +784,7 @@ public class StageHandler {
 
 
 
-	public String livingHabitCollectorEditor(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
+	public String livingHabitCollectorEditor(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()) {
 		case 0:{
@@ -978,7 +974,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String livingHabitCollectorHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String livingHabitCollectorHandler(  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		switch(currentUser.getSubStage()){
 		case 0:{
@@ -1121,7 +1117,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String healthPediaHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String healthPediaHandler(  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		//user key word input
 		//String
@@ -1194,7 +1190,7 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	public String feedBackHandler(String replyToken, String text, Users currentUser, SQLDatabaseEngine database) {
+	public String feedBackHandler(  String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
@@ -1202,7 +1198,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-	public String userGuideHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
+	public String userGuideHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		replymsg = "All set. Type anything to return to main menu...";
 		currentUser.setStage("Main");//back to main
@@ -1210,7 +1206,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 		return replymsg;
 	}
-	public String couponHandler(String replyToken,  String text, Users currentUser, SQLDatabaseEngine database) {
+	public String couponHandler(   String text, Users currentUser, SQLDatabaseEngine database) {
 		String replymsg = "";
 		if(CouponWarehouse.getInstance().isCodeValid(currentUser.getID(),text) && !CouponWarehouse.getInstance().checkSelf(currentUser.getID(),text) ){
 			 Coupon newCoupon = CouponWarehouse.getInstance().issueCoupon(currentUser.getID(),text);
@@ -1234,8 +1230,8 @@ public class StageHandler {
 		return replymsg;
 	}
 
-	// this is self assessment Handler
-//	public String selfAssessmentHandler(String replyToken, Event event, String text, Users currentUser, SQLDatabaseEngine database) {
+	// this is self assessment Handler function
+//	public String selfAssessmentHandler(  Event event, String text, Users currentUser, SQLDatabaseEngine database) {
 //		String replymsg = "";
 //		switch (currentUser.getSubStage()) {
 //			case 0:{
@@ -1332,7 +1328,7 @@ public class StageHandler {
 		database.updateUser(currentUser);//update user stage when the stage has been changed
 	}
 
-	public String followHandler(String replyToken, Event event, Users currentUser , SQLDatabaseEngine database){
+	public String followHandler( Event event, Users currentUser , SQLDatabaseEngine database){
 		String msg = "";
 		try{
 			currentUser = database.searchUser(event.getSource().getUserId());

@@ -168,7 +168,7 @@ public class KitchenSinkController {
 		handleTextContent(event.getReplyToken(), event, message);
 
 	}
-
+	/*
 	@EventMapping
 	public void handleStickerMessageEvent(MessageEvent<StickerMessageContent> event) {
 		handleSticker(event.getReplyToken(), event.getMessage());
@@ -211,7 +211,7 @@ public class KitchenSinkController {
 		DownloadedContent mp4 = saveContent("mp4", response);
 		reply(event.getReplyToken(), new AudioMessage(mp4.getUri(), 100));
 	}
-
+*/
 	@EventMapping
 	public void handleUnfollowEvent(UnfollowEvent event) {
 		log.info("unfollowed this bot: {}", event);
@@ -226,10 +226,10 @@ public class KitchenSinkController {
 	public void handleFollowEvent(FollowEvent event) {
 		String replyToken = event.getReplyToken();
 		String msgbuffer = null;
-		msgbuffer = stageHandler.followHandler(replyToken,event,currentUser,database);
+		msgbuffer = stageHandler.followHandler(event,currentUser,database);
 		this.replyText(replyToken, msgbuffer);
 	}
-
+	/*
 	@EventMapping
 	public void handleJoinEvent(JoinEvent event) {
 		String replyToken = event.getReplyToken();
@@ -252,7 +252,7 @@ public class KitchenSinkController {
 	public void handleOtherEvent(Event event) {
 		log.info("Received message(Ignored): {}", event);
 	}
-
+*/
 
 	private void reply(@NonNull String replyToken, @NonNull Message message) {
 		reply(replyToken, Collections.singletonList(message));
@@ -299,11 +299,11 @@ public class KitchenSinkController {
 		this.push(to, new TextMessage(message));
 	}
 
-
+	/*
 	private void handleSticker(String replyToken, StickerMessageContent content) {
 		reply(replyToken, new StickerMessage(content.getPackageId(), content.getStickerId()));
 	}
-
+*/
 	private Users getSourceUser(Event event){
 		Users user = null;
 		try{
@@ -335,31 +335,31 @@ public class KitchenSinkController {
 		else {
 	        switch(currentUser.getStage()) {
 	        	case "Init":
-	        		replymsg = stageHandler.initStageHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.initStageHandler( text, currentUser, database);
 	        		break;
 	        	case "Main":
-	        		replymsg = stageHandler.mainStageHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.mainStageHandler( text, currentUser, database);
 	        		break;
 	        	case "LivingHabitCollector":{
-	        		replymsg = stageHandler.livingHabitCollectorHandler(replyToken, text, currentUser, database);
+	        		replymsg = stageHandler.livingHabitCollectorHandler(text, currentUser, database);
 	        	}	break;
 	        	case "LivingHabitEditor":
-	        		replymsg = stageHandler.livingHabitCollectorEditor(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.livingHabitCollectorEditor(text, currentUser, database);
 	        		break;
 	        	case "DietPlanner":
-	        		replymsg = stageHandler.dietPlannerHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.dietPlannerHandler(text, currentUser, database);
 	        		break;
 	        	case "HealthPedia":
-	        		replymsg = stageHandler.healthPediaHandler(replyToken,  text, currentUser, database);
+	        		replymsg = stageHandler.healthPediaHandler(text, currentUser, database);
 	        		break;
 	        	case "FeedBack":
-	        		replymsg = stageHandler.feedBackHandler(replyToken, text, currentUser, database);
+	        		replymsg = stageHandler.feedBackHandler(text, currentUser, database);
 	        		break;
 	        	case "UserGuide":
-	        		replymsg = stageHandler.userGuideHandler(replyToken, text, currentUser, database);
+	        		replymsg = stageHandler.userGuideHandler(text, currentUser, database);
 	        		break;
 						case "Coupon":
-							replymsg = stageHandler.couponHandler(replyToken,  text, currentUser, database);
+							replymsg = stageHandler.couponHandler( text, currentUser, database);
 							break;
 	        	default:
 	        		replymsg = "Due to some stage error, I am deactivated. To reactivate me, please block->unblock me.";
@@ -405,7 +405,7 @@ public class KitchenSinkController {
 		//});
 		//chatbotThread.start();
 	}
-
+	/*
 	private static DownloadedContent saveContent(String ext, MessageContentResponse responseBody) {
 		log.info("Got content-type: {}", responseBody);
 
@@ -462,4 +462,5 @@ public class KitchenSinkController {
         	);
     	}
     }
+		*/
 }
